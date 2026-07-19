@@ -59,6 +59,7 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   const registry = await response.json() as {
     patches: Array<{ id: string; sha256: string; verification: { status: string; operations: number; assertions: number } }>;
   };
+  expect(registry.patches).toHaveLength(2);
   expect(registry.patches[0].id).toBe("org.openpatch.civicapply-accessible-draft");
   expect(registry.patches[0].sha256).toMatch(/^[a-f0-9]{64}$/);
   expect(registry.patches[0].verification).toEqual({ status: "verified", operations: 19, assertions: 10 });
@@ -68,4 +69,53 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   const patchResponse = await page.request.get("/registry/patches/civic-apply.openpatch.json");
   expect(patchResponse.ok()).toBe(true);
   expect((await patchResponse.json()).schemaVersion).toBe(1);
+  const navigator = registry.patches.find((patch) => patch.id === "org.openpatch.metrocare-service-navigator");
+  expect(navigator?.verification).toEqual({ status: "verified", operations: 10, assertions: 8 });
+  const navigatorResponse = await page.request.get("/registry/patches/metrocare-service-navigator.openpatch.json");
+  expect(navigatorResponse.ok()).toBe(true);
+});
+
+test("the original care directory is usable but forces people to inspect every service", async ({ page }) => {
+  await page.goto("/care/");
+  await expect(page.locator(".care-service:visible")).toHaveCount(12);
+  await expect(page.locator("#care-directory input[type='search']")).toHaveCount(0);
+  await expect(page.locator("#care-directory select")).toHaveCount(0);
+  await expect(page.locator(".care-community-promo")).toBeVisible();
+});
+
+test("the feature patch privately combines access needs, persists them, and supports the keyboard", async ({ page }, testInfo) => {
+  const runtimeErrors: string[] = [];
+  const postPatchRequests: string[] = [];
+  page.on("pageerror", (error) => runtimeErrors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") runtimeErrors.push(message.text()); });
+  await page.goto("/care/");
+  await page.addScriptTag({ path: runtimePath });
+  const health = await page.evaluate(() => (window as Window & { __applyMetroCarePatch: () => { healthy: number; total: number } }).__applyMetroCarePatch());
+  expect(health).toMatchObject({ healthy: 10, total: 10 });
+  await expect(page.locator(".openpatch-navigator")).toBeVisible();
+  await expect(page.locator(".care-community-promo")).toBeHidden();
+  page.on("request", (request) => postPatchRequests.push(request.url()));
+
+  await page.locator("select[id$='-access']").selectOption("wheelchair");
+  await page.locator("select[id$='-language']").selectOption("urdu");
+  await page.locator("select[id$='-availability']").selectOption("new-patients");
+  await expect(page.locator(".care-service:visible")).toHaveCount(1);
+  await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
+  await expect(page.locator(".openpatch-navigator__status")).toHaveText("1 of 12 services match");
+  expect(postPatchRequests).toEqual([]);
+
+  await page.reload();
+  await page.addScriptTag({ path: runtimePath });
+  await page.evaluate(() => (window as Window & { __applyMetroCarePatch: () => unknown }).__applyMetroCarePatch());
+  await expect(page.locator("select[id$='-language']")).toHaveValue("urdu");
+  await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
+
+  await page.locator(".openpatch-navigator__clear").click();
+  await page.locator(".care-hero h1").click();
+  await page.keyboard.press("/");
+  await expect(page.locator(".openpatch-navigator input[type='search']")).toBeFocused();
+  if (testInfo.project.name === "mobile-chromium") {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
+  }
+  expect(runtimeErrors).toEqual([]);
 });

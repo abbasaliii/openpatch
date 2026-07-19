@@ -1,4 +1,5 @@
 import civicPatchJson from "../registry/patches/civic-apply.openpatch.json";
+import metroCarePatchJson from "../registry/patches/metrocare-service-navigator.openpatch.json";
 import { applyPatch } from "../core/engine";
 import { buildPatchCatalog, matchingCatalogPatches } from "../core/registry";
 import type { OpenPatch, PatchHealth } from "../core/types";
@@ -10,7 +11,7 @@ type RuntimePatchState = {
   patch: Pick<OpenPatch, "id" | "name" | "summary" | "version" | "capabilities" | "author" | "match"> & { operationCount: number };
 };
 
-const bundled = [civicPatchJson as OpenPatch];
+const bundled = [civicPatchJson as OpenPatch, metroCarePatchJson as OpenPatch];
 let matches: RuntimePatchState[] = [];
 
 async function initialize() {

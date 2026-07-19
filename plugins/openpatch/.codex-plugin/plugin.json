@@ -1,23 +1,24 @@
 {
   "name": "openpatch",
-  "version": "0.2.0",
-  "description": "Author safe, domain-scoped community repairs for broken websites with Codex.",
+  "version": "0.3.0",
+  "description": "Author safe, domain-scoped community repairs and missing features for websites with Codex.",
   "author": {
     "name": "OpenPatch"
   },
   "license": "MIT",
-  "keywords": ["accessibility", "browser-extension", "website-repair", "safe-dsl"],
+  "keywords": ["accessibility", "browser-extension", "website-repair", "content-filter", "safe-dsl"],
   "skills": "./skills/",
   "interface": {
     "displayName": "OpenPatch",
-    "shortDescription": "Author safe, tested community website repairs",
-    "longDescription": "Turn a concrete website complaint into a constrained OpenPatch repair, validate every selector and permission, and prove the behavior with browser tests before publication.",
+    "shortDescription": "Author safe, tested community web features",
+    "longDescription": "Turn a concrete website complaint or missing capability into a constrained OpenPatch repair, validate every selector and permission, and prove the behavior with browser tests before publication.",
     "developerName": "OpenPatch",
     "category": "Developer Tools",
-    "capabilities": ["Website inspection", "Safe patch authoring", "Browser testing"],
+    "capabilities": ["Website inspection", "Safe patch authoring", "Accessible feature filters", "Browser testing"],
     "defaultPrompt": [
       "Use OpenPatch to repair this inaccessible form.",
       "Create a safe mobile-layout patch for this page.",
+      "Add private filters to this service directory.",
       "Check whether this OpenPatch still works."
     ],
     "brandColor": "#0C9B6C"

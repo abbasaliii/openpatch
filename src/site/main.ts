@@ -8,6 +8,7 @@ document.querySelectorAll(".section, .proof-bar, .impact-band").forEach((element
 
 type RegistryIndex = {
   patches: Array<{
+    id: string;
     version: string;
     sha256: string;
     scope: { hosts: string[]; paths: string[] };
@@ -20,8 +21,8 @@ async function loadRegistryReceipt() {
     const response = await fetch("/registry/index.json", { cache: "no-store" });
     if (!response.ok) throw new Error(`Registry returned ${response.status}`);
     const index = await response.json() as RegistryIndex;
-    const patch = index.patches[0];
-    if (!patch) throw new Error("Registry is empty");
+    const patch = index.patches.find((entry) => entry.id === "org.openpatch.metrocare-service-navigator");
+    if (!patch) throw new Error("Flagship patch is missing");
     const version = document.getElementById("registry-version");
     const health = document.getElementById("registry-health");
     const scope = document.getElementById("registry-scope");

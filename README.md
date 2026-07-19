@@ -2,35 +2,38 @@
 
 **Fix the web you have.**
 
-OpenPatch is a safe, public repair layer for websites users do not own. A user shows Codex a broken page, describes the problem, and gets a constrained, domain-scoped patch. Everyone else can install that community repair with one click—without AI, an account, or an API key.
+OpenPatch is a safe, public feature layer for websites users do not own. A user shows Codex a missing capability or inaccessible workflow and gets a constrained, domain-scoped patch. Everyone else can install that community upgrade with one click—without AI, an account, or an API key.
 
 Built for OpenAI Build Week 2026 with Codex and GPT‑5.6.
 
-**Live product:** [openpatch-tau.vercel.app](https://openpatch-tau.vercel.app/) · [Live CivicApply demo](https://openpatch-tau.vercel.app/demo/) · [Public registry](https://openpatch-tau.vercel.app/registry/index.json)
+**Live product:** [openpatch-tau.vercel.app](https://openpatch-tau.vercel.app/) · [Flagship MetroCare demo](https://openpatch-tau.vercel.app/care/) · [CivicApply repair](https://openpatch-tau.vercel.app/demo/) · [Public registry](https://openpatch-tau.vercel.app/registry/index.json)
 
 ## The demo
 
-The bundled CivicApply portal recreates a familiar high-stakes failure: a public-benefits form that overflows on mobile, loses unfinished progress, reports generic inaccessible errors, and is covered by a survey.
+The flagship MetroCare demo is deliberately not a broken toy. It is a credible healthcare directory that works as its owner designed it—but forces a person to inspect twelve cards to compare access, language, availability, and type of care. The site is missing the feature that person actually needs.
 
-OpenPatch applies 19 declarative operations that:
+OpenPatch’s community patch adds a complete service navigator using ten declarative operations:
 
-- Repair the complete 390px mobile layout
-- Preserve non-sensitive form progress in origin-local storage
-- Restore a draft after a simulated session reset
-- Add specific accessible validation with `aria-invalid` and `aria-describedby`
-- Add arrow-key navigation to the progress controls
-- Move help into the application workflow
-- Remove the blocking survey and contradictory native save state
+- Search existing services using only declared `data-*` attributes
+- Combine type-of-care, access, language, and availability filters
+- Reduce “wheelchair access + Urdu + accepting new patients” to one matching provider
+- Announce result counts through an ARIA live region
+- Support `/` to focus search and Escape to clear
+- Preserve only the user’s filter preferences locally for 24 hours
+- Send no filter, page, or health data over the network
+- Improve the desktop and 390px workflow without replacing the portal’s real links
+
+The original CivicApply proof remains in the registry as a second repair. Its 19 constrained operations repair mobile layout, save non-sensitive form progress, restore drafts after a simulated reset, add accessible validation and keyboard navigation, move human help into the workflow, and remove an obstructive survey.
 
 On any page without a community patch, the extension can also create a **privacy-safe Repair Brief** for Codex. It includes the exact origin and path, viewport geometry, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, URL queries, or page text.
 
-OpenPatch v0.3 closes the community loop: download any `.openpatch.json`, open its target page, and choose the file in the extension. Before installation, the extension validates the DSL, confirms the current URL is in scope, preflights every operation against the live DOM, computes a SHA-256 receipt, displays the exact capabilities, and requests Chrome access only for the declared domains. A failed selector or policy check blocks installation.
+OpenPatch v0.4 closes the community loop and proves safe feature augmentation: download any `.openpatch.json`, open its target page, and choose the file in the extension. Before installation, the extension validates the DSL, confirms the current URL is in scope, preflights every operation against the live DOM, computes a SHA-256 receipt, displays the exact capabilities, and requests Chrome access only for the declared domains. A failed selector or policy check blocks installation.
 
-The validator reports **19/19 healthy operations**, **10/10 publication assertions**, and a SHA-256 publication receipt. Local drafts expire automatically after 24 hours.
+The flagship validator reports **10/10 healthy operations**, **8/8 publication assertions**, and SHA-256 receipt `e984431ee1d653eb214429badac793417a9c3d82c9ac9d10b910ae48512fd038`. Local filter preferences expire automatically after 24 hours.
 
-| Before — fixed-width form and blocking survey | After — repaired, accessible, locally saved |
+| Before — twelve cards and no way to express a need | After — one private, accessible match |
 | --- | --- |
-| ![Broken CivicApply form at 390px](submission-assets/civicapply-before-mobile.png) | ![OpenPatched CivicApply form at 390px](submission-assets/civicapply-after-mobile.png) |
+| ![Original MetroCare directory](submission-assets/metrocare-before-desktop.png) | ![OpenPatched MetroCare service navigator](submission-assets/metrocare-after-desktop.png) |
 
 ## Why this is different
 
@@ -47,7 +50,7 @@ flowchart LR
   G --> H[Anyone gets the repair\nNo AI or account]
 ```
 
-The patch language supports seven capabilities: allowlisted styles, safe attributes, explicit hiding, same-page reorganization, non-sensitive form persistence, local validation, and keyboard navigation. It has no operation for scripts, HTML injection, network requests, cookies, or cross-origin data.
+The patch language supports eight capabilities: bounded collection filtering, allowlisted styles, safe attributes, explicit hiding, same-page reorganization, non-sensitive form persistence, local validation, and keyboard navigation. It has no operation for scripts, patch-authored HTML, network requests, cookies, or cross-origin data. The trusted collection navigator can read only explicitly declared `data-*` attributes, never page text or field values.
 
 ## Judge quick start
 
@@ -55,20 +58,20 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [OpenPatch extension v0.3.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.3.0.zip) — load-unpacked Chrome extension
-- [OpenPatch Codex plugin v0.2.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.2.0.zip) — validated authoring plugin
-- Extension SHA-256: `1D04C2C87D9AB5B8813B6DA4AA9315E12C3D8BA737A95D5DEC3C0910470B6437`
-- Plugin SHA-256: `ADDD9D9AFAB4CF9FB70DA19BBF6B170E0DA015B762EE333AF9051605D0054DB1`
+- [OpenPatch extension v0.4.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.4.0.zip) — load-unpacked Chrome extension
+- [OpenPatch Codex plugin v0.3.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.3.0.zip) — validated authoring plugin
+- Extension SHA-256: `9FA8855E3C4154D8EDDEDB08A6E1CC0027B2114B0E42A70F49AD235A8EDE6A39`
+- Plugin SHA-256: `02F08D07A3130F6241189F75123C616504C13970B4C973B5A6358EFAAC9C3D3E`
 
 Then:
 
 1. Download and unzip the public extension artifact above.
 2. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select the unzipped folder.
-3. Open [the live CivicApply demo](https://openpatch-tau.vercel.app/demo/).
-4. Try the broken form at a narrow viewport, enter sample data, and choose **Simulate timeout now**.
-5. Open the OpenPatch extension and enable **CivicApply: accessible & autosaved**.
-6. Enter sample data again, simulate another timeout, and watch the patch restore it.
-7. Submit an invalid email to see the accessible error, then focus a progress step and use the arrow keys.
+3. Open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/).
+4. Observe twelve services and no search or filters—the directory works, but cannot express a person’s combined needs.
+5. Open the OpenPatch extension and enable **MetroCare: personal service navigator**.
+6. Choose **Wheelchair access**, **Urdu**, and **Accepting new patients**. The directory reduces to Harbor Family Clinic and announces `1 of 12 services match`.
+7. Reload to see the preferences restored locally; press `/` to focus search. The automated test also proves those interactions make zero network requests.
 
 No account, test credential, API key, or external service is required.
 
@@ -121,15 +124,15 @@ npm run verify
 
 Current results:
 
-- 21/21 unit, policy, registry, preflight, runtime, and privacy tests pass
-- 6/6 desktop and 390px browser tests pass
-- 2/2 production Manifest V3 extension integration tests pass with a dynamically installed patch and the real public demo domain
-- 19/19 constrained operations apply
-- 10/10 publication assertions pass
+- 31/31 unit, policy, registry, preflight, runtime, and privacy tests pass
+- 10/10 desktop and 390px browser journeys pass
+- 4/4 Manifest V3 extension integration tests pass with a dynamically installed patch plus both real public demo domains
+- 10/10 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
+- 8/8 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy
 - Production site and Manifest V3 extension build successfully
 - Public `/registry/index.json` and versioned patch download are generated with a SHA-256 receipt
 
-Browser tests prove both states: the original portal must be broken, and the patched portal must fit the viewport, restore a local draft after reload, expose specific accessible errors, and support arrow-key focus movement.
+Browser tests prove both product claims: MetroCare starts as a realistic but filterless directory, then privately combines access needs, persists preferences, announces results, supports the keyboard, fits mobile, and emits no interaction requests; CivicApply still proves layout repair, local draft restoration, specific accessible errors, and arrow-key focus movement.
 
 ## Repository map
 
@@ -139,7 +142,7 @@ plugins/openpatch/               Distributable Codex plugin package
 src/core/                      DSL types, domain matcher, validator, runtime
 src/extension/                 Manifest V3 content script, popup, service worker
 src/registry/patches/          Versioned community patches
-src/site/                      Registry landing page and CivicApply demo
+src/site/                      Registry landing page, MetroCare flagship, and CivicApply demo
 tests/                         Security, runtime, and browser tests
 scripts/                       Build, validation, and preview tooling
 ```

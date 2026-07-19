@@ -139,6 +139,40 @@ Add roving tabindex and arrow-key focus movement within one container.
 
 Capability: `keyboard-navigation`.
 
+### `collectionFilter`
+
+Add a trusted, accessible search-and-filter navigator to one existing collection. The runtime builds native controls itself; patches cannot provide HTML or event code. Search and filter values are matched only against explicitly declared `data-*` attributes on existing items—never page text, form values, cookies, or network data.
+
+```json
+{
+  "id": "service-navigator",
+  "type": "collectionFilter",
+  "selector": "#service-directory",
+  "items": ".service-card",
+  "title": "Find a service that fits you",
+  "description": "Combine access and language needs privately on this device.",
+  "search": {
+    "label": "Search services",
+    "placeholder": "Try dentist or family doctor",
+    "attributes": ["data-service-name", "data-keywords"]
+  },
+  "filters": [
+    {
+      "id": "access",
+      "label": "Access need",
+      "attribute": "data-access",
+      "options": [
+        { "value": "wheelchair", "label": "Wheelchair access" },
+        { "value": "telehealth", "label": "Telehealth" }
+      ]
+    }
+  ],
+  "persist": { "key": "service-needs-v1", "ttlMinutes": 1440 }
+}
+```
+
+Capabilities: `content-filter`, `accessibility`, and `keyboard-navigation`; also `local-storage` when `persist` is present. The collection selector must match exactly one element, every searchable field and facet must name a safe `data-*` attribute, filters expire within seven days, and the runtime caps the collection at 100 items. `/` focuses search and Escape clears it.
+
 ## Assertions
 
 Use `exists` to lock selector counts and `attribute` to verify repaired semantics.

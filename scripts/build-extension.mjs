@@ -26,10 +26,7 @@ await Promise.all([
   cp(resolve(root, "src/extension/manifest.json"), resolve(outdir, "manifest.json")),
   cp(resolve(root, "src/extension/popup.html"), resolve(outdir, "popup.html")),
   cp(resolve(root, "src/extension/popup.css"), resolve(outdir, "popup.css")),
-  cp(
-    resolve(root, "src/registry/patches/civic-apply.openpatch.json"),
-    resolve(outdir, "patches/civic-apply.openpatch.json")
-  )
+  cp(resolve(root, "src/registry/patches"), resolve(outdir, "patches"), { recursive: true })
 ]);
 
 console.log(`Built unpacked extension at ${outdir}`);

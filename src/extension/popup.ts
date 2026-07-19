@@ -39,9 +39,10 @@ let pendingImport: { patch: OpenPatch; hash: string; preflight: SelectorPrefligh
 const CAPABILITY_LABELS: Record<string, string> = {
   layout: "Change allowlisted layout and visual properties",
   accessibility: "Add ARIA and safe interaction attributes",
-  "local-storage": "Save non-sensitive form fields on this device",
+  "local-storage": "Store bounded non-sensitive preferences or form drafts on this device",
   "keyboard-navigation": "Add arrow-key navigation within matched controls",
   validation: "Add local, accessible field validation",
+  "content-filter": "Filter existing items using only declared data attributes",
   "hide-elements": "Hide explicitly matched obstructive elements",
   reorganize: "Move matched elements within the same page"
 };
@@ -49,9 +50,10 @@ const CAPABILITY_LABELS: Record<string, string> = {
 const CAPABILITY_CHIPS: Record<string, string> = {
   layout: "Responsive layout",
   accessibility: "Accessibility",
-  "local-storage": "Local autosave",
+  "local-storage": "Local preferences",
   "keyboard-navigation": "Keyboard controls",
   validation: "Accessible errors",
+  "content-filter": "Private filters",
   "hide-elements": "Remove obstruction",
   reorganize: "Simplified workflow"
 };

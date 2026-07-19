@@ -1,6 +1,6 @@
 {
   "name": "openpatch",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "A safe, community repair layer for websites users do not own.",
@@ -17,7 +17,7 @@
     "test:extension": "npm run build:extension && playwright test --config playwright.extension.config.ts",
     "validate:patch": "tsx scripts/validate-patch.ts",
     "check": "tsc --noEmit && npm test && npm run build",
-    "verify": "npm run check && npm run validate:patch -- src/registry/patches/civic-apply.openpatch.json src/site/demo/index.html && npm run test:browser && npm run test:extension"
+    "verify": "npm run check && npm run validate:patch -- src/registry/patches/civic-apply.openpatch.json src/site/demo/index.html && npm run validate:patch -- src/registry/patches/metrocare-service-navigator.openpatch.json src/site/care/index.html && npm run test:browser && npm run test:extension"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

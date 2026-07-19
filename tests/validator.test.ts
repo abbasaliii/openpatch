@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import civicPatch from "../src/registry/patches/civic-apply.openpatch.json";
+import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
 import { patchMatchesUrl } from "../src/core/matcher";
 import type { OpenPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
@@ -9,6 +10,32 @@ describe("OpenPatch policy validator", () => {
   it("accepts the bundled CivicApply repair", () => {
     const result = validatePatch(civicPatch);
     expect(result.ok).toBe(true);
+  });
+
+  it("accepts the bounded MetroCare feature repair", () => {
+    expect(validatePatch(metroCarePatch).ok).toBe(true);
+  });
+
+  it("blocks collection filters from reading page text or arbitrary attributes", () => {
+    const unsafe = structuredClone(metroCarePatch) as typeof metroCarePatch;
+    const navigator = unsafe.operations.find((operation) => operation.type === "collectionFilter") as {
+      search: { attributes: string[] };
+      filters: Array<{ attribute: string }>;
+    };
+    navigator.search.attributes = ["textContent"];
+    navigator.filters[0].attribute = "onclick";
+    const result = validatePatch(unsafe);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.issues.filter((issue) => issue.message.includes("data-*")).length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("requires collection-filter preferences to expire", () => {
+    const unsafe = structuredClone(metroCarePatch) as typeof metroCarePatch;
+    const navigator = unsafe.operations.find((operation) => operation.type === "collectionFilter") as { persist: { ttlMinutes: number } };
+    navigator.persist.ttlMinutes = 10081;
+    const result = validatePatch(unsafe);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.issues.some((issue) => issue.path.endsWith("persist.ttlMinutes"))).toBe(true);
   });
 
   it("rejects arbitrary script operations", () => {

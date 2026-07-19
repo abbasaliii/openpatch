@@ -16,6 +16,11 @@ export function preflightPatchOnDocument(candidate: OpenPatch): SelectorPrefligh
       const matched = containers.length === 1 ? count(operation.items, containers[0]) : containers.length;
       return { id: operation.id, matched, healthy: containers.length === 1 && matched > 0 };
     }
+    if (operation.type === "collectionFilter") {
+      const containers = document.querySelectorAll(operation.selector);
+      const matched = containers.length === 1 ? count(operation.items, containers[0]) : containers.length;
+      return { id: operation.id, matched, healthy: containers.length === 1 && matched > 0 };
+    }
     const matched = count(operation.selector);
     if (operation.type === "move") return { id: operation.id, matched, healthy: matched > 0 && count(operation.target) === 1 };
     if (operation.type === "persistForm") {
