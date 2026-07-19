@@ -2,7 +2,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { applyPatch } from "../src/core/engine";
 import civicPatchJson from "../src/registry/patches/civic-apply.openpatch.json";
+import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
 import type { OpenPatch } from "../src/core/types";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 const fixture = `
   <div class="survey-wall">Survey</div>
@@ -83,5 +86,70 @@ describe("constrained patch runtime", () => {
     buttons[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
     expect(document.activeElement).toBe(buttons[1]);
     expect(buttons[1].tabIndex).toBe(0);
+  });
+});
+
+const careFixture = readFileSync(resolve(import.meta.dirname, "../src/site/care/index.html"), "utf8");
+
+describe("safe collection navigator runtime", () => {
+  beforeEach(() => {
+    const parsed = new DOMParser().parseFromString(careFixture, "text/html");
+    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.className = "";
+    document.head.innerHTML = parsed.head.innerHTML;
+    document.body.innerHTML = parsed.body.innerHTML;
+    localStorage.clear();
+  });
+
+  it("adds accessible search and facets without patch-authored HTML or script", () => {
+    const health = applyPatch(metroCarePatchJson as OpenPatch);
+    expect(health.applied).toBe(true);
+    expect(health.healthy).toBe(10);
+    expect(document.querySelectorAll(".openpatch-navigator input[type='search']")).toHaveLength(1);
+    expect(document.querySelectorAll(".openpatch-navigator select")).toHaveLength(4);
+    expect(document.querySelector(".openpatch-navigator__status")?.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("combines real access needs into one matching service", () => {
+    applyPatch(metroCarePatchJson as OpenPatch);
+    const select = (id: string, value: string) => {
+      const element = document.querySelector<HTMLSelectElement>(`select[id$='-${id}']`)!;
+      element.value = value;
+      element.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+    select("access", "wheelchair");
+    select("language", "urdu");
+    select("availability", "new-patients");
+    const visible = [...document.querySelectorAll<HTMLElement>(".care-service")].filter((item) => !item.hidden);
+    expect(visible).toHaveLength(1);
+    expect(visible[0].dataset.serviceName).toBe("Harbor Family Clinic");
+    expect(document.querySelector(".openpatch-navigator__status")?.textContent).toBe("1 of 12 services match");
+  });
+
+  it("keeps access preferences local and restores them within the TTL", () => {
+    applyPatch(metroCarePatchJson as OpenPatch);
+    const language = document.querySelector<HTMLSelectElement>("select[id$='-language']")!;
+    language.value = "urdu";
+    language.dispatchEvent(new Event("change", { bubbles: true }));
+    expect([...Object.values(localStorage)].join(" ")).toContain("urdu");
+
+    const parsed = new DOMParser().parseFromString(careFixture, "text/html");
+    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.className = "";
+    document.body.innerHTML = parsed.body.innerHTML;
+    applyPatch(metroCarePatchJson as OpenPatch);
+    expect(document.querySelector<HTMLSelectElement>("select[id$='-language']")?.value).toBe("urdu");
+  });
+
+  it("supports slash-to-search and Escape-to-clear", () => {
+    applyPatch(metroCarePatchJson as OpenPatch);
+    const search = document.querySelector<HTMLInputElement>(".openpatch-navigator input[type='search']")!;
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "/", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(search);
+    search.value = "therapy";
+    search.dispatchEvent(new Event("input", { bubbles: true }));
+    search.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(search.value).toBe("");
+    expect(document.querySelector(".openpatch-navigator__status")?.textContent).toBe("12 of 12 services match");
   });
 });

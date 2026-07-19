@@ -4,7 +4,7 @@
 
 **Project name:** OpenPatch
 
-**Elevator pitch:** A safe public repair layer for the web—author domain-scoped fixes with Codex, then let anyone install them with one click, without AI or an account.
+**Elevator pitch:** A public feature layer for the web: one person asks Codex for the missing capability they need, Codex authors and tests a safe domain-scoped patch, and everyone else installs it without AI or an account.
 
 **Recommended track:** Apps for Your Life
 
@@ -12,11 +12,12 @@
 
 - Product and registry: https://openpatch-tau.vercel.app/
 - Source repository: https://github.com/abbasaliii/openpatch
-- Live no-login demo: https://openpatch-tau.vercel.app/demo/
-- Chrome extension: https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.3.0.zip
-- Codex authoring plugin: https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.2.0.zip
+- Flagship no-login demo: https://openpatch-tau.vercel.app/care/
+- Secondary CivicApply demo: https://openpatch-tau.vercel.app/demo/
+- Chrome extension: https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.4.0.zip
+- Codex authoring plugin: https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.3.0.zip
 - Machine-readable registry: https://openpatch-tau.vercel.app/registry/index.json
-- Versioned community patch: https://openpatch-tau.vercel.app/registry/patches/civic-apply.openpatch.json
+- Flagship community patch: https://openpatch-tau.vercel.app/registry/patches/metrocare-service-navigator.openpatch.json
 
 The authoring workflow is technical, but the product's end user is a citizen, student, patient, shopper, or worker who needs an everyday website to function. Position OpenPatch as consumer agency over shared digital infrastructure.
 
@@ -24,10 +25,10 @@ The authoring workflow is technical, but the product's end user is a citizen, st
 
 | Criterion | Evidence judges can see | Demo moment |
 | --- | --- | --- |
-| Technological Implementation | GPT‑5.6/Codex authoring workflow, constrained typed DSL, fail-closed validator, privacy-safe Repair Brief, per-operation health, SHA-256 registry receipt, unit and browser tests | Paste the Repair Brief into Codex, show the generated patch, then flash the green validator and test receipts |
-| Design | Coherent extension-to-Codex-to-registry flow, plain-language permissions, visible health, polished responsive landing page, dramatic exact-viewport before/after | Enable one repair and immediately remove overflow, obstruction, lost progress, generic errors, and broken keyboard behavior |
-| Potential Impact | Government, education, health, marketplace, and legacy-tool workflows; AI cost is paid once by the author while every downstream user needs no AI, account, or API key | Lose an unfinished benefits application before the repair; restore it after the repair |
-| Quality of the Idea | A public functional repair layer—not a theme editor and not an arbitrary userscript marketplace—with reusable community patches and breakage receipts | End on “When owners won’t fix it, users still can.” |
+| Technological Implementation | GPT‑5.6/Codex authoring workflow, eight-operation typed DSL, trusted filter builder, fail-closed validator, privacy-safe Repair Brief, per-operation health, SHA-256 registry receipt, and network-silence tests | Show `collectionFilter` reading only declared `data-*` attributes, then flash 10/10 operations, 8/8 assertions, and 31/31 safety tests |
+| Design | Coherent extension-to-Codex-to-registry flow, plain-language permissions, polished navigator UI, native controls, ARIA result announcements, keyboard shortcut, mobile layout, and a credible unpatched state | Select wheelchair access + Urdu + accepting new patients and watch twelve services become one understandable choice |
+| Potential Impact | Government, education, health, marketplace, and legacy-tool workflows; AI cost is paid once by the author while every downstream user needs no AI, account, or API key | A person expresses a real combination of access needs the original healthcare directory never supported |
+| Quality of the Idea | A public functional feature layer—not a theme editor and not an arbitrary userscript marketplace—with reusable patches and breakage receipts | End on “When a site won’t add it, users still can.” |
 
 The tie-breaker starts with Technological Implementation, so the video should show the real Codex workflow and test receipts—not only the polished UI.
 
@@ -35,17 +36,17 @@ The tie-breaker starts with Technological Implementation, so the video should sh
 
 ### Inspiration
 
-People are forced to use websites they did not choose and cannot change: government forms, university portals, healthcare services, marketplaces, and legacy work tools. When those sites lose progress, break on mobile, or regress in accessibility, the usual answer is “wait for the owner.” OpenPatch gives users another answer.
+People are forced to use websites they did not choose and cannot change: government forms, university portals, healthcare directories, marketplaces, and legacy work tools. Those sites do not need to be obviously broken to fail someone. A directory can work exactly as designed and still omit the filter an access need requires. The usual answer is “wait for the owner.” OpenPatch gives users another answer.
 
 ### What it does
 
 OpenPatch is a browser extension, a constrained transformation language, an installable Codex patch-authoring plugin, and a machine-readable public repair registry.
 
-A user opens a broken page and describes the problem to Codex. Codex inspects the live DOM and screenshots, maps the complaint to safe built-in operations, validates every selector and permission, and runs browser behavior tests. The resulting versioned patch runs only on its declared host and paths. Other users download its `.openpatch.json`; the extension independently validates policy, checks the current URL, preflights every live selector, shows a SHA-256 permission receipt, and requests Chrome access only for the declared domains. No AI, account, or API key is needed to install it.
+A user opens a page and describes the capability they need to Codex. Codex inspects the live DOM and screenshots, maps the request to safe built-in operations, validates every selector and permission, and runs browser behavior tests. The resulting versioned patch runs only on its declared host and paths. Other users download its `.openpatch.json`; the extension independently validates policy, checks the current URL, preflights every live selector, shows a SHA-256 permission receipt, and requests Chrome access only for the declared domains. No AI, account, or API key is needed to install it.
 
 If no patch exists, the extension creates a privacy-safe Repair Brief that the user pastes into Codex. The brief includes only structural signals and bounded selector candidates—never field values, cookies, storage, query strings, or page text.
 
-Our CivicApply demo repairs a public-benefits form with 19 declarative operations. It fixes the 390px layout, preserves unfinished progress locally, restores a draft after a simulated session reset, adds accessible validation and arrow-key navigation, moves help into the workflow, and removes a blocking survey.
+Our flagship MetroCare demo starts with a realistic healthcare directory: twelve legitimate service cards, but no way to combine access, language, availability, and type-of-care needs. A ten-operation patch adds a trusted service navigator, native accessible controls, ARIA live result counts, `/` and Escape shortcuts, locally expiring preferences, and mobile refinements. Choosing wheelchair access + Urdu + accepting new patients yields one matching clinic. The interaction emits zero network requests. CivicApply remains as a second verified patch for form persistence, accessibility, and mobile repair.
 
 ### How we built it
 
@@ -53,26 +54,28 @@ Our CivicApply demo repairs a public-benefits form with 19 declarative operation
 - Safe community import with exact-domain Chrome permissions, live selector preflight, local versioning, and fail-closed runtime registration
 - TypeScript transformation DSL and runtime
 - Fail-closed security validator with CSS, attribute, selector, scope, and capability allowlists
+- Trusted collection-filter runtime that reads only declared `data-*` attributes and accepts no patch-authored HTML or event code
 - Official `.agents/skills` `$openpatch-author` workflow plus a distributable Codex plugin
 - Generated `/registry/index.json` with a versioned patch download and SHA-256 receipt
 - JSDOM unit tests plus Playwright desktop and 390px before/after tests
-- Vite landing page and intentionally broken CivicApply test portal
+- Vite landing page, realistic MetroCare missing-feature demo, and CivicApply repair demo
 
 GPT‑5.6 operates through Codex while a patch is authored and tested. The installed extension contains no model call and needs no OpenAI API key.
 
 ### Challenges
 
-The hardest constraint was making repairs useful without turning the product into an arbitrary-code marketplace. We modeled every repair as a typed built-in, rejected unsafe CSS and attributes, excluded sensitive form fields at runtime, required exact scope and selector counts, and made browser tests prove user-visible behavior.
+The hardest constraint was making repairs powerful enough to add a missing feature without turning the product into an arbitrary-code marketplace. `collectionFilter` does not accept HTML, JavaScript, callbacks, or network URLs. It can read only named `data-*` attributes from an exact collection, builds native controls inside trusted runtime code, caps its item count, announces results accessibly, and expires local preferences.
 
 Responsive testing also exposed a subtle issue: device emulation can clamp document measurements even when a fixed-width application shell is visibly broken. We changed the test to assert the offending element's geometry directly and kept a strict post-patch viewport-fit assertion.
 
 ### Accomplishments
 
-- 19/19 operations healthy
-- 21/21 security, registry, preflight, runtime, and privacy tests passing
-- 2/2 production Manifest V3 extension integration tests passing with a dynamically installed community patch and the real public demo domain
-- 6/6 desktop and mobile browser tests passing
-- 10/10 publishing assertions passing
+- 10/10 flagship feature operations and 8/8 publishing assertions healthy
+- 19/19 CivicApply repair operations and 10/10 assertions remain healthy
+- 31/31 security, registry, preflight, runtime, and privacy tests passing
+- 4/4 Manifest V3 extension integration tests passing, including both real public demo domains
+- 10/10 desktop and 390px browser journeys passing
+- Browser proof that filter interactions emit zero network requests
 - A working no-account, no-API-key extension flow
 - A validated Codex skill that turns complaints into test-gated patches
 
@@ -82,19 +85,19 @@ The safest repair is the smallest operation that makes an acceptance criterion o
 
 ### What's next
 
-Publisher signing and moderation, automatic remote registry discovery and revocation, scheduled breakage checks, community review, and additional built-ins such as declarative filtering and reading modes.
+Publisher signing and moderation, automatic remote registry discovery and revocation, scheduled breakage checks, community review, and additional built-ins such as task-focused reading modes and accessible table transformations.
 
 ## Judge testing instructions
 
-1. Download https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.3.0.zip.
+1. Download https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.4.0.zip.
 2. Unzip it, open `chrome://extensions`, enable Developer mode, and load the folder unpacked.
-3. Open https://openpatch-tau.vercel.app/demo/.
-4. At 390px, observe horizontal overflow and the blocking survey.
-5. Enter synthetic values and choose **Simulate timeout now**; observe the lost fields.
-6. Open the extension and enable the verified CivicApply repair.
-7. Repeat the timeout; observe the restored draft.
-8. Enter an invalid email and continue; inspect the specific visible and ARIA-linked error.
-9. Focus a progress step and use Left/Right arrows.
+3. Open https://openpatch-tau.vercel.app/care/.
+4. Observe twelve service cards and no search or filters. The directory is functional, but a person must inspect every card.
+5. Open the extension and enable **MetroCare: personal service navigator**.
+6. Choose **Wheelchair access**, **Urdu**, and **Accepting new patients**.
+7. Observe one result—Harbor Family Clinic—and the live `1 of 12 services match` announcement.
+8. Reload and see the preferences restored on-device; press `/` to focus search and Escape to clear it.
+9. For the second proof, open `/demo/` and enable CivicApply to test draft restoration and accessible validation.
 
 No credentials or API key are needed.
 
@@ -102,32 +105,32 @@ No credentials or API key are needed.
 
 **0:00–0:15 — Hook**
 
-“The software that matters most is often software we do not own. When a government form breaks on mobile or loses an application, users normally cannot fix it. OpenPatch is a public repair layer for the web.”
+“A website does not have to be broken to fail you. Sometimes the feature you need simply does not exist—and the software that matters most is software you cannot change. OpenPatch is the public feature layer for the web.”
 
 **0:15–0:48 — Show the pain**
 
-Open CivicApply at 390px. Pan across the overflowing form, show the survey covering controls, type a name and email, simulate a timeout, and show the cleared fields. Submit once to show the generic `FORM_12` error.
+Open MetroCare. Show twelve services and the line explaining that the original portal requires people to inspect every card. Ask a concrete question: “Which clinic is wheelchair accessible, supports Urdu, and accepts new patients?” There is no way to answer it in the original interface.
 
 **0:48–1:25 — Authoring with Codex**
 
-On a page without a repair, type the complaint in the extension and choose **Copy Codex repair brief**. Flash the privacy receipt, paste the brief into Codex, then show `$openpatch-author`, live DOM/screenshot inspection, and the JSON patch. Say: “GPT‑5.6 through Codex authors only these constrained operations. The brief excludes private values, and there is no script, fetch, HTML injection, or API key in the extension.” Flash the validator output: policy passed, 19/19 operations, 10/10 assertions, SHA-256 receipt.
+On a page without a repair, type the request in the extension and choose **Copy Codex repair brief**. Flash the privacy receipt, paste the brief into Codex, then show `$openpatch-author`, DOM/screenshot inspection, and `collectionFilter`. Say: “GPT‑5.6 through Codex can add a real feature, but the patch can read only declared `data-*` attributes. It cannot contain script, HTML, fetch, cookies, or page-text extraction.” Flash: policy passed, 10/10 operations, 8/8 assertions, SHA-256 receipt.
 
 **1:25–2:08 — Visible repair**
 
-Open the extension popup. Point out the exact website, policy-checked patch, permission list, and selector health. Enable the patch. Show the single-column layout and removed survey. Fill the form, simulate timeout, and show “Draft restored.” Enter an invalid email and show the specific accessible message. Use arrow keys on progress steps.
+Open the extension popup. Point out exact-domain scope, policy check, capabilities, and selector health. Enable the patch. Select wheelchair access, Urdu, and accepting new patients: twelve cards become one. Reload to prove the preferences stay local, press `/` to focus search, and say: “Our browser test proves these interactions make zero network requests.”
 
 **2:08–2:32 — Community loop**
 
-Show the registry landing page and download the safe patch. On its target page, choose it in OpenPatch and flash the independent policy, scope, 19/19 live-selector, and SHA-256 receipt before installation. “The AI is only needed once, when a patch is authored. Everyone else gets the repair without AI, an account, or an API key.”
+Show the registry with two repairs and download the MetroCare patch. Flash the independent policy, scope, 10/10 live-selector, and SHA-256 receipt before installation. Briefly show CivicApply as the second proof. “The AI is needed once when a feature is authored. Everyone else gets it without AI, an account, or an API key.”
 
 **2:32–2:45 — Close**
 
-“Website owner will not fix it? Users can. OpenPatch gives people agency over the software they are forced to use. Fix the web you have.”
+“When a site will not add the feature people need, users still can. OpenPatch gives communities agency over the software they are forced to use. Fix the web you have.”
 
 ## Submission checklist
 
-- [x] Deploy the landing page and CivicApply demo to a stable public URL
-- [x] Upload `release/openpatch-extension-v0.3.0.zip` and `release/openpatch-codex-plugin-v0.2.0.zip` to a stable public download
+- [x] Deploy the landing page, MetroCare flagship, and CivicApply demo to a stable public URL
+- [x] Upload `release/openpatch-extension-v0.4.0.zip` and `release/openpatch-codex-plugin-v0.3.0.zip` to a stable public download
 - [x] Attach the validated Codex plugin package and mention the repo-discovered skill path
 - [x] Make the repository public under the MIT license, or share private access with the required judge accounts
 - [ ] Add repository URL to Devpost
@@ -135,5 +138,5 @@ Show the registry landing page and download the safe patch. On its target page, 
 - [ ] Add YouTube URL to Devpost
 - [ ] Run `/feedback` in the primary Codex build thread and add the Session ID
 - [x] Add the public demo URL and exact no-login testing instructions
-- [ ] Add project thumbnail and before/after screenshots from `dist/previews`
+- [x] Prepare project thumbnail and same-viewport MetroCare before/after screenshots in `submission-assets`
 - [ ] Complete all five Devpost steps and submit before July 21, 2026 at 5:00 PM Pacific

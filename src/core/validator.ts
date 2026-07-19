@@ -12,6 +12,7 @@ const CAPABILITIES = new Set<PatchCapability>([
   "local-storage",
   "keyboard-navigation",
   "validation",
+  "content-filter",
   "hide-elements",
   "reorganize"
 ]);
@@ -85,6 +86,8 @@ const SAFE_PATH = /^\/[a-z0-9._~!$&'()+,;=:@%/-]*\*?$/i;
 const UNSAFE_VALUE = /(javascript\s*:|expression\s*\(|url\s*\(|@import|<\/?script|onerror\s*=|onload\s*=)/i;
 const UNSAFE_SELECTOR = /(^|[\s,>+~])(?:html|head|body|\*)(?:$|[\s,>+~.#[:])|:root\b|:(?:is|where|not|has)\([^)]*\*/i;
 const UNSAFE_PATTERN = /(\\[1-9]|\(\?[=!<]|\([^)]*[+*][^)]*\)[+*?{])/;
+const SAFE_DATA_ATTRIBUTE = /^data-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const SAFE_TOKEN = /^[a-z0-9][a-z0-9_-]{0,39}$/i;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -120,13 +123,13 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
     issues.push({ path: `${base}.id`, message: "must use 3-80 lowercase letters, numbers, dots, dashes, or underscores" });
   }
   const type = value.type;
-  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation"];
+  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter"];
   if (typeof type !== "string" || !known.includes(type)) {
     issues.push({ path: `${base}.type`, message: "is not an allowed transformation" });
     return;
   }
 
-  if (["style", "attributes", "hide", "move", "persistForm", "validation"].includes(type)) {
+  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter"].includes(type)) {
     checkSelector(value.selector, `${base}.selector`, issues);
   }
 
@@ -242,6 +245,67 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
       issues.push({ path: `${base}.orientation`, message: "must be horizontal or vertical" });
     }
   }
+
+  if (type === "collectionFilter") {
+    checkSelector(value.items, `${base}.items`, issues);
+    if (!text(value.title, 80)) issues.push({ path: `${base}.title`, message: "must be a concise navigator title" });
+    if (!text(value.description, 180)) issues.push({ path: `${base}.description`, message: "must explain what the navigator changes" });
+    if (!isRecord(value.search)) {
+      issues.push({ path: `${base}.search`, message: "must define an accessible search control" });
+    } else {
+      if (!text(value.search.label, 80)) issues.push({ path: `${base}.search.label`, message: "must label the search control" });
+      if (value.search.placeholder !== undefined && !text(value.search.placeholder, 100)) {
+        issues.push({ path: `${base}.search.placeholder`, message: "must be concise when provided" });
+      }
+      if (!Array.isArray(value.search.attributes) || value.search.attributes.length === 0 || value.search.attributes.length > 6) {
+        issues.push({ path: `${base}.search.attributes`, message: "must list 1-6 data attributes" });
+      } else {
+        value.search.attributes.forEach((attribute, attributeIndex) => {
+          if (typeof attribute !== "string" || !SAFE_DATA_ATTRIBUTE.test(attribute)) {
+            issues.push({ path: `${base}.search.attributes[${attributeIndex}]`, message: "must be a safe data-* attribute" });
+          }
+        });
+      }
+    }
+    if (!Array.isArray(value.filters) || value.filters.length === 0 || value.filters.length > 6) {
+      issues.push({ path: `${base}.filters`, message: "must define 1-6 safe filters" });
+    } else {
+      value.filters.forEach((filter, filterIndex) => {
+        const filterPath = `${base}.filters[${filterIndex}]`;
+        if (!isRecord(filter)) {
+          issues.push({ path: filterPath, message: "must be an object" });
+          return;
+        }
+        if (!text(filter.id, 40) || !SAFE_TOKEN.test(String(filter.id))) issues.push({ path: `${filterPath}.id`, message: "must be a stable filter id" });
+        if (!text(filter.label, 80)) issues.push({ path: `${filterPath}.label`, message: "must label the filter" });
+        if (typeof filter.attribute !== "string" || !SAFE_DATA_ATTRIBUTE.test(filter.attribute)) {
+          issues.push({ path: `${filterPath}.attribute`, message: "must read one safe data-* attribute" });
+        }
+        if (!Array.isArray(filter.options) || filter.options.length === 0 || filter.options.length > 12) {
+          issues.push({ path: `${filterPath}.options`, message: "must define 1-12 options" });
+          return;
+        }
+        filter.options.forEach((option, optionIndex) => {
+          const optionPath = `${filterPath}.options[${optionIndex}]`;
+          if (!isRecord(option) || !text(option.label, 60) || !text(option.value, 40) || !SAFE_TOKEN.test(String(option.value))) {
+            issues.push({ path: optionPath, message: "must contain a safe value and visible label" });
+          }
+        });
+      });
+    }
+    if (value.persist !== undefined) {
+      if (!isRecord(value.persist)) {
+        issues.push({ path: `${base}.persist`, message: "must define a bounded local preference receipt" });
+      } else {
+        if (!text(value.persist.key, 80) || !/^[a-z0-9._-]+$/i.test(String(value.persist.key))) {
+          issues.push({ path: `${base}.persist.key`, message: "must be a stable storage key" });
+        }
+        if (!Number.isInteger(value.persist.ttlMinutes) || Number(value.persist.ttlMinutes) < 5 || Number(value.persist.ttlMinutes) > 10080) {
+          issues.push({ path: `${base}.persist.ttlMinutes`, message: "must expire between 5 minutes and 7 days" });
+        }
+      }
+    }
+  }
 }
 
 export function validatePatch(value: unknown): ValidationResult {
@@ -339,6 +403,12 @@ export function requiredCapabilities(operations: PatchOperation[]): PatchCapabil
     if (operation.type === "persistForm") result.add("local-storage");
     if (operation.type === "validation") result.add("validation");
     if (operation.type === "keyboardNavigation") result.add("keyboard-navigation");
+    if (operation.type === "collectionFilter") {
+      result.add("content-filter");
+      result.add("accessibility");
+      result.add("keyboard-navigation");
+      if (operation.persist) result.add("local-storage");
+    }
   }
   return [...result];
 }

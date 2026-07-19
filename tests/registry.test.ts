@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import civicPatchJson from "../src/registry/patches/civic-apply.openpatch.json";
+import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
 import {
   buildPatchCatalog,
   comparePatchVersions,
@@ -10,6 +11,7 @@ import {
 import type { OpenPatch } from "../src/core/types";
 
 const civicPatch = civicPatchJson as OpenPatch;
+const metroCarePatch = metroCarePatchJson as OpenPatch;
 
 describe("community patch catalog", () => {
   it("loads validated local patches and rejects malformed storage entries", () => {
@@ -37,5 +39,15 @@ describe("community patch catalog", () => {
     expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("http://localhost/account"))).toHaveLength(0);
     expect(contentScriptMatches([civicPatch])).toEqual(["*://openpatch-tau.vercel.app/demo/*", "http://127.0.0.1/demo/*", "http://localhost/demo/*"]);
     expect(permissionOrigins(civicPatch)).toEqual(["*://openpatch-tau.vercel.app/*", "http://127.0.0.1/*", "http://localhost/*"]);
+  });
+
+  it("discovers the feature repair only on the MetroCare route", () => {
+    const catalog = [
+      { patch: civicPatch, source: "bundled" as const },
+      { patch: metroCarePatch, source: "bundled" as const }
+    ];
+    expect(matchingCatalogPatches(catalog, new URL("https://openpatch-tau.vercel.app/care/"))).toHaveLength(1);
+    expect(matchingCatalogPatches(catalog, new URL("https://openpatch-tau.vercel.app/demo/"))).toHaveLength(1);
+    expect(contentScriptMatches([civicPatch, metroCarePatch])).toContain("*://openpatch-tau.vercel.app/care/*");
   });
 });

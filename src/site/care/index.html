@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A fictional healthcare service directory used to demonstrate an OpenPatch community feature repair." />
+    <title>MetroCare Services Directory · OpenPatch demo</title>
+    <link rel="stylesheet" href="./care.css" />
+  </head>
+  <body>
+    <div class="demo-ribbon">
+      <a href="/">← OpenPatch</a>
+      <span>Fictional public demo</span>
+      <strong>Original directory has no search or filters</strong>
+    </div>
+
+    <header class="care-header">
+      <a class="care-brand" href="#top" aria-label="MetroCare home">
+        <span aria-hidden="true">M+</span>
+        <span><strong>MetroCare</strong><small>Community health network</small></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#services">Services</a>
+        <a href="#coverage">Coverage</a>
+        <a href="#help">Get help</a>
+      </nav>
+      <button type="button">My care</button>
+    </header>
+
+    <main id="top">
+      <section class="care-hero" aria-labelledby="care-title">
+        <div>
+          <span class="care-kicker">Community services directory</span>
+          <h1 id="care-title">Find care that fits your life.</h1>
+          <p>Browse local clinics and support programs. Availability and access information is updated by each provider.</p>
+        </div>
+        <div class="care-hero-proof" aria-label="Directory facts">
+          <strong>12</strong><span>programs across one regional network</span>
+        </div>
+      </section>
+
+      <div class="care-advisory" role="note">
+        <strong>Need urgent help?</strong>
+        <span>Call local emergency services for a life-threatening emergency. Directory listings are not medical advice.</span>
+      </div>
+
+      <div class="care-shell">
+        <div class="care-layout">
+          <aside class="care-sidebar" aria-label="Directory navigation">
+            <section>
+              <span class="side-label">Browse directory</span>
+              <a href="#services" class="active">All services <b>12</b></a>
+              <a href="#services">Primary care <b>3</b></a>
+              <a href="#services">Mental health <b>3</b></a>
+              <a href="#services">Dental care <b>2</b></a>
+              <a href="#services">Pharmacy support <b>2</b></a>
+              <a href="#services">Family support <b>2</b></a>
+            </section>
+            <section id="coverage">
+              <span class="side-label">Before you visit</span>
+              <a href="#coverage">Coverage and costs</a>
+              <a href="#coverage">Language services</a>
+              <a href="#coverage">Accessibility requests</a>
+            </section>
+            <section class="care-community-promo">
+              <span>MetroCare newsletter</span>
+              <strong>Monthly community health updates</strong>
+              <button type="button">Sign up</button>
+            </section>
+          </aside>
+
+          <section class="care-main" id="services">
+            <div class="care-intro">
+              <div>
+                <span class="care-kicker">All programs</span>
+                <h2>Community care directory</h2>
+              </div>
+              <p>Each card lists access, language, and availability details. The original portal requires people to inspect every card.</p>
+            </div>
+
+            <section class="care-urgent" id="help" aria-labelledby="navigator-help-title">
+              <span aria-hidden="true">?</span>
+              <div><strong id="navigator-help-title">Not sure where to start?</strong><p>A community navigator can help compare programs at 1-800-555-0196, Monday–Friday.</p></div>
+            </section>
+
+            <section id="care-directory">
+              <div class="care-results-heading">
+                <div><h2>Available services</h2><p>12 services · alphabetic order</p></div>
+                <span>Updated today</span>
+              </div>
+              <div class="care-service-grid">
+                <article class="care-service" data-service-name="Harbor Family Clinic" data-keywords="family doctor checkup preventive care children adults primary care" data-need="primary-care family-support" data-access="wheelchair sensory-friendly" data-languages="english urdu spanish" data-availability="today this-week new-patients">
+                  <div class="service-top"><span class="service-icon">HF</span><span class="availability available">Appointments today</span></div>
+                  <h3>Harbor Family Clinic</h3><p>Family medicine, preventive visits, and same-day care for adults and children.</p>
+                  <ul><li>Wheelchair accessible</li><li>Urdu and Spanish</li><li>Accepting new patients</li></ul>
+                  <a href="#harbor" aria-label="View Harbor Family Clinic details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Beacon Mental Wellness" data-keywords="therapy counseling anxiety depression mental health virtual" data-need="mental-health" data-access="sensory-friendly telehealth" data-languages="english urdu" data-availability="today new-patients">
+                  <div class="service-top"><span class="service-icon violet">BM</span><span class="availability available">Virtual today</span></div>
+                  <h3>Beacon Mental Wellness</h3><p>Short-term counseling and virtual mental-health appointments for adults.</p>
+                  <ul><li>Sensory-friendly rooms</li><li>Urdu available</li><li>Accepting new patients</li></ul>
+                  <a href="#beacon" aria-label="View Beacon Mental Wellness details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Northside Community Health" data-keywords="family doctor primary care vaccines chronic condition" data-need="primary-care" data-access="wheelchair" data-languages="english spanish" data-availability="this-week new-patients">
+                  <div class="service-top"><span class="service-icon blue">NC</span><span class="availability">This week</span></div>
+                  <h3>Northside Community Health</h3><p>Primary care, vaccinations, and chronic-condition support near the transit center.</p>
+                  <ul><li>Wheelchair accessible</li><li>Spanish available</li><li>Accepting new patients</li></ul>
+                  <a href="#northside" aria-label="View Northside Community Health details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Open Door Dental" data-keywords="dentist dental cleaning urgent tooth pain" data-need="dental" data-access="wheelchair" data-languages="english asl" data-availability="this-week">
+                  <div class="service-top"><span class="service-icon amber">OD</span><span class="availability">This week</span></div>
+                  <h3>Open Door Dental</h3><p>Preventive dental care, urgent assessments, and sliding-scale treatment.</p>
+                  <ul><li>Wheelchair accessible</li><li>ASL by request</li><li>Referral required</li></ul>
+                  <a href="#open-door" aria-label="View Open Door Dental details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Riverbend Counseling" data-keywords="therapy grief youth family counseling mental health" data-need="mental-health family-support" data-access="telehealth" data-languages="english spanish" data-availability="this-week new-patients">
+                  <div class="service-top"><span class="service-icon violet">RC</span><span class="availability">This week</span></div>
+                  <h3>Riverbend Counseling</h3><p>Individual and family counseling with in-person and remote appointments.</p>
+                  <ul><li>Telehealth available</li><li>Spanish available</li><li>Accepting new patients</li></ul>
+                  <a href="#riverbend" aria-label="View Riverbend Counseling details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Central Pharmacy Support" data-keywords="medicine prescription pharmacy delivery refill" data-need="pharmacy" data-access="wheelchair delivery" data-languages="english urdu" data-availability="today">
+                  <div class="service-top"><span class="service-icon green">CP</span><span class="availability available">Open today</span></div>
+                  <h3>Central Pharmacy Support</h3><p>Prescription assistance, refill coordination, and local medicine delivery.</p>
+                  <ul><li>Wheelchair accessible</li><li>Urdu available</li><li>Delivery available</li></ul>
+                  <a href="#central" aria-label="View Central Pharmacy Support details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Little Steps Pediatrics" data-keywords="children child pediatric doctor vaccines family" data-need="primary-care family-support" data-access="sensory-friendly" data-languages="english spanish" data-availability="this-week new-patients">
+                  <div class="service-top"><span class="service-icon blue">LS</span><span class="availability">This week</span></div>
+                  <h3>Little Steps Pediatrics</h3><p>Routine and urgent pediatric visits from birth through adolescence.</p>
+                  <ul><li>Sensory-friendly hours</li><li>Spanish available</li><li>Accepting new patients</li></ul>
+                  <a href="#little-steps" aria-label="View Little Steps Pediatrics details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Sunrise Recovery Clinic" data-keywords="recovery addiction substance support counseling" data-need="mental-health" data-access="wheelchair telehealth" data-languages="english asl" data-availability="today this-week">
+                  <div class="service-top"><span class="service-icon amber">SR</span><span class="availability available">Intake today</span></div>
+                  <h3>Sunrise Recovery Clinic</h3><p>Confidential recovery support, counseling, and medication-assisted treatment.</p>
+                  <ul><li>Wheelchair accessible</li><li>Telehealth follow-up</li><li>ASL by request</li></ul>
+                  <a href="#sunrise" aria-label="View Sunrise Recovery Clinic details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="East Market Dental" data-keywords="dentist dental cleaning family emergency" data-need="dental" data-access="sensory-friendly" data-languages="english urdu" data-availability="new-patients">
+                  <div class="service-top"><span class="service-icon amber">EM</span><span class="availability wait">Next month</span></div>
+                  <h3>East Market Dental</h3><p>General dentistry with quiet appointments for adults and families.</p>
+                  <ul><li>Sensory-friendly hours</li><li>Urdu available</li><li>Accepting new patients</li></ul>
+                  <a href="#east-market" aria-label="View East Market Dental details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="HomeBridge Family Support" data-keywords="home family caregiver food transport social worker" data-need="family-support" data-access="home-visit telehealth" data-languages="english spanish urdu" data-availability="this-week new-patients">
+                  <div class="service-top"><span class="service-icon green">HB</span><span class="availability">This week</span></div>
+                  <h3>HomeBridge Family Support</h3><p>Care navigation, food referrals, transportation, and caregiver support.</p>
+                  <ul><li>Home visits available</li><li>Urdu and Spanish</li><li>New referrals accepted</li></ul>
+                  <a href="#homebridge" aria-label="View HomeBridge Family Support details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="Neighborhood Medicine Access" data-keywords="prescription medicine cost pharmacy financial help" data-need="pharmacy" data-access="wheelchair" data-languages="english spanish" data-availability="today new-patients">
+                  <div class="service-top"><span class="service-icon green">NM</span><span class="availability available">Open today</span></div>
+                  <h3>Neighborhood Medicine Access</h3><p>Help applying for reduced-cost prescriptions and manufacturer programs.</p>
+                  <ul><li>Wheelchair accessible</li><li>Spanish available</li><li>Walk-ins welcome</li></ul>
+                  <a href="#medicine-access" aria-label="View Neighborhood Medicine Access details">View service details <span>→</span></a>
+                </article>
+                <article class="care-service" data-service-name="West End Mobile Clinic" data-keywords="mobile clinic checkup screening primary care community" data-need="primary-care" data-access="wheelchair" data-languages="english asl" data-availability="this-week">
+                  <div class="service-top"><span class="service-icon blue">WE</span><span class="availability">Friday</span></div>
+                  <h3>West End Mobile Clinic</h3><p>Weekly screenings and basic primary care at rotating neighborhood sites.</p>
+                  <ul><li>Wheelchair lift</li><li>ASL by request</li><li>No appointment needed</li></ul>
+                  <a href="#west-end" aria-label="View West End Mobile Clinic details">View service details <span>→</span></a>
+                </article>
+              </div>
+            </section>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="care-footer"><strong>MetroCare</strong><span>Demonstration data only · No real providers or medical guidance</span></footer>
+    <script type="module" src="./care.ts"></script>
+  </body>
+</html>

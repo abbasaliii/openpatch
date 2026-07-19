@@ -4,6 +4,7 @@ export type PatchCapability =
   | "local-storage"
   | "keyboard-navigation"
   | "validation"
+  | "content-filter"
   | "hide-elements"
   | "reorganize";
 
@@ -68,6 +69,30 @@ export type KeyboardNavigationOperation = {
   wrap?: boolean;
 };
 
+export type CollectionFilterOperation = {
+  id: string;
+  type: "collectionFilter";
+  selector: string;
+  items: string;
+  title: string;
+  description: string;
+  search: {
+    label: string;
+    placeholder?: string;
+    attributes: string[];
+  };
+  filters: Array<{
+    id: string;
+    label: string;
+    attribute: string;
+    options: Array<{ value: string; label: string }>;
+  }>;
+  persist?: {
+    key: string;
+    ttlMinutes: number;
+  };
+};
+
 export type PatchOperation =
   | StyleOperation
   | AttributeOperation
@@ -75,7 +100,8 @@ export type PatchOperation =
   | MoveOperation
   | PersistFormOperation
   | ValidationOperation
-  | KeyboardNavigationOperation;
+  | KeyboardNavigationOperation
+  | CollectionFilterOperation;
 
 export type PatchAssertion =
   | { type: "exists"; selector: string; min?: number; max?: number }

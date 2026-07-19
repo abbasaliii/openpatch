@@ -7,7 +7,7 @@ import { validatePatch } from "./src/core/validator";
 const root = __dirname;
 const siteOut = resolve(root, "dist/site");
 const patchSourceDir = resolve(root, "src/registry/patches");
-const releaseFiles = ["openpatch-extension-v0.3.0.zip", "openpatch-codex-plugin-v0.2.0.zip"];
+const releaseFiles = ["openpatch-extension-v0.4.0.zip", "openpatch-codex-plugin-v0.3.0.zip"];
 
 async function loadRegistryArtifacts() {
   const patchFiles = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".openpatch.json")).sort();
@@ -93,7 +93,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: resolve(root, "src/site/index.html"),
-        demo: resolve(root, "src/site/demo/index.html")
+        demo: resolve(root, "src/site/demo/index.html"),
+        care: resolve(root, "src/site/care/index.html")
       }
     }
   }

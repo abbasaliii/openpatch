@@ -94,3 +94,34 @@ test("the packaged extension repairs the real public demo domain", async () => {
   await expect(page.locator(".openpatch-save-status")).toContainText("Draft saved");
   await expect(page.locator("html")).toHaveAttribute("data-openpatch-applied", /org\.openpatch\.civicapply-accessible-draft@1\.2\.0/);
 });
+
+test("the production extension activates the bundled MetroCare feature repair", async () => {
+  let worker = context.serviceWorkers()[0];
+  if (!worker) worker = await context.waitForEvent("serviceworker");
+  await worker.evaluate(async () => {
+    const stored = await chrome.storage.local.get("enabledPatches");
+    const enabledPatches = (stored.enabledPatches ?? {}) as Record<string, boolean>;
+    enabledPatches["org.openpatch.metrocare-service-navigator"] = true;
+    await chrome.storage.local.set({ enabledPatches });
+  });
+
+  const page = await context.newPage();
+  await page.goto("http://127.0.0.1:4174/care/");
+  await expect(page.locator(".openpatch-navigator")).toBeVisible();
+  await page.locator("select[id$='-access']").selectOption("wheelchair");
+  await page.locator("select[id$='-language']").selectOption("urdu");
+  await page.locator("select[id$='-availability']").selectOption("new-patients");
+  await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
+  await expect(page.locator("html")).toHaveAttribute("data-openpatch-applied", /org\.openpatch\.metrocare-service-navigator@1\.0\.0/);
+});
+
+test("the packaged extension adds the feature on the real public MetroCare domain", async () => {
+  const page = await context.newPage();
+  await page.goto("https://openpatch-tau.vercel.app/care/");
+  await expect(page.locator(".openpatch-navigator")).toBeVisible();
+  await page.locator("select[id$='-access']").selectOption("wheelchair");
+  await page.locator("select[id$='-language']").selectOption("urdu");
+  await page.locator("select[id$='-availability']").selectOption("new-patients");
+  await expect(page.locator(".openpatch-navigator__status")).toHaveText("1 of 12 services match");
+  await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
+});

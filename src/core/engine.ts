@@ -1,4 +1,5 @@
 import type {
+  CollectionFilterOperation,
   FieldRule,
   OpenPatch,
   OperationHealth,
@@ -43,6 +44,46 @@ function installTrustedUiStyles(document: Document) {
     [aria-invalid="true"] {
       border-color: #d92d20 !important;
       box-shadow: 0 0 0 3px rgba(217, 45, 32, .12) !important;
+    }
+    .openpatch-navigator {
+      margin: 0 0 24px;
+      padding: 22px;
+      border: 1px solid #b9e6d1;
+      border-radius: 18px;
+      color: #17352a;
+      background: linear-gradient(145deg, #f2fcf7, #ffffff);
+      box-shadow: 0 14px 36px rgba(22, 94, 67, .09);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .openpatch-navigator__head { display: flex; align-items: start; gap: 14px; margin-bottom: 18px; }
+    .openpatch-navigator__mark {
+      display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 auto;
+      border-radius: 12px; color: #fff; background: #0b9569; font-weight: 850;
+    }
+    .openpatch-navigator h2 { margin: 0 0 4px; color: #143126; font-size: 20px; line-height: 1.2; }
+    .openpatch-navigator p { margin: 0; color: #5f746b; font-size: 13px; line-height: 1.5; }
+    .openpatch-navigator__controls { display: grid; grid-template-columns: minmax(210px, 1.4fr) repeat(3, minmax(130px, 1fr)); gap: 10px; }
+    .openpatch-navigator label { display: grid; gap: 6px; color: #355649; font-size: 11px; font-weight: 800; }
+    .openpatch-navigator input, .openpatch-navigator select {
+      width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #bed4ca; border-radius: 10px;
+      color: #19362b; background: #fff; font: 500 13px/1.25 ui-sans-serif, system-ui, sans-serif;
+    }
+    .openpatch-navigator input:focus, .openpatch-navigator select:focus {
+      outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 1px; border-color: #0b9569;
+    }
+    .openpatch-navigator__receipt { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding-top: 14px; border-top: 1px solid #dcece4; }
+    .openpatch-navigator__status { color: #136b4d !important; font-weight: 800; }
+    .openpatch-navigator__privacy { margin-left: auto !important; font-size: 10px !important; }
+    .openpatch-navigator__clear {
+      min-height: 34px; padding: 7px 10px; border: 1px solid #bad5c8; border-radius: 9px;
+      color: #176248; background: #fff; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
+    }
+    .openpatch-navigator__clear:focus-visible { outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 2px; }
+    @media (max-width: 760px) {
+      .openpatch-navigator { padding: 18px; border-radius: 16px; }
+      .openpatch-navigator__controls { grid-template-columns: 1fr; }
+      .openpatch-navigator__receipt { align-items: flex-start; flex-wrap: wrap; }
+      .openpatch-navigator__privacy { width: 100%; margin-left: 0 !important; }
     }
   `;
   document.head.append(style);
@@ -201,6 +242,166 @@ function setupValidation(operation: ValidationOperation, context: BrowserContext
   return pairs.length;
 }
 
+function splitAttributeTokens(value: string | null) {
+  return (value ?? "").toLowerCase().split(/[\s,|]+/).filter(Boolean);
+}
+
+function setupCollectionFilter(
+  patch: OpenPatch,
+  operation: CollectionFilterOperation,
+  context: BrowserContext,
+  container: HTMLElement
+) {
+  const { document, storage } = context;
+  const items = [...container.querySelectorAll<HTMLElement>(operation.items)].slice(0, MAX_MATCHES);
+  if (items.length === 0) return { matched: 0, detail: "no collection items found" };
+
+  const panel = document.createElement("section");
+  panel.className = "openpatch-navigator";
+  panel.dataset.openpatchOwned = "true";
+  panel.setAttribute("aria-label", operation.title);
+  const head = document.createElement("div");
+  head.className = "openpatch-navigator__head";
+  const mark = document.createElement("span");
+  mark.className = "openpatch-navigator__mark";
+  mark.setAttribute("aria-hidden", "true");
+  mark.textContent = "⌕";
+  const copy = document.createElement("div");
+  const title = document.createElement("h2");
+  title.textContent = operation.title;
+  const description = document.createElement("p");
+  description.textContent = operation.description;
+  copy.append(title, description);
+  head.append(mark, copy);
+
+  const controls = document.createElement("div");
+  controls.className = "openpatch-navigator__controls";
+  const searchId = `openpatch-search-${operation.id}`;
+  const searchLabel = document.createElement("label");
+  searchLabel.htmlFor = searchId;
+  searchLabel.append(document.createTextNode(operation.search.label));
+  const search = document.createElement("input");
+  search.id = searchId;
+  search.type = "search";
+  search.autocomplete = "off";
+  search.placeholder = operation.search.placeholder ?? "";
+  search.setAttribute("aria-keyshortcuts", "/");
+  searchLabel.append(search);
+  controls.append(searchLabel);
+
+  const selects = operation.filters.map((filter) => {
+    const id = `openpatch-filter-${operation.id}-${filter.id}`;
+    const label = document.createElement("label");
+    label.htmlFor = id;
+    label.append(document.createTextNode(filter.label));
+    const select = document.createElement("select");
+    select.id = id;
+    const any = document.createElement("option");
+    any.value = "";
+    any.textContent = `Any ${filter.label.toLowerCase()}`;
+    select.append(any);
+    filter.options.forEach((option) => {
+      const element = document.createElement("option");
+      element.value = option.value;
+      element.textContent = option.label;
+      select.append(element);
+    });
+    label.append(select);
+    controls.append(label);
+    return { filter, select };
+  });
+
+  const receipt = document.createElement("div");
+  receipt.className = "openpatch-navigator__receipt";
+  const status = document.createElement("p");
+  status.className = "openpatch-navigator__status";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "openpatch-navigator__clear";
+  clear.textContent = "Clear filters";
+  const privacy = document.createElement("p");
+  privacy.className = "openpatch-navigator__privacy";
+  privacy.textContent = operation.persist
+    ? `Preferences stay on this device for ${Math.round(operation.persist.ttlMinutes / 60)} hours`
+    : "Filtering stays on this page";
+  receipt.append(status, clear, privacy);
+  panel.append(head, controls, receipt);
+  container.prepend(panel);
+
+  const storageKey = operation.persist ? `openpatch:${patch.id}:${operation.persist.key}` : null;
+  const readState = () => ({
+    search: search.value,
+    filters: Object.fromEntries(selects.map(({ filter, select }) => [filter.id, select.value]))
+  });
+  const saveState = () => {
+    if (!storageKey) return;
+    try { storage.setItem(storageKey, JSON.stringify({ savedAt: Date.now(), ...readState() })); } catch { /* origin storage can be unavailable */ }
+  };
+  const apply = () => {
+    const query = search.value.trim().toLowerCase();
+    let visible = 0;
+    items.forEach((item) => {
+      const searchable = operation.search.attributes.map((attribute) => item.getAttribute(attribute) ?? "").join(" ").toLowerCase();
+      const matchesSearch = query.length === 0 || query.split(/\s+/).every((term) => searchable.includes(term));
+      const matchesFilters = selects.every(({ filter, select }) => {
+        if (!select.value) return true;
+        return splitAttributeTokens(item.getAttribute(filter.attribute)).includes(select.value.toLowerCase());
+      });
+      const show = matchesSearch && matchesFilters;
+      item.hidden = !show;
+      item.toggleAttribute("data-openpatch-filtered", !show);
+      if (show) visible += 1;
+    });
+    status.textContent = `${visible} of ${items.length} services match`;
+    saveState();
+  };
+
+  if (storageKey && operation.persist) {
+    try {
+      const raw = storage.getItem(storageKey);
+      if (raw) {
+        const saved = JSON.parse(raw) as { savedAt?: unknown; search?: unknown; filters?: unknown };
+        const savedAt = typeof saved.savedAt === "number" ? saved.savedAt : 0;
+        if (Date.now() - savedAt <= operation.persist.ttlMinutes * 60_000) {
+          if (typeof saved.search === "string") search.value = saved.search;
+          if (saved.filters && typeof saved.filters === "object" && !Array.isArray(saved.filters)) {
+            const storedFilters = saved.filters as Record<string, unknown>;
+            selects.forEach(({ filter, select }) => {
+              if (typeof storedFilters[filter.id] === "string") select.value = String(storedFilters[filter.id]);
+            });
+          }
+        } else storage.removeItem(storageKey);
+      }
+    } catch { /* invalid local state is ignored */ }
+  }
+
+  search.addEventListener("input", apply);
+  selects.forEach(({ select }) => select.addEventListener("change", apply));
+  clear.addEventListener("click", () => {
+    search.value = "";
+    selects.forEach(({ select }) => { select.value = ""; });
+    apply();
+    search.focus();
+  });
+  document.addEventListener("keydown", (event) => {
+    const keyboardEvent = event as KeyboardEvent;
+    const active = document.activeElement as HTMLElement | null;
+    const typing = active?.tagName === "INPUT" || active?.tagName === "TEXTAREA" || active?.tagName === "SELECT" || active?.isContentEditable;
+    if (keyboardEvent.key === "/" && !typing) {
+      keyboardEvent.preventDefault();
+      search.focus();
+    }
+    if (keyboardEvent.key === "Escape" && document.activeElement === search && search.value) {
+      search.value = "";
+      apply();
+    }
+  });
+  apply();
+  return { matched: items.length, detail: `${items.length} items filterable` };
+}
+
 function applyOperation(patch: OpenPatch, operation: PatchOperation, context: BrowserContext): OperationHealth {
   const { document, window } = context;
   try {
@@ -247,6 +448,12 @@ function applyOperation(patch: OpenPatch, operation: PatchOperation, context: Br
       if (forms.length !== 1) return { id: operation.id, type: operation.type, matched: forms.length, applied: false, detail: "expected exactly one form" };
       const count = setupValidation(operation, context, forms[0]);
       return { id: operation.id, type: operation.type, matched: count, applied: count > 0 };
+    }
+    if (operation.type === "collectionFilter") {
+      const containers = selected(document, operation.selector);
+      if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one collection container" };
+      const result = setupCollectionFilter(patch, operation, context, containers[0]);
+      return { id: operation.id, type: operation.type, matched: result.matched, applied: result.matched > 0, detail: result.detail };
     }
     const containers = selected(document, operation.container);
     if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one navigation container" };
