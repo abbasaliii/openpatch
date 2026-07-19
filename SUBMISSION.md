@@ -11,6 +11,7 @@
 ## Final public links
 
 - Product and registry: https://openpatch-tau.vercel.app/
+- Source repository: https://github.com/abbasaliii/openpatch
 - Live no-login demo: https://openpatch-tau.vercel.app/demo/
 - Chrome extension: https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.3.0.zip
 - Codex authoring plugin: https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.2.0.zip
@@ -127,8 +128,8 @@ Show the registry landing page and download the safe patch. On its target page, 
 
 - [x] Deploy the landing page and CivicApply demo to a stable public URL
 - [x] Upload `release/openpatch-extension-v0.3.0.zip` and `release/openpatch-codex-plugin-v0.2.0.zip` to a stable public download
-- [ ] Attach the validated Codex plugin package and mention the repo-discovered skill path
-- [ ] Make the repository public under the MIT license, or share private access with the required judge accounts
+- [x] Attach the validated Codex plugin package and mention the repo-discovered skill path
+- [x] Make the repository public under the MIT license, or share private access with the required judge accounts
 - [ ] Add repository URL to Devpost
 - [ ] Record and upload a public YouTube video under 3 minutes
 - [ ] Add YouTube URL to Devpost
