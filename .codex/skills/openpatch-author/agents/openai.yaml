@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author an OpenPatch"
+  short_description: "Turn website complaints into safe, tested repairs"
+  default_prompt: "Use $openpatch-author to inspect this broken website and author a safe, tested community repair."

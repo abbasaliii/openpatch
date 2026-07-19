@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CivicApply — Housing Support Application</title>
+    <link rel="stylesheet" href="/demo/demo.css" />
+  </head>
+  <body>
+    <div class="demo-ribbon">
+      <a href="/">← OpenPatch</a>
+      <span><strong>Demo site</strong> · intentionally broken</span>
+      <span>Open the extension to repair it</span>
+    </div>
+
+    <header class="government-header">
+      <a class="agency" href="#">
+        <span>CA</span>
+        <div><strong>CivicApply</strong><small>Department of Community Services</small></div>
+      </a>
+      <nav><a href="#">Benefits</a><a href="#">My applications</a><a href="#">Help</a></nav>
+      <button class="account-button">AM⌄</button>
+    </header>
+
+    <div class="session-warning">
+      <strong>Your session expires in <span id="session-time">09:42</span></strong>
+      <p>For your security, this page will reset when time runs out.</p>
+      <button id="simulate-timeout" type="button">Simulate timeout now</button>
+    </div>
+
+    <section class="application-heading">
+      <div>
+        <span class="application-id">APPLICATION HS-2026-1849</span>
+        <h1>Housing Support Application</h1>
+        <p>Apply for short-term rent and utility assistance.</p>
+      </div>
+      <span class="draft-badge">Not saved</span>
+    </section>
+
+    <div id="progress-steps" class="progress-steps">
+      <button class="active"><span>1</span>About you</button>
+      <i></i>
+      <button><span>2</span>Household</button>
+      <i></i>
+      <button><span>3</span>Review</button>
+    </div>
+
+    <div class="application-shell">
+      <main class="application-main">
+        <div class="generic-error" id="generic-error" hidden>
+          <strong>Something went wrong.</strong>
+          <p>There are errors on this page. Error code: FORM_12.</p>
+        </div>
+
+        <h2>Tell us about yourself</h2>
+        <p class="form-intro">We need this information to check whether your household qualifies.</p>
+
+        <form id="benefits-form" novalidate>
+          <div class="field-row">
+            <label for="full-name">Full legal name <span>*</span></label>
+            <div class="control"><input id="full-name" name="fullName" type="text" /><small>As it appears on your ID</small></div>
+          </div>
+
+          <div class="field-row">
+            <label for="email">Email <span>*</span></label>
+            <div class="control"><input id="email" name="email" type="text" /><small>We send application updates here</small></div>
+          </div>
+
+          <div class="field-row">
+            <label for="phone">Phone number</label>
+            <div class="control"><input id="phone" name="phone" type="tel" /><small>Optional</small></div>
+          </div>
+
+          <div class="field-row">
+            <label for="household-size">Household size <span>*</span></label>
+            <div class="control">
+              <select id="household-size" name="householdSize">
+                <option value="">Choose one</option>
+                <option value="1">1 person</option>
+                <option value="2">2 people</option>
+                <option value="3">3 people</option>
+                <option value="4">4 people</option>
+                <option value="5+">5 or more people</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <label for="address">Street address <span>*</span></label>
+            <div class="control"><textarea id="address" name="address" rows="3"></textarea></div>
+          </div>
+
+          <div class="field-row checkbox-row">
+            <span>Contact preference</span>
+            <label><input name="textUpdates" type="checkbox" /> Send me text-message updates</label>
+          </div>
+
+          <div class="form-actions">
+            <button class="secondary" type="button">Back</button>
+            <button class="primary" type="submit">Continue to household</button>
+          </div>
+        </form>
+
+        <div class="success-panel" id="success-panel" hidden>
+          <span>✓</span><div><strong>Step complete</strong><p>Your information passed local validation.</p></div>
+        </div>
+      </main>
+
+      <aside class="application-sidebar">
+        <section class="help-card">
+          <span class="help-icon">?</span>
+          <h2>Need help applying?</h2>
+          <p>Call a benefits navigator at <strong>1-800-555-0147</strong>.</p>
+          <p>Monday–Friday, 8am–6pm</p>
+        </section>
+      </aside>
+    </div>
+
+    <div class="survey-wall">
+      <button class="survey-close" aria-label="Close">×</button>
+      <span>2 minute survey</span>
+      <h2>Help improve CivicApply!</h2>
+      <p>Tell us how your application experience is going before you continue.</p>
+      <button type="button">Take the survey</button>
+      <small>No thanks</small>
+    </div>
+
+    <div class="timeout-toast" id="timeout-toast" hidden>Session reset. Unsaved fields were cleared.</div>
+    <script type="module" src="/demo/demo.ts"></script>
+  </body>
+</html>

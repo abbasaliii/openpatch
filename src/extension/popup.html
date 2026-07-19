@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenPatch</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true"><span></span><span></span></div>
+      <div>
+        <strong>OpenPatch</strong>
+        <p>Make the web work for you.</p>
+      </div>
+      <span class="safe-pill">Safe DSL</span>
+    </header>
+
+    <main>
+      <section class="site-row" aria-label="Current website">
+        <span class="site-icon" id="site-icon">C</span>
+        <div>
+          <span class="eyebrow">Current website</span>
+          <strong id="site-host">Checking this page…</strong>
+        </div>
+        <span class="match-dot" id="match-dot" aria-label="Patch status"></span>
+      </section>
+
+      <section class="patch-card" id="patch-card" hidden>
+        <div class="card-head">
+          <span class="patch-icon" aria-hidden="true">✦</span>
+          <div>
+            <span class="eyebrow">Community repair found</span>
+            <h1 id="patch-name">CivicApply repair</h1>
+          </div>
+          <span class="version" id="patch-version">v1.0.0</span>
+        </div>
+        <p class="summary" id="patch-summary"></p>
+
+        <div class="author-row">
+          <span class="avatar">OP</span>
+          <span>by <strong id="patch-author">OpenPatch Community</strong></span>
+          <span class="verified">✓ Verified</span>
+        </div>
+
+        <div class="repair-list" aria-label="Repair capabilities">
+          <span>Responsive layout</span>
+          <span>Local autosave</span>
+          <span>Accessible errors</span>
+          <span>Keyboard controls</span>
+        </div>
+
+        <div class="health-row" id="health-row">
+          <span class="health-icon">✓</span>
+          <div>
+            <strong id="health-title">Selectors preflighted</strong>
+            <p id="health-detail">19 constrained operations · no arbitrary JavaScript</p>
+          </div>
+        </div>
+
+        <label class="toggle-row" for="patch-toggle">
+          <span>
+            <strong id="toggle-title">Apply this repair</strong>
+            <small>Only on this website</small>
+          </span>
+          <input id="patch-toggle" type="checkbox" role="switch" />
+          <span class="toggle" aria-hidden="true"></span>
+        </label>
+
+        <details>
+          <summary>Review patch permissions</summary>
+          <ul id="permissions-list"></ul>
+        </details>
+      </section>
+
+      <section class="empty-state" id="empty-state">
+        <span class="empty-mark">⌁</span>
+        <h1>No repair for this page</h1>
+        <p>Open the CivicApply demo to test the bundled community patch.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span><i></i> Domain scoped</span>
+      <span>No account or API key</span>
+    </footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

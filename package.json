@@ -1,0 +1,31 @@
+{
+  "name": "openpatch",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A safe, community repair layer for websites users do not own.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "npm run build:site && npm run build:extension",
+    "build:site": "vite build",
+    "build:extension": "node scripts/build-extension.mjs",
+    "capture:previews": "node scripts/build-test-runtime.mjs && node scripts/capture-previews.mjs",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "test:browser": "node scripts/build-test-runtime.mjs && playwright test",
+    "validate:patch": "tsx scripts/validate-patch.ts",
+    "check": "tsc --noEmit && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/chrome": "^0.1.1",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.0"
+  }
+}

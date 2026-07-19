@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="OpenPatch is a safe community repair layer for websites users do not own." />
+    <title>OpenPatch — Fix the web you have</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="nav-shell">
+      <a class="brand" href="/" aria-label="OpenPatch home">
+        <span class="brand-symbol" aria-hidden="true"><i></i><i></i></span>
+        <span>OpenPatch</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#repairs">Repairs</a>
+        <a href="#safety">Safety</a>
+        <a href="#how-it-works">How it works</a>
+      </nav>
+      <a class="nav-action" href="/demo/">Try live demo <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="signal"><span></span> A public repair layer for the web</div>
+          <h1>Fix the web<br /><em>you have.</em></h1>
+          <p class="hero-lede">Websites fail people every day. OpenPatch lets anyone author a safe repair with Codex—and lets everyone else install it with one click.</p>
+          <div class="hero-actions">
+            <a class="primary-action" href="/demo/">See the before & after <span>→</span></a>
+            <a class="secondary-action" href="#how-it-works">How it works</a>
+          </div>
+          <div class="trust-strip">
+            <span><i>✓</i> No API key</span>
+            <span><i>✓</i> No arbitrary JavaScript</span>
+            <span><i>✓</i> Domain scoped</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="OpenPatch transforming a broken application form">
+          <div class="glow-orb"></div>
+          <div class="browser-frame before-window">
+            <div class="browser-chrome">
+              <div class="traffic"><i></i><i></i><i></i></div>
+              <span>civicapply.example/application</span>
+              <b>⋯</b>
+            </div>
+            <div class="broken-site">
+              <div class="tiny-nav"><i></i><span></span><span></span></div>
+              <div class="broken-title"></div>
+              <div class="broken-form-row"><small>Name</small><i></i></div>
+              <div class="broken-form-row"><small>Email</small><i></i></div>
+              <div class="broken-form-row"><small>Address</small><i></i></div>
+              <div class="broken-error">ERROR_12: invalid</div>
+              <div class="obstruction">Help us improve!<button>Take survey</button></div>
+            </div>
+            <span class="before-label">Before</span>
+          </div>
+
+          <div class="repair-path" aria-hidden="true"><span>✦</span></div>
+
+          <div class="browser-frame after-window">
+            <div class="browser-chrome">
+              <div class="traffic"><i></i><i></i><i></i></div>
+              <span>civicapply.example/application</span>
+              <b>⋯</b>
+            </div>
+            <div class="repaired-site">
+              <div class="saved-pill">✓ Draft saved on this device</div>
+              <strong>Tell us about your household</strong>
+              <label>Full name<i>Alex Morgan</i></label>
+              <label>Email address<i>alex@example.com</i></label>
+              <div class="steps"><span class="done">✓</span><i></i><span>2</span><i></i><span>3</span></div>
+            </div>
+            <span class="after-label">OpenPatched</span>
+          </div>
+
+          <aside class="floating-patch-card">
+            <div><span class="patch-spark">✦</span><strong>Repair active</strong></div>
+            <p>CivicApply: accessible & autosaved</p>
+            <div class="health"><i></i> 19/19 operations healthy</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="proof-bar" aria-label="OpenPatch facts">
+        <div><strong>7</strong><span>safe repair capabilities</span></div>
+        <div><strong>0</strong><span>lines of patch JavaScript</span></div>
+        <div><strong>1-click</strong><span>community installation</span></div>
+        <div><strong>Local</strong><span>private draft storage</span></div>
+      </section>
+
+      <section class="section repairs" id="repairs">
+        <div class="section-heading">
+          <div>
+            <span class="kicker">Community registry</span>
+            <h2>Repairs people can trust.</h2>
+          </div>
+          <p>Every patch declares exactly what it changes, where it runs, and whether its selectors still match.</p>
+        </div>
+
+        <article class="registry-card">
+          <div class="registry-preview civic-preview">
+            <div class="preview-top"><span>CA</span><strong>CivicApply</strong><i>Public benefits portal</i></div>
+            <div class="preview-screen">
+              <span class="preview-saved">✓ Draft protected</span>
+              <b>Housing Support Application</b>
+              <i></i><i></i><i></i>
+            </div>
+          </div>
+          <div class="registry-info">
+            <div class="registry-meta"><span class="category">Accessibility</span><span>Updated today</span></div>
+            <h3>CivicApply: accessible & autosaved</h3>
+            <p>Repairs mobile layout, preserves unfinished progress, adds keyboard navigation and accessible error messages, and removes an obstructive survey.</p>
+            <div class="capabilities"><span>Layout</span><span>Autosave</span><span>ARIA</span><span>Keyboard</span><span>Validation</span></div>
+            <div class="publisher">
+              <span class="publisher-avatar">OP</span>
+              <div><small>Published by</small><strong>OpenPatch Community <i>✓</i></strong></div>
+              <div class="installs"><small>Patch health</small><strong><i></i> 19/19</strong></div>
+            </div>
+          </div>
+          <div class="registry-action">
+            <div class="domain-lock"><span>⌾</span><div><small>Runs only on</small><strong>civicapply.example</strong></div></div>
+            <a href="/demo/">Open demo <span>→</span></a>
+            <p>No AI or account required</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="section safety" id="safety">
+        <div class="safety-copy">
+          <span class="kicker">Constrained by design</span>
+          <h2>Powerful repairs.<br />Not a code injection marketplace.</h2>
+          <p>Codex authors a small declarative patch. OpenPatch validates every operation against an allowlist, tests every selector, and shows users a plain-language permission receipt before anything runs.</p>
+          <ul>
+            <li><span>01</span><div><strong>Declarative transformations only</strong><p>Layout, accessibility, persistence, navigation, validation, filtering, and reorganization.</p></div></li>
+            <li><span>02</span><div><strong>Exact domain and path scope</strong><p>A university portal patch cannot touch your bank, inbox, or another page.</p></div></li>
+            <li><span>03</span><div><strong>Continuous breakage detection</strong><p>Selector health turns red when the original site changes underneath a patch.</p></div></li>
+          </ul>
+        </div>
+        <div class="code-card" aria-label="Example safe OpenPatch DSL">
+          <div class="code-head"><span><i></i><i></i><i></i></span><b>housing-support.openpatch.json</b><em>Validated</em></div>
+          <pre><code><span class="muted">{</span>
+  <span class="key">"match"</span>: <span class="muted">{</span>
+    <span class="key">"hosts"</span>: [<span class="string">"civicapply.example"</span>],
+    <span class="key">"paths"</span>: [<span class="string">"/application/*"</span>]
+  <span class="muted">}</span>,
+  <span class="key">"operations"</span>: [
+    <span class="muted">{</span>
+      <span class="key">"type"</span>: <span class="string">"persistForm"</span>,
+      <span class="key">"selector"</span>: <span class="string">"#benefits-form"</span>,
+      <span class="key">"include"</span>: [<span class="string">"input"</span>, <span class="string">"select"</span>]
+    <span class="muted">}</span>,
+    <span class="muted">{</span>
+      <span class="key">"type"</span>: <span class="string">"keyboardNavigation"</span>,
+      <span class="key">"container"</span>: <span class="string">"#progress-steps"</span>
+    <span class="muted">}</span>
+  ]
+<span class="muted">}</span></code></pre>
+          <div class="blocked"><span>⊘</span><div><strong>script, eval, fetch, cookies</strong><p>Rejected by the security validator</p></div></div>
+        </div>
+      </section>
+
+      <section class="section how" id="how-it-works">
+        <div class="center-heading">
+          <span class="kicker">From complaint to community fix</span>
+          <h2>Ask once. Help everyone.</h2>
+        </div>
+        <div class="steps-grid">
+          <article><span class="step-number">01</span><div class="step-icon talk">“</div><h3>Describe what is broken</h3><p>Open the bad website in Chrome and tell Codex what keeps failing for you.</p><blockquote>“This form loses my progress and the errors are inaccessible.”</blockquote></article>
+          <article><span class="step-number">02</span><div class="step-icon inspect">✦</div><h3>Codex authors & tests</h3><p>Codex inspects the live DOM and screenshots, produces only safe operations, and verifies behavior before publishing.</p><div class="mini-checks"><span>✓ 19 operations healthy</span><span>✓ 7 policy checks pass</span></div></article>
+          <article><span class="step-number">03</span><div class="step-icon share">⌁</div><h3>Everyone gets the repair</h3><p>The patch enters the public registry. Other people install it without AI, an account, or an API key.</p><div class="people"><i>AM</i><i>JK</i><i>RS</i><i>+2k</i></div></article>
+        </div>
+      </section>
+
+      <section class="impact-band">
+        <div><span class="kicker">The web is shared infrastructure</span><h2>When owners won’t fix it,<br />users still can.</h2></div>
+        <div class="impact-list"><span>Government forms</span><span>University portals</span><span>Health services</span><span>Marketplaces</span><span>Legacy tools</span><span>Accessibility regressions</span></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand" href="/"><span class="brand-symbol"><i></i><i></i></span><span>OpenPatch</span></a>
+      <p>Fix the web you have.</p>
+      <span>Built with Codex + GPT‑5.6 for OpenAI Build Week 2026</span>
+    </footer>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
