@@ -42,6 +42,7 @@ The public Git history preserves the Build Week sequence:
 | Jul 20, 06:28 | `e489524` | Compatibility Sentinel and drift quarantine |
 | Jul 20 | `v0.7.0` release | Private provider comparison, workspace compatibility receipts, final visual and release hardening |
 | Jul 20 | `v0.7.1` hotfix | Canonical cross-platform patch bytes prevent Windows/Linux SHA-256 receipt drift in production builds |
+| Jul 20 | `v0.7.2` hardening | Clean-install Linux CI plus six-hour live monitoring, retained receipts, retries, and automatic material quarantine/recovery promotion |
 
 ## Iteration examples
 
@@ -60,7 +61,7 @@ npm install
 npm run verify
 ```
 
-The release gate performs type checking, 40 unit/policy/privacy tests, both patch validators, 14 desktop/mobile browser journeys, and 4 packaged Manifest V3 extension tests—including public registry discovery and execution on the real production domain.
+The release gate performs type checking, 43 unit/policy/privacy tests, both patch validators, 14 desktop/mobile browser journeys, and 4 packaged Manifest V3 extension tests—including public registry discovery and execution on the real production domain.
 
 Additional publication evidence:
 

@@ -45,3 +45,24 @@ export function summarizeCompatibility(patches: PatchCompatibilityReport[]) {
     total: patches.length
   };
 }
+
+export function compatibilityMaterialState(report: RegistryCompatibilityReport) {
+  return {
+    schemaVersion: report.schemaVersion,
+    summary: report.summary,
+    patches: [...report.patches]
+      .sort((left, right) => `${left.id}\u0000${left.version}`.localeCompare(`${right.id}\u0000${right.version}`))
+      .map((patch) => ({
+        id: patch.id,
+        version: patch.version,
+        pageUrl: patch.pageUrl,
+        status: patch.status,
+        patchSha256: patch.patchSha256,
+        healthy: patch.healthy,
+        total: patch.total,
+        fingerprint: patch.fingerprint,
+        driftedOperationIds: [...patch.driftedOperationIds].sort(),
+        error: patch.error ?? null
+      }))
+  };
+}

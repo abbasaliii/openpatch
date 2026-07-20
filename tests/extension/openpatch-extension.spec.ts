@@ -111,9 +111,6 @@ test("the production extension discovers and installs MetroCare from the verifie
   await expect(popup.locator("#registry-match-proof")).toContainText("live compatibility 11/11");
   await expect(popup.locator("#import-health")).toHaveText("11/11 operation targets healthy");
   await expect(popup.locator("#import-status")).toContainText("Verified and healthy");
-  await popup.locator("body").screenshot({
-    path: resolve(import.meta.dirname, "../../submission-assets/openpatch-registry-discovery.png")
-  });
   await popup.locator("#install-button").click();
 
   await expect.poll(async () => worker.evaluate(async () => {

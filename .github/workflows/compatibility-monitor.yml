@@ -1,0 +1,93 @@
+name: Compatibility Sentinel
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: compatibility-sentinel
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    name: Verify every published patch against its live target
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: true
+      FORCE_COLOR: 1
+    steps:
+      - name: Check out the public registry
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run the live monitor with transient-failure retries
+        id: monitor
+        continue-on-error: true
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if npm run monitor:registry; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+          exit 1
+
+      - name: Compare and promote material compatibility changes
+        id: promote
+        if: always()
+        continue-on-error: true
+        run: npx tsx scripts/promote-compatibility-report.ts compatibility-report.json src/registry/compatibility.json --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve the complete operation receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: compatibility-receipt-${{ github.run_id }}
+          path: compatibility-report.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Publish a quarantine or recovery transition
+        if: always() && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          if git diff --quiet -- src/registry/compatibility.json; then
+            echo "No material compatibility state changed."
+            exit 0
+          fi
+          git config user.name "openpatch-sentinel[bot]"
+          git config user.email "openpatch-sentinel[bot]@users.noreply.github.com"
+          git add src/registry/compatibility.json
+          git commit -m "chore: publish compatibility state [skip ci]"
+          git push origin HEAD:main
+
+      - name: Fail visibly when monitoring or promotion failed
+        if: always()
+        env:
+          MONITOR_OUTCOME: ${{ steps.monitor.outcome }}
+          PROMOTE_OUTCOME: ${{ steps.promote.outcome }}
+        shell: bash
+        run: |
+          if [ "$MONITOR_OUTCOME" != "success" ] || [ "$PROMOTE_OUTCOME" != "success" ]; then
+            echo "Compatibility Sentinel detected drift, an unreachable target, or invalid evidence."
+            exit 1
+          fi

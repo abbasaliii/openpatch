@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   compatibilityEvidence,
+  compatibilityMaterialState,
   compatibilityStatus,
   summarizeCompatibility,
-  type PatchCompatibilityReport
+  type PatchCompatibilityReport,
+  type RegistryCompatibilityReport
 } from "../src/core/compatibility";
 import type { SelectorPreflightResult } from "../src/core/preflight";
 
@@ -53,5 +55,37 @@ describe("compatibility sentinel", () => {
     });
     expect(summarizeCompatibility([make("healthy"), make("drifted"), make("unreachable")]))
       .toEqual({ healthy: 1, drifted: 1, unreachable: 1, total: 3 });
+  });
+
+  it("promotes only material compatibility transitions, not timestamp churn", () => {
+    const makeReport = (checkedAt: string, status: PatchCompatibilityReport["status"]): RegistryCompatibilityReport => ({
+      schemaVersion: 1,
+      generatedAt: checkedAt,
+      registryUrl: "https://example.test/registry/index.json",
+      summary: {
+        healthy: status === "healthy" ? 1 : 0,
+        drifted: status === "drifted" ? 1 : 0,
+        unreachable: status === "unreachable" ? 1 : 0,
+        total: 1
+      },
+      patches: [{
+        id: "org.openpatch.example",
+        version: "1.0.0",
+        pageUrl: "https://example.test/",
+        status,
+        checkedAt,
+        patchSha256: "a".repeat(64),
+        healthy: status === "healthy" ? 1 : 0,
+        total: 1,
+        fingerprint: status === "healthy" ? "b".repeat(64) : "c".repeat(64),
+        driftedOperationIds: status === "drifted" ? ["directory"] : [],
+        results: []
+      }]
+    });
+
+    expect(compatibilityMaterialState(makeReport("2026-07-20T00:00:00.000Z", "healthy")))
+      .toEqual(compatibilityMaterialState(makeReport("2026-07-20T06:00:00.000Z", "healthy")));
+    expect(compatibilityMaterialState(makeReport("2026-07-20T06:00:00.000Z", "drifted")))
+      .not.toEqual(compatibilityMaterialState(makeReport("2026-07-20T06:00:00.000Z", "healthy")));
   });
 });

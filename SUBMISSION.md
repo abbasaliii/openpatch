@@ -30,7 +30,7 @@ The authoring workflow is technical, but the product's end user is a citizen, st
 
 | Criterion | Evidence judges can see | Demo moment |
 | --- | --- | --- |
-| Technological Implementation | GPT‑5.6/Codex authoring workflow, nine-capability typed DSL, trusted filter and comparison builders, fail-closed validator, privacy-safe Repair Brief, automatic registry discovery, SHA-bound Compatibility Sentinel, drift quarantine, per-operation health, and network-silence tests | Show `collectionCompare`, then flash the 11/11 live fingerprint, 10/10 assertions, six-hour workflow, and 40/40 safety tests |
+| Technological Implementation | GPT‑5.6/Codex authoring workflow, nine-capability typed DSL, trusted filter and comparison builders, fail-closed validator, privacy-safe Repair Brief, automatic registry discovery, SHA-bound Compatibility Sentinel, drift quarantine, per-operation health, and network-silence tests | Show `collectionCompare`, then flash the 11/11 live fingerprint, 10/10 assertions, six-hour workflow, and 43/43 safety tests |
 | Design | Coherent extension-to-Codex-to-registry flow, plain-language permissions, polished navigator UI, native controls, ARIA result announcements, keyboard shortcut, mobile layout, and a credible unpatched state | Select wheelchair access + Urdu + accepting new patients and watch twelve services become one understandable choice |
 | Potential Impact | Government, education, health, marketplace, and legacy-tool workflows; AI cost is paid once by the author while every downstream user needs no AI, account, or API key | A person expresses a real combination of access needs the original healthcare directory never supported |
 | Quality of the Idea | A public functional feature layer—not a theme editor and not an arbitrary userscript marketplace—with reusable patches and breakage receipts | End on “When a site won’t add it, users still can.” |
@@ -80,7 +80,7 @@ Responsive testing also exposed a subtle issue: device emulation can clamp docum
 
 - 11/11 flagship feature operations and 10/10 publishing assertions healthy
 - 19/19 CivicApply repair operations and 10/10 assertions remain healthy
-- 40/40 security, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests passing
+- 43/43 security, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests passing
 - 4/4 Manifest V3 extension integration tests passing, including both real public demo domains
 - 14/14 desktop and 390px browser journeys passing, including the instant judge preview and interactive quarantine console
 - Browser proof that filter and comparison interactions emit zero network requests
@@ -93,7 +93,7 @@ The safest repair is the smallest operation that makes an acceptance criterion o
 
 ### What's next
 
-Publisher signing and moderation, automated revocation propagation, community review, and additional built-ins such as task-focused reading modes and guided multi-step workflows.
+Publisher signing and moderation, community review, and additional built-ins such as task-focused reading modes and guided multi-step workflows.
 
 ## Judge testing instructions
 

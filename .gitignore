@@ -2,6 +2,7 @@ node_modules/
 dist/
 playwright-report/
 test-results/
+compatibility-report.json
 .DS_Store
 *.log
 
