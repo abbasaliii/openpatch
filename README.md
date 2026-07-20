@@ -34,7 +34,7 @@ OpenPatch also closes the community loop and watches it after publication. Open 
 
 ![Compatibility Sentinel showing a simulated patch quarantine](submission-assets/compatibility-sentinel-quarantine.png)
 
-The flagship validator reports **11/11 healthy operations**, **10/10 publication assertions**, and SHA-256 receipt `8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d`. Local filter preferences expire automatically after 24 hours.
+The flagship validator reports **11/11 healthy operations**, **10/10 publication assertions**, and SHA-256 receipt `14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c`. Local filter preferences expire automatically after 24 hours.
 
 ![OpenPatch private service comparison](submission-assets/metrocare-compare-desktop.png)
 

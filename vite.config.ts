@@ -3,6 +3,7 @@ import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import type { RegistryCompatibilityReport } from "./src/core/compatibility";
+import { canonicalPatchSource } from "./src/core/patch-source";
 import { validatePatch } from "./src/core/validator";
 
 const root = __dirname;
@@ -19,7 +20,7 @@ async function loadRegistryArtifacts() {
   const patchFiles = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".openpatch.json")).sort();
   const artifacts = await Promise.all(patchFiles.map(async (fileName) => {
     const sourcePath = resolve(patchSourceDir, fileName);
-    const raw = await readFile(sourcePath, "utf8");
+    const raw = canonicalPatchSource(await readFile(sourcePath, "utf8"));
     const validation = validatePatch(JSON.parse(raw) as unknown);
     if (!validation.ok) throw new Error(`${fileName} failed registry policy validation: ${validation.issues.map((issue) => `${issue.path} ${issue.message}`).join("; ")}`);
     const patch = validation.patch;
@@ -28,7 +29,7 @@ async function loadRegistryArtifacts() {
       entry.id === patch.id && entry.version === patch.version && entry.patchSha256 === sha256
     );
     if (!compatibility) throw new Error(`${fileName} has no current compatibility receipt. Run npm run monitor:registry -- src/registry/compatibility.json.`);
-    return { fileName, sourcePath, raw, patch, sha256, compatibility };
+    return { fileName, raw, patch, sha256, compatibility };
   }));
   const registry = {
     schemaVersion: 1,
@@ -102,7 +103,7 @@ const registryPlugin: Plugin = {
     const downloadDir = resolve(siteOut, "downloads");
     await mkdir(patchDir, { recursive: true });
     await mkdir(downloadDir, { recursive: true });
-    await Promise.all(artifacts.map((artifact) => copyFile(artifact.sourcePath, resolve(patchDir, artifact.fileName))));
+    await Promise.all(artifacts.map((artifact) => writeFile(resolve(patchDir, artifact.fileName), artifact.raw, "utf8")));
     await Promise.all(releaseFiles.map((fileName) => copyFile(resolve(root, "release", fileName), resolve(downloadDir, fileName))));
     await writeFile(resolve(registryDir, "index.json"), JSON.stringify(registry, null, 2));
     await writeFile(resolve(registryDir, "compatibility.json"), `${JSON.stringify(compatibilityReport, null, 2)}\n`);

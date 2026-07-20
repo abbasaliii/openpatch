@@ -3,12 +3,13 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { JSDOM } from "jsdom";
 import { applyPatch } from "../src/core/engine";
+import { canonicalPatchSource } from "../src/core/patch-source";
 import type { OpenPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
 
 const patchPath = resolve(process.argv[2] ?? "src/registry/patches/civic-apply.openpatch.json");
 const htmlPath = resolve(process.argv[3] ?? "src/site/demo/index.html");
-const raw = await readFile(patchPath, "utf8");
+const raw = canonicalPatchSource(await readFile(patchPath, "utf8"));
 const candidate: unknown = JSON.parse(raw);
 const result = validatePatch(candidate);
 

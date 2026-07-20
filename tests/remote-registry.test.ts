@@ -26,13 +26,13 @@ const registryFixture: PublicRegistryIndex = {
       "reorganize"
     ],
     download: "/registry/patches/metrocare-service-navigator.openpatch.json",
-    sha256: "8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d",
+    sha256: "14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c",
     verification: { status: "verified", operations: 11, assertions: 10 },
     compatibility: {
       status: "healthy",
       checkedAt: "2026-07-20T00:52:08.768Z",
       pageUrl: "https://openpatch-tau.vercel.app/care/",
-      patchSha256: "8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d",
+      patchSha256: "14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c",
       healthy: 11,
       total: 11,
       fingerprint: "3e0a80a64a09c90f056df16f18b9b7141cc95956d8a5cab4fa6ade9da2d5c9ff",

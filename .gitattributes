@@ -1,0 +1,2 @@
+*.openpatch.json text eol=lf
+src/registry/compatibility.json text eol=lf

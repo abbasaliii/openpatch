@@ -10,6 +10,7 @@ import {
   type RegistryCompatibilityReport
 } from "../src/core/compatibility";
 import type { SelectorPreflightResult } from "../src/core/preflight";
+import { canonicalPatchSource } from "../src/core/patch-source";
 import { parsePublicRegistry } from "../src/core/remote-registry";
 import type { OpenPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
@@ -48,7 +49,7 @@ let entries: MonitorEntry[];
 if (workspaceMode) {
   const files = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".openpatch.json")).sort();
   entries = await Promise.all(files.map(async (file) => {
-    const raw = await readFile(resolve(patchSourceDir, file), "utf8");
+    const raw = canonicalPatchSource(await readFile(resolve(patchSourceDir, file), "utf8"));
     const validation = validatePatch(JSON.parse(raw) as unknown);
     if (!validation.ok) throw new Error(`${file} failed policy at ${validation.issues[0]?.path}.`);
     return {

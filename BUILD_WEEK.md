@@ -41,6 +41,7 @@ The public Git history preserves the Build Week sequence:
 | Jul 20, 05:32 | `c49f839` | Verified public registry discovery |
 | Jul 20, 06:28 | `e489524` | Compatibility Sentinel and drift quarantine |
 | Jul 20 | `v0.7.0` release | Private provider comparison, workspace compatibility receipts, final visual and release hardening |
+| Jul 20 | `v0.7.1` hotfix | Canonical cross-platform patch bytes prevent Windows/Linux SHA-256 receipt drift in production builds |
 
 ## Iteration examples
 
