@@ -18,7 +18,7 @@
 - Secondary CivicApply demo: https://openpatch-tau.vercel.app/demo/
 - Chrome extension: https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.8.0.zip
 - Codex authoring plugin: https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.4.0.zip
-- Upload-ready demo video: `submission-assets/openpatch-demo.mp4` (2:26, narrated, captioned; public YouTube URL pending)
+- Upload-ready demo video: `submission-assets/openpatch-demo.mp4` (2:44, narrated, captioned; public YouTube URL pending)
 - Devpost 3:2 cover: `submission-assets/openpatch-devpost-thumbnail.png`
 - Extension SHA-256: `7ED1F10FFBD98F93BC8CBBA44DB53B26ECCD5915289983960D631E5922F2CE75`
 - Plugin SHA-256: `E78D5ACC07F5F4E17BE4D8E2EB37905A56BACA14E591DFBA7403BB3E4BFEDED9`

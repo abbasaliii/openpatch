@@ -1,0 +1,38 @@
+[
+  {
+    "title": "The problem",
+    "text": "Some websites are impossible to avoid: government forms, university portals, and health directories. When one is confusing or missing a feature, you normally have to wait for the owner to fix it. OpenPatch gives users another option: safely repair the website for themselves, then share that repair with everyone."
+  },
+  {
+    "title": "The whole product",
+    "text": "Here is the whole product. One person tells Codex what the website needs. Codex inspects the page and creates a small, constrained patch. OpenPatch tests it and publishes it for that exact domain. Everyone else installs the repair without using AI, creating an account, or entering an API key."
+  },
+  {
+    "title": "A real missing feature",
+    "text": "Take this fictional MetroCare directory. It has twelve useful providers, but no search, no filters, and no comparison. A patient looking for wheelchair access, Urdu support, and a clinic accepting new patients must open and inspect every card. The website works, but it still fails that person."
+  },
+  {
+    "title": "One person authors the repair",
+    "text": "The user describes the problem in OpenPatch and copies a privacy-safe Repair Brief into Codex. The brief contains page structure and selector candidates, never form values, cookies, storage, private page text, or URL queries. Codex then uses the OpenPatch authoring skill to inspect the page, choose approved building blocks, and test the result."
+  },
+  {
+    "title": "A constrained patch",
+    "text": "This is not an arbitrary userscript. A patch can request safe operations such as layout repair, accessibility, local autosave, search, filtering, and comparison. It cannot contain JavaScript, HTML templates, network calls, or cookie access. Here the patch applies eleven operations, and every target is healthy."
+  },
+  {
+    "title": "The visible result",
+    "text": "The missing controls now appear directly inside MetroCare. I choose wheelchair access, Urdu, and accepting new patients. Twelve services immediately become one clear match. The preferences stay on this device, result changes are announced for assistive technology, and these interactions send no network request."
+  },
+  {
+    "title": "More than a cosmetic change",
+    "text": "OpenPatch can add real product capability. I clear the filters, select two providers, and open a keyboard-accessible comparison table. The trusted runtime builds this table only from fields the patch declared in advance. Nothing is scraped from arbitrary page text, and nothing leaves the browser."
+  },
+  {
+    "title": "Everyone else installs without AI",
+    "text": "After one person authors the repair, everyone else gets a normal extension experience. OpenPatch finds the matching community patch, shows the exact website scope, permissions, version, SHA-256 receipt, scheduled compatibility result, and a fresh live selector check. One click installs it. AI was needed once; every later user needs only the patch."
+  },
+  {
+    "title": "A public repair layer",
+    "text": "Websites change, so the Compatibility Sentinel checks every published repair in Chromium every six hours. If a selector breaks, the patch is quarantined before another user discovers it. The same safe engine can repair a mobile form, preserve unfinished progress, and add accessible errors. OpenPatch is a public feature layer for the web: when the owner will not fix it, users still can."
+  }
+]

@@ -1,89 +1,139 @@
 1
-00:00:00,000 --> 00:00:07,500
-A website does not have to be broken to fail you.
-It can work exactly as its owner designed it.
+00:00:00,000 --> 00:00:05,307
+Some websites are impossible to avoid: government forms, university portals, and health directories.
 
 2
-00:00:07,500 --> 00:00:15,300
-And still omit the feature your life depends on.
-OpenPatch is a public feature layer for websites users do not control.
+00:00:05,307 --> 00:00:10,296
+When one is confusing or missing a feature, you normally have to wait for the owner to fix it.
 
 3
-00:00:15,300 --> 00:00:23,800
-MetroCare is a credible twelve-provider directory.
-But there is no search, combined filtering, or comparison.
+00:00:10,296 --> 00:00:16,506
+OpenPatch gives users another option: safely repair the website for themselves, then share that repair with everyone.
 
 4
-00:00:23,800 --> 00:00:32,100
-To find wheelchair access, Urdu, and new patients,
-you must inspect every card yourself.
+00:00:16,506 --> 00:00:18,028
+Here is the whole product.
 
 5
-00:00:32,100 --> 00:00:38,500
-OpenPatch creates a privacy-safe Repair Brief
-with bounded structural signals for Codex.
+00:00:18,028 --> 00:00:20,721
+One person tells Codex what the website needs.
 
 6
-00:00:38,500 --> 00:00:44,800
-Field values, cookies, storage, query strings,
-and page text never enter the brief.
+00:00:20,721 --> 00:00:24,408
+Codex inspects the page and creates a small, constrained patch.
 
 7
-00:00:44,800 --> 00:00:54,500
-GPT-5.6 through Codex inspects the DOM and screenshots,
-defines acceptance criteria, and chooses constrained operations.
+00:00:24,408 --> 00:00:27,804
+OpenPatch tests it and publishes it for that exact domain.
 
 8
-00:00:54,500 --> 00:01:04,600
-It cannot provide JavaScript, HTML, callbacks, fetches,
-cookies, templates, or arbitrary page-text extraction.
+00:00:27,804 --> 00:00:33,423
+Everyone else installs the repair without using AI, creating an account, or entering an API key.
 
 9
-00:01:04,600 --> 00:01:11,800
-Now the exact constrained runtime is active.
-Eleven of eleven operations are healthy.
+00:00:33,423 --> 00:00:35,700
+Take this fictional MetroCare directory.
 
 10
-00:01:11,800 --> 00:01:19,200
-Two providers become a keyboard-accessible comparison table
-built only from declared data attributes.
+00:00:35,700 --> 00:00:40,084
+It has twelve useful providers, but no search, no filters, and no comparison.
 
 11
-00:01:19,200 --> 00:01:28,000
-Wheelchair access, Urdu, and accepting new patients
-reduce twelve services to one understandable choice.
+00:00:40,084 --> 00:00:47,143
+A patient looking for wheelchair access, Urdu support, and a clinic accepting new patients must open and inspect every card.
 
 12
-00:01:28,000 --> 00:01:36,800
-Preferences stay local, results are announced,
-and our browser test proves the interactions emit zero requests.
+00:00:47,143 --> 00:00:49,989
+The website works, but it still fails that person.
 
 13
-00:01:36,800 --> 00:01:45,800
-The extension discovers the community feature automatically
-and shows scope, permissions, integrity, and compatibility.
+00:00:49,989 --> 00:00:55,360
+The user describes the problem in OpenPatch and copies a privacy-safe Repair Brief into Codex.
 
 14
-00:01:45,800 --> 00:01:54,700
-One click installs it. Everyone downstream needs
-no AI, account, or API key.
+00:00:55,360 --> 00:01:02,788
+The brief contains page structure and selector candidates, never form values, cookies, storage, private page text, or URL queries.
 
 15
-00:01:54,700 --> 00:02:01,300
-The Compatibility Sentinel checks every published target
-in Chromium every six hours.
+00:01:02,788 --> 00:01:09,645
+Codex then uses the OpenPatch authoring skill to inspect the page, choose approved building blocks, and test the result.
 
 16
-00:02:01,300 --> 00:02:07,800
-If the original site changes, the patch is quarantined
-before another user discovers it.
+00:01:09,645 --> 00:01:11,951
+This is not an arbitrary userscript.
 
 17
-00:02:07,800 --> 00:02:17,000
-Built in this primary GPT-5.6 and Codex thread:
-40 unit tests, 14 browser journeys, and 4 extension tests.
+00:01:11,951 --> 00:01:19,895
+A patch can request safe operations such as layout repair, accessibility, local autosave, search, filtering, and comparison.
 
 18
-00:02:17,000 --> 00:02:26,100
-When a site will not add the feature people need, users still can.
-Fix the web you have.
+00:01:19,895 --> 00:01:24,892
+It cannot contain JavaScript, HTML templates, network calls, or cookie access.
+
+19
+00:01:24,892 --> 00:01:29,376
+Here the patch applies eleven operations, and every target is healthy.
+
+20
+00:01:29,376 --> 00:01:32,487
+The missing controls now appear directly inside MetroCare.
+
+21
+00:01:32,487 --> 00:01:35,760
+I choose wheelchair access, Urdu, and accepting new patients.
+
+22
+00:01:35,760 --> 00:01:38,495
+Twelve services immediately become one clear match.
+
+23
+00:01:38,495 --> 00:01:45,952
+The preferences stay on this device, result changes are announced for assistive technology, and these interactions send no network request.
+
+24
+00:01:45,952 --> 00:01:48,260
+OpenPatch can add real product capability.
+
+25
+00:01:48,260 --> 00:01:53,261
+I clear the filters, select two providers, and open a keyboard-accessible comparison table.
+
+26
+00:01:53,261 --> 00:01:57,932
+The trusted runtime builds this table only from fields the patch declared in advance.
+
+27
+00:01:57,932 --> 00:02:02,108
+Nothing is scraped from arbitrary page text, and nothing leaves the browser.
+
+28
+00:02:02,108 --> 00:02:07,263
+After one person authors the repair, everyone else gets a normal extension experience.
+
+29
+00:02:07,263 --> 00:02:18,053
+OpenPatch finds the matching community patch, shows the exact website scope, permissions, version, SHA-256 receipt, scheduled compatibility result, and a fresh live selector check.
+
+30
+00:02:18,053 --> 00:02:19,372
+One click installs it.
+
+31
+00:02:19,372 --> 00:02:22,849
+AI was needed once; every later user needs only the patch.
+
+32
+00:02:22,849 --> 00:02:28,489
+Websites change, so the Compatibility Sentinel checks every published repair in Chromium every six hours.
+
+33
+00:02:28,489 --> 00:02:32,787
+If a selector breaks, the patch is quarantined before another user discovers it.
+
+34
+00:02:32,787 --> 00:02:38,319
+The same safe engine can repair a mobile form, preserve unfinished progress, and add accessible errors.
+
+35
+00:02:38,319 --> 00:02:43,530
+OpenPatch is a public feature layer for the web: when the owner will not fix it, users still can.

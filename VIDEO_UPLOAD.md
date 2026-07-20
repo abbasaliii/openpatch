@@ -3,11 +3,11 @@
 ## Final assets
 
 - Video: `submission-assets/openpatch-demo.mp4`
-- Runtime: 2:26.12
-- Format: 1600×900 (16:9) H.264, 25 fps, 48 kHz AAC
+- Runtime: 2:43.60
+- Format: 1600×900 (16:9) H.264 High, 30 fps, AAC-LC
 - Audio target: normalized to −16 LUFS with −1.5 dBTP ceiling
-- Size: 9,044,364 bytes
-- SHA-256: `B03C76B9C9C10D0DF1A82847CE51DB32D28745F1B958595EF25ABE478141905E`
+- Size: 11,656,026 bytes
+- SHA-256: `46BE30C294F31D949C4B3850F87527C20339C559C8FC96684E2C8DD510597413`
 - Thumbnail: `submission-assets/openpatch-youtube-thumbnail.png` (1280×720)
 - Captions: `submission-assets/openpatch-demo.srt`
 - Narration source: `submission-assets/demo-narration.txt`
@@ -37,15 +37,15 @@ Built with GPT-5.6 and Codex for OpenAI Build Week 2026. The healthcare director
 ## Chapters
 
 ```text
-0:00 The public feature layer for the web
-0:15 A credible missing capability
-0:32 Privacy-safe Repair Brief
-0:45 GPT-5.6 + Codex authoring boundary
-1:05 Accessible provider comparison
-1:19 Twelve services become one
-1:37 Verified community installation
-1:55 Compatibility Sentinel and quarantine
-2:08 Build Week engineering proof
+0:00 Websites you cannot change
+0:17 The whole product in three steps
+0:33 MetroCare before OpenPatch
+0:50 Privacy-safe Codex authoring
+1:09 A constrained patch, not a userscript
+1:29 Twelve services become one
+1:46 Keyboard-accessible comparison
+2:02 Everyone else installs without AI
+2:23 Compatibility, quarantine, and form repair
 ```
 
 ## Upload settings
