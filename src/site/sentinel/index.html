@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="OpenPatch Compatibility Sentinel: live breakage detection for community web repairs." />
+    <title>Compatibility Sentinel — OpenPatch</title>
+    <link rel="stylesheet" href="/sentinel/sentinel.css" />
+  </head>
+  <body>
+    <header class="console-nav">
+      <a class="brand" href="/"><span class="brand-symbol" aria-hidden="true"><i></i><i></i></span><strong>OpenPatch</strong></a>
+      <span class="console-label">Compatibility Console</span>
+      <nav><a href="/registry/compatibility.json">Raw receipt ↗</a><a class="nav-demo" href="/care/">Open flagship demo</a></nav>
+    </header>
+
+    <main>
+      <section class="console-hero">
+        <div>
+          <span class="kicker"><i></i> Compatibility Sentinel</span>
+          <h1>Know when the web moved<br /><em>underneath a patch.</em></h1>
+          <p>Every six hours, Chromium opens each published target, verifies the exact patch bytes, and preflights every constrained operation. Drifted patches are quarantined before another user discovers them.</p>
+        </div>
+        <aside class="hero-receipt">
+          <span>Registry state</span>
+          <strong id="hero-status">Checking live receipt…</strong>
+          <p id="hero-checked">Connecting to the public registry</p>
+          <div><i></i> No page or user data collected</div>
+        </aside>
+      </section>
+
+      <section class="metric-grid" aria-label="Compatibility summary">
+        <article><span>Published patches</span><strong id="metric-total">—</strong><small>SHA-bound artifacts</small></article>
+        <article class="healthy"><span>Live compatible</span><strong id="metric-healthy">—</strong><small>Eligible for discovery</small></article>
+        <article><span>Operations watched</span><strong id="metric-operations">—</strong><small>Selector targets</small></article>
+        <article><span>Check interval</span><strong>6h</strong><small>Scheduled Chromium</small></article>
+      </section>
+
+      <section class="workspace">
+        <div class="patch-panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow">Public compatibility ledger</span><h2>Published patches</h2></div>
+            <span class="ledger-state"><i></i> Machine verified</span>
+          </div>
+          <div class="patch-list" id="patch-list" aria-live="polite">
+            <p class="loading">Loading operation receipts…</p>
+          </div>
+        </div>
+
+        <aside class="drift-lab">
+          <span class="eyebrow">Interactive drift lab</span>
+          <h2>What happens after a redesign?</h2>
+          <p>Simulate MetroCare renaming its directory selector. This changes only the visualization—never the live registry.</p>
+          <div class="selector-change">
+            <small>Original target</small><code>#care-directory</code>
+            <span>↓ site redesign</span>
+            <small>Observed target</small><code class="missing">0 matches</code>
+          </div>
+          <div class="simulation-state" id="simulation-state">
+            <span class="state-icon">✓</span>
+            <div><strong>Eligible for discovery</strong><small>10/10 operations compatible</small></div>
+          </div>
+          <button id="simulate-drift" type="button">Simulate selector drift</button>
+          <p class="simulation-note" id="simulation-note" role="status" aria-live="polite">The real published patch remains untouched.</p>
+        </aside>
+      </section>
+
+      <section class="pipeline" aria-label="Breakage detection pipeline">
+        <article><span>01</span><strong>Open live target</strong><p>Headless Chromium loads the declared public host and path.</p></article>
+        <i>→</i>
+        <article><span>02</span><strong>Verify exact bytes</strong><p>The downloaded patch must match its registry SHA-256 receipt.</p></article>
+        <i>→</i>
+        <article><span>03</span><strong>Preflight operations</strong><p>Every selector and required relationship is checked without applying changes.</p></article>
+        <i>→</i>
+        <article><span>04</span><strong>Allow or quarantine</strong><p>Only healthy entries remain eligible for automatic discovery.</p></article>
+      </section>
+    </main>
+
+    <footer><a href="/">← Back to OpenPatch</a><span>Public evidence, local privacy.</span></footer>
+    <script type="module" src="/sentinel/sentinel.ts"></script>
+  </body>
+</html>

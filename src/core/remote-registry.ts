@@ -13,6 +13,16 @@ export type RegistryPatchEntry = {
   download: string;
   sha256: string;
   verification: { status: "verified"; operations: number; assertions: number };
+  compatibility?: {
+    status: "healthy" | "drifted" | "unreachable";
+    checkedAt: string;
+    pageUrl: string;
+    patchSha256: string;
+    healthy: number;
+    total: number;
+    fingerprint: string;
+    driftedOperationIds: string[];
+  };
 };
 
 export type PublicRegistryIndex = {
@@ -52,6 +62,24 @@ function safeEntry(value: unknown): value is RegistryPatchEntry {
   if (value.verification.status !== "verified") return false;
   if (!Number.isInteger(value.verification.operations) || Number(value.verification.operations) < 1 || Number(value.verification.operations) > 100) return false;
   if (!Number.isInteger(value.verification.assertions) || Number(value.verification.assertions) < 1 || Number(value.verification.assertions) > 100) return false;
+  if (value.compatibility !== undefined) {
+    if (!isRecord(value.compatibility)) return false;
+    if (!["healthy", "drifted", "unreachable"].includes(String(value.compatibility.status))) return false;
+    if (!isShortString(value.compatibility.checkedAt, 40) || !Number.isFinite(Date.parse(String(value.compatibility.checkedAt)))) return false;
+    if (!isShortString(value.compatibility.pageUrl, 500) || !isShortString(value.compatibility.patchSha256, 64)) return false;
+    if (!/^[a-f0-9]{64}$/.test(String(value.compatibility.patchSha256)) || value.compatibility.patchSha256 !== value.sha256) return false;
+    if (!isShortString(value.compatibility.fingerprint, 64) || !/^[a-f0-9]{64}$/.test(String(value.compatibility.fingerprint))) return false;
+    if (!Number.isInteger(value.compatibility.healthy) || !Number.isInteger(value.compatibility.total)) return false;
+    if (Number(value.compatibility.healthy) < 0 || Number(value.compatibility.total) < 1 || Number(value.compatibility.healthy) > Number(value.compatibility.total)) return false;
+    if (!Array.isArray(value.compatibility.driftedOperationIds) || value.compatibility.driftedOperationIds.length > 100) return false;
+    if (!value.compatibility.driftedOperationIds.every((id) => isShortString(id, 120))) return false;
+    try {
+      const monitoredUrl = new URL(String(value.compatibility.pageUrl));
+      if (!patchMatchesUrl({ match: value.scope } as OpenPatch, monitoredUrl)) return false;
+    } catch { return false; }
+    if (value.compatibility.status === "healthy" && (value.compatibility.healthy !== value.compatibility.total || value.compatibility.driftedOperationIds.length > 0)) return false;
+    if (value.compatibility.status === "drifted" && value.compatibility.healthy === value.compatibility.total) return false;
+  }
   return true;
 }
 
@@ -62,7 +90,11 @@ export function parsePublicRegistry(value: unknown): PublicRegistryIndex | null 
 }
 
 export function registryMatchesUrl(index: PublicRegistryIndex, url: URL) {
-  return index.patches.filter((entry) => patchMatchesUrl({ match: entry.scope } as OpenPatch, url));
+  return index.patches.filter((entry) =>
+    entry.compatibility?.status !== "drifted"
+    && entry.compatibility?.status !== "unreachable"
+    && patchMatchesUrl({ match: entry.scope } as OpenPatch, url)
+  );
 }
 
 export function registryPatchUrl(entry: RegistryPatchEntry, registryUrl = PUBLIC_REGISTRY_URL) {

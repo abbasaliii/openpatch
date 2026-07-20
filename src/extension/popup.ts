@@ -177,7 +177,10 @@ function showRegistryOffer(entry: RegistryPatchEntry) {
   byId("install-title").textContent = "A verified feature is ready";
   byId("install-description").textContent = "OpenPatch checked its policy, SHA-256 receipt, domain scope, and live selectors on this page.";
   byId("registry-match-name").textContent = `${entry.name} · v${entry.version}`;
-  byId("registry-match-proof").textContent = `${entry.verification.operations} constrained operations · ${entry.verification.assertions} automated assertions`;
+  const sentinelProof = entry.compatibility
+    ? ` · live compatibility ${entry.compatibility.healthy}/${entry.compatibility.total}`
+    : "";
+  byId("registry-match-proof").textContent = `${entry.verification.operations} constrained operations · ${entry.verification.assertions} assertions${sentinelProof}`;
   byId("import-file-label").textContent = "Or choose a .openpatch.json instead";
   installButton.textContent = "Install verified community feature";
 }

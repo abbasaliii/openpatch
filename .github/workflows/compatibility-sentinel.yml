@@ -1,0 +1,32 @@
+name: Compatibility Sentinel
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  monitor-public-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Preflight every published patch against its live page
+        run: npm run monitor:registry -- compatibility-report.json
+      - name: Preserve the machine-readable compatibility receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openpatch-compatibility-${{ github.run_id }}
+          path: compatibility-report.json
+          if-no-files-found: error
+          retention-days: 30

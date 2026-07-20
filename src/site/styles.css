@@ -129,6 +129,9 @@ button, input, select, textarea { font: inherit; }
 .registry-info h3 { margin: 15px 0 10px; font-size: 23px; letter-spacing: -.035em; }
 .registry-info > p { max-width: 530px; margin: 0; color: #627169; font-size: 12px; line-height: 1.6; }
 .registry-info .registry-receipt { margin-top: 17px; padding: 8px 10px; border: 1px solid #dce9e3; border-radius: 8px; color: #587067; background: #f7fbf9; font: 8px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+.registry-info .compatibility-receipt { display: flex; align-items: center; gap: 7px; margin-top: 17px; padding: 8px 10px; border: 1px solid #bfe7d3; border-radius: 8px; color: #08724f; background: #effcf6; font: 800 8px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.registry-info .compatibility-receipt::before { content: ""; width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: #10a471; box-shadow: 0 0 0 3px rgba(16, 164, 113, .11); }
+.registry-info .compatibility-receipt + .registry-receipt { margin-top: 7px; }
 .capabilities { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 22px; }
 .capabilities span { padding: 5px 8px; border: 1px solid #dce6e1; border-radius: 7px; color: #5d6b64; font-size: 8px; font-weight: 750; }
 .publisher { display: flex; align-items: center; gap: 9px; }

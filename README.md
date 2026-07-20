@@ -6,7 +6,7 @@ OpenPatch is a safe, public feature layer for websites users do not own. A user 
 
 Built for OpenAI Build Week 2026 with Codex and GPT‑5.6.
 
-**Live product:** [openpatch-tau.vercel.app](https://openpatch-tau.vercel.app/) · [Flagship MetroCare demo](https://openpatch-tau.vercel.app/care/) · [CivicApply repair](https://openpatch-tau.vercel.app/demo/) · [Public registry](https://openpatch-tau.vercel.app/registry/index.json)
+**Live product:** [openpatch-tau.vercel.app](https://openpatch-tau.vercel.app/) · [Flagship MetroCare demo](https://openpatch-tau.vercel.app/care/) · [CivicApply repair](https://openpatch-tau.vercel.app/demo/) · [Public registry](https://openpatch-tau.vercel.app/registry/index.json) · [Compatibility Sentinel](https://openpatch-tau.vercel.app/registry/compatibility.json)
 
 ## The demo
 
@@ -27,7 +27,9 @@ The original CivicApply proof remains in the registry as a second repair. Its 19
 
 On any page without a community patch, the extension can also create a **privacy-safe Repair Brief** for Codex. It includes the exact origin and path, viewport geometry, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, URL queries, or page text.
 
-OpenPatch v0.5 closes the community loop: open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. A failed hash, policy rule, scope, or selector blocks installation. Manual `.openpatch.json` import remains available for independent distribution.
+OpenPatch v0.6 closes the community loop and watches it after publication. Open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. The Compatibility Sentinel also opens every published target in Chromium every six hours, records an operation-by-operation structural fingerprint, and quarantines drifted or unreachable patches from discovery. A failed hash, policy rule, scope, compatibility receipt, or selector blocks installation. Manual `.openpatch.json` import remains available for independent distribution.
+
+![Compatibility Sentinel showing a simulated patch quarantine](submission-assets/compatibility-sentinel-quarantine.png)
 
 The flagship validator reports **10/10 healthy operations**, **8/8 publication assertions**, and SHA-256 receipt `c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698`. Local filter preferences expire automatically after 24 hours.
 
@@ -58,9 +60,9 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [OpenPatch extension v0.5.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.5.0.zip) — load-unpacked Chrome extension
+- [OpenPatch extension v0.6.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.6.0.zip) — load-unpacked Chrome extension
 - [OpenPatch Codex plugin v0.3.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.3.0.zip) — validated authoring plugin
-- Extension SHA-256: `398F9D753940F6CFF0BF7F17365960C0EC58F93D1BD8CCC5D48866DE6444FD05`
+- Extension SHA-256: `728577E853298F62003C0BFD162CFFCBFFCE788DC20310198A24600ECED2646A`
 - Plugin SHA-256: `02F08D07A3130F6241189F75123C616504C13970B4C973B5A6358EFAAC9C3D3E`
 
 Then:
@@ -71,7 +73,7 @@ Then:
 2. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select the unzipped folder.
 3. Open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/).
 4. Observe twelve services and no search or filters—the directory works, but cannot express a person’s combined needs.
-5. Open the OpenPatch extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, and reports `10/10 operation targets healthy`.
+5. Open the OpenPatch extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, shows the scheduled `10/10` live-compatibility result, and independently reports `10/10 operation targets healthy` on your current tab.
 6. Choose **Install verified community feature**; the page reloads with the navigator active.
 7. Choose **Wheelchair access**, **Urdu**, and **Accepting new patients**. The directory reduces to Harbor Family Clinic and announces `1 of 12 services match`.
 8. Reload to see the preferences restored locally; press `/` to focus search. The automated test also proves those interactions make zero network requests.
@@ -122,6 +124,7 @@ npm test
 npm run validate:patch
 npm run test:browser
 npm run test:extension
+npm run monitor:registry
 npm run build
 # or run the entire release gate:
 npm run verify
@@ -129,13 +132,14 @@ npm run verify
 
 Current results:
 
-- 34/34 unit, policy, registry-discovery, preflight, runtime, and privacy tests pass
-- 12/12 desktop and 390px browser journeys pass, including the zero-install judge preview
+- 38/38 unit, policy, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests pass
+- 14/14 desktop and 390px browser journeys pass, including the zero-install judge preview and interactive quarantine console
 - 4/4 Manifest V3 extension integration tests pass with a dynamically installed patch plus both real public demo domains
 - 10/10 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
 - 8/8 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy
 - Production site and Manifest V3 extension build successfully
 - Public `/registry/index.json` and versioned patch download are generated with a SHA-256 receipt
+- Public `/registry/compatibility.json` exposes live-page fingerprints and per-operation health; a scheduled GitHub workflow reruns it every six hours
 
 Browser tests prove both product claims: MetroCare starts as a realistic but filterless directory, then privately combines access needs, persists preferences, announces results, supports the keyboard, fits mobile, and emits no interaction requests; CivicApply still proves layout repair, local draft restoration, specific accessible errors, and arrow-key focus movement.
 
@@ -143,6 +147,7 @@ Browser tests prove both product claims: MetroCare starts as a realistic but fil
 
 ```text
 .agents/skills/openpatch-author/ Codex patch-authoring workflow, auto-discovered in this repo
+.github/workflows/              Six-hour public-registry Compatibility Sentinel
 plugins/openpatch/               Distributable Codex plugin package
 src/core/                      DSL types, domain matcher, validator, runtime
 src/extension/                 Manifest V3 content script, popup, service worker
@@ -191,7 +196,7 @@ This project was created during the Build Week submission period in a single cor
 
 **Where GPT‑5.6 through Codex accelerated the work:** translating the concept into a judge-focused vertical slice; scaffolding the Manifest V3 extension and public registry; implementing and threat-modeling the DSL; authoring the CivicApply repair; building the privacy-safe extension-to-Codex Repair Brief; packaging the official repo skill and plugin; building unit and browser tests; running responsive visual QA; and turning browser failures into concrete layout and test-fixture fixes.
 
-**Key joint tradeoff:** the hackathon MVP publishes two fully tested community patches instead of pretending a production-scale catalog already exists. The registry is a genuine machine-readable endpoint with versions, scopes, downloadable artifacts, operation/assertion counts, and SHA-256 receipts; the extension automatically discovers the matching verified entry, revalidates it, preflights the live page, and installs it on its exact domains. Publisher signing, moderation, and revocation remain explicit next milestones.
+**Key joint tradeoff:** the hackathon MVP publishes two fully tested community patches instead of pretending a production-scale catalog already exists. The registry is a genuine machine-readable endpoint with versions, scopes, downloadable artifacts, operation/assertion counts, SHA-256 receipts, and live compatibility fingerprints; the extension automatically discovers the matching verified entry, rejects quarantined patches, revalidates it, preflights the current page, and installs it on its exact domains. Publisher signing, moderation, and revocation remain explicit next milestones.
 
 Before final Devpost submission, the project thread's `/feedback` Codex Session ID will be added to the submission as required.
 
@@ -201,6 +206,7 @@ OpenPatch treats patches, websites, registry metadata, and page content as untru
 
 - Exact host and narrow path matching happens before execution.
 - Registry metadata is schema-checked, downloads are same-origin pinned, and SHA-256 integrity is verified before installation.
+- Scheduled Chromium checks bind every compatibility receipt to the exact patch SHA; drifted and unreachable entries are excluded from automatic discovery.
 - Discovered and imported patches are policy-validated and live-selector-preflighted before Chrome requests exact-domain access.
 - Operations are parsed into typed built-ins; patch code is never evaluated.
 - CSS properties and attributes use allowlists.
@@ -211,7 +217,7 @@ OpenPatch treats patches, websites, registry metadata, and page content as untru
 - Patches never replace the site's actual authentication, submission, or server validation.
 - Repair Briefs exclude values, cookies, storage, query strings, and page text before anything is copied to Codex.
 
-The current MVP bundles one offline repair and automatically discovers matching verified features from the public registry. Publisher signatures, moderation, revocation, and scheduled breakage checks are explicit next milestones.
+The current MVP bundles one offline repair, automatically discovers matching verified features, and runs six-hour live compatibility checks against the public registry. Publisher signatures, moderation, automated revocation propagation, and community review are explicit next milestones.
 
 ## License
 

@@ -57,7 +57,12 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   const response = await page.request.get("/registry/index.json");
   expect(response.ok()).toBe(true);
   const registry = await response.json() as {
-    patches: Array<{ id: string; sha256: string; verification: { status: string; operations: number; assertions: number } }>;
+    patches: Array<{
+      id: string;
+      sha256: string;
+      verification: { status: string; operations: number; assertions: number };
+      compatibility: { status: string; healthy: number; total: number; fingerprint: string };
+    }>;
   };
   expect(registry.patches).toHaveLength(2);
   expect(registry.patches[0].id).toBe("org.openpatch.civicapply-accessible-draft");
@@ -71,8 +76,28 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   expect((await patchResponse.json()).schemaVersion).toBe(1);
   const navigator = registry.patches.find((patch) => patch.id === "org.openpatch.metrocare-service-navigator");
   expect(navigator?.verification).toEqual({ status: "verified", operations: 10, assertions: 8 });
+  expect(navigator?.compatibility).toMatchObject({ status: "healthy", healthy: 10, total: 10 });
+  expect(navigator?.compatibility.fingerprint).toMatch(/^[a-f0-9]{64}$/);
+  await expect(page.locator("#compatibility-receipt")).toContainText("Compatibility Sentinel: healthy");
+  const compatibilityResponse = await page.request.get("/registry/compatibility.json");
+  expect(compatibilityResponse.ok()).toBe(true);
+  expect((await compatibilityResponse.json()).summary).toEqual({ healthy: 2, drifted: 0, unreachable: 0, total: 2 });
   const navigatorResponse = await page.request.get("/registry/patches/metrocare-service-navigator.openpatch.json");
   expect(navigatorResponse.ok()).toBe(true);
+});
+
+test("the Compatibility Console explains live evidence and quarantines simulated drift", async ({ page }) => {
+  await page.goto("/sentinel/");
+  await expect(page.locator("#hero-status")).toHaveText("All 2 patches compatible");
+  await expect(page.locator("#metric-healthy")).toHaveText("2/2");
+  await expect(page.locator("#metric-operations")).toHaveText("29");
+  await expect(page.locator(".patch-row")).toHaveCount(2);
+  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "10/10 live"]);
+  await page.locator("#simulate-drift").click();
+  await expect(page.locator("#simulation-state")).toHaveClass(/quarantined/);
+  await expect(page.locator("#simulation-state strong")).toHaveText("Quarantined from discovery");
+  await expect(page.locator("#simulation-note")).toContainText("until a maintainer publishes and verifies an updated version");
+  await expect(page.getByRole("link", { name: "Raw receipt ↗" })).toHaveAttribute("href", "/registry/compatibility.json");
 });
 
 test("the original care directory is usable but forces people to inspect every service", async ({ page }) => {

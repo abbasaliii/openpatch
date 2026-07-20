@@ -13,6 +13,13 @@ type RegistryIndex = {
     sha256: string;
     scope: { hosts: string[]; paths: string[] };
     verification: { status: string; operations: number; assertions: number };
+    compatibility?: {
+      status: "healthy" | "drifted" | "unreachable";
+      checkedAt: string;
+      healthy: number;
+      total: number;
+      fingerprint: string;
+    };
   }>;
 };
 
@@ -27,10 +34,15 @@ async function loadRegistryReceipt() {
     const health = document.getElementById("registry-health");
     const scope = document.getElementById("registry-scope");
     const receipt = document.getElementById("registry-receipt");
+    const compatibility = document.getElementById("compatibility-receipt");
     if (version) version.textContent = `Published v${patch.version}`;
-    if (health) health.innerHTML = `<i></i> ${patch.verification.operations}/${patch.verification.operations}`;
+    if (health) health.innerHTML = `<i></i> ${patch.compatibility?.healthy ?? patch.verification.operations}/${patch.compatibility?.total ?? patch.verification.operations} live`;
     if (scope) scope.textContent = `${patch.scope.hosts.join(", ")} · ${patch.scope.paths.join(", ")}`;
     if (receipt) receipt.textContent = `SHA-256 ${patch.sha256} · ${patch.verification.assertions} assertions`;
+    if (compatibility && patch.compatibility) {
+      const checked = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(patch.compatibility.checkedAt));
+      compatibility.textContent = `Compatibility Sentinel: ${patch.compatibility.status} · checked ${checked} · ${patch.compatibility.fingerprint.slice(0, 12)}…`;
+    }
   } catch {
     const receipt = document.getElementById("registry-receipt");
     if (receipt) receipt.textContent = "Registry receipt unavailable — bundled demo remains usable.";

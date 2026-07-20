@@ -1,6 +1,6 @@
 {
   "name": "openpatch",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "description": "A safe, community repair layer for websites users do not own.",
@@ -11,6 +11,7 @@
     "build:site": "vite build",
     "build:extension": "node scripts/build-extension.mjs",
     "capture:previews": "node scripts/build-test-runtime.mjs && node scripts/capture-previews.mjs",
+    "monitor:registry": "node scripts/build-test-runtime.mjs && tsx scripts/check-registry-compatibility.ts",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:browser": "node scripts/build-test-runtime.mjs && playwright test",

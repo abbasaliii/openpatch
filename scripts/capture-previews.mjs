@@ -25,6 +25,12 @@ try {
   await desktop.waitForTimeout(250);
   await desktop.screenshot({ path: resolve(previewDir, "openpatch-landing.png"), fullPage: true });
 
+  const sentinel = await browser.newPage({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 1 });
+  await sentinel.goto("http://127.0.0.1:4173/sentinel/", { waitUntil: "networkidle" });
+  await sentinel.screenshot({ path: resolve(previewDir, "compatibility-sentinel.png"), fullPage: true });
+  await sentinel.locator("#simulate-drift").click();
+  await sentinel.screenshot({ path: resolve(previewDir, "compatibility-sentinel-quarantine.png"), fullPage: true });
+
   const careDesktop = await browser.newPage({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 1 });
   await careDesktop.goto("http://127.0.0.1:4173/care/", { waitUntil: "networkidle" });
   await careDesktop.screenshot({ path: resolve(previewDir, "metrocare-before-desktop.png"), fullPage: true });

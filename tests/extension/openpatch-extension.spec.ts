@@ -108,6 +108,7 @@ test("the production extension discovers and installs MetroCare from the verifie
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(popup.locator("#registry-match")).toBeVisible();
   await expect(popup.locator("#registry-match-name")).toContainText("MetroCare: personal service navigator");
+  await expect(popup.locator("#registry-match-proof")).toContainText("live compatibility 10/10");
   await expect(popup.locator("#import-health")).toHaveText("10/10 operation targets healthy");
   await expect(popup.locator("#import-status")).toContainText("Verified and healthy");
   await popup.locator("body").screenshot({

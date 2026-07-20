@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-20T00:56:50.657Z",
+  "registryUrl": "https://openpatch-tau.vercel.app/registry/index.json",
+  "summary": {
+    "healthy": 2,
+    "drifted": 0,
+    "unreachable": 0,
+    "total": 2
+  },
+  "patches": [
+    {
+      "id": "org.openpatch.civicapply-accessible-draft",
+      "version": "1.2.0",
+      "pageUrl": "https://openpatch-tau.vercel.app/demo/",
+      "status": "healthy",
+      "checkedAt": "2026-07-20T00:56:50.657Z",
+      "patchSha256": "34427b68a8004c90edd33c287db8472cb356854215ba3a8d46c26032674d2721",
+      "healthy": 19,
+      "total": 19,
+      "fingerprint": "7748cb22e659e4b19196ab4a420497c2a3783466236742305b7baf5f6f43c767",
+      "driftedOperationIds": [],
+      "results": [
+        {
+          "id": "hide-obstructive-survey",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "hide-conflicting-save-state",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "repair-page-width",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "repair-mobile-layout",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "mobile-form-spacing",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "mobile-header-width",
+          "matched": 2,
+          "healthy": true
+        },
+        {
+          "id": "mobile-preserve-agency-nav",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "mobile-content-width",
+          "matched": 2,
+          "healthy": true
+        },
+        {
+          "id": "mobile-progress-gaps",
+          "matched": 2,
+          "healthy": true
+        },
+        {
+          "id": "readable-fields",
+          "matched": 6,
+          "healthy": true
+        },
+        {
+          "id": "move-help-before-form",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "help-card-layout",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "progress-semantics",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "progress-keyboard",
+          "matched": 3,
+          "healthy": true
+        },
+        {
+          "id": "label-required-email",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "label-required-name",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "label-other-required-fields",
+          "matched": 2,
+          "healthy": true
+        },
+        {
+          "id": "persist-draft",
+          "matched": 6,
+          "healthy": true
+        },
+        {
+          "id": "accessible-validation",
+          "matched": 4,
+          "healthy": true
+        }
+      ]
+    },
+    {
+      "id": "org.openpatch.metrocare-service-navigator",
+      "version": "1.0.0",
+      "pageUrl": "https://openpatch-tau.vercel.app/care/",
+      "status": "healthy",
+      "checkedAt": "2026-07-20T00:56:50.657Z",
+      "patchSha256": "c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698",
+      "healthy": 10,
+      "total": 10,
+      "fingerprint": "a718426872e03f687ddb31a6844bea09f1051b19951410fc3103b2df15d110b9",
+      "driftedOperationIds": [],
+      "results": [
+        {
+          "id": "add-private-service-navigator",
+          "matched": 12,
+          "healthy": true
+        },
+        {
+          "id": "hide-newsletter-promotion",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "move-human-help-near-results",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "label-directory-region",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "label-results-list",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "label-service-items",
+          "matched": 12,
+          "healthy": true
+        },
+        {
+          "id": "strengthen-result-cards",
+          "matched": 12,
+          "healthy": true
+        },
+        {
+          "id": "mobile-stack-workspace",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "mobile-directory-width",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "mobile-compact-navigation",
+          "matched": 1,
+          "healthy": true
+        }
+      ]
+    }
+  ]
+}

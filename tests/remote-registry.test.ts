@@ -26,7 +26,17 @@ const registryFixture: PublicRegistryIndex = {
     ],
     download: "/registry/patches/metrocare-service-navigator.openpatch.json",
     sha256: "c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698",
-    verification: { status: "verified", operations: 10, assertions: 8 }
+    verification: { status: "verified", operations: 10, assertions: 8 },
+    compatibility: {
+      status: "healthy",
+      checkedAt: "2026-07-20T00:52:08.768Z",
+      pageUrl: "https://openpatch-tau.vercel.app/care/",
+      patchSha256: "c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698",
+      healthy: 10,
+      total: 10,
+      fingerprint: "a718426872e03f687ddb31a6844bea09f1051b19951410fc3103b2df15d110b9",
+      driftedOperationIds: []
+    }
   }]
 };
 
@@ -52,5 +62,18 @@ describe("public registry discovery", () => {
     const unverified = structuredClone(registryFixture) as unknown as { patches: Array<{ verification: { status: string } }> };
     unverified.patches[0].verification.status = "pending";
     expect(parsePublicRegistry(unverified)).toBeNull();
+  });
+
+  it("quarantines a patch whose live compatibility receipt reports drift", () => {
+    const drifted = structuredClone(registryFixture);
+    drifted.patches[0].compatibility!.status = "drifted";
+    drifted.patches[0].compatibility!.healthy = 9;
+    drifted.patches[0].compatibility!.driftedOperationIds = ["add-private-service-navigator"];
+    const parsed = parsePublicRegistry(drifted);
+    expect(parsed).not.toBeNull();
+    expect(registryMatchesUrl(parsed!, new URL("https://openpatch-tau.vercel.app/care/"))).toEqual([]);
+
+    drifted.patches[0].compatibility!.fingerprint = "not-a-hash";
+    expect(parsePublicRegistry(drifted)).toBeNull();
   });
 });
