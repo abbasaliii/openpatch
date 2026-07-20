@@ -135,7 +135,7 @@ No credentials or API key are needed.
 - [x] Add repository URL to Devpost
 - [x] Record a narrated, captioned demo video under 3 minutes (`submission-assets/patch-the-web-demo.mp4`)
 - [x] Upload the final video to public YouTube using `VIDEO_UPLOAD.md`
-- [ ] Save the YouTube URL in Devpost
+- [x] Save the YouTube URL in Devpost
 - [x] Run `/feedback` in the primary Codex build thread and add the Session ID
 - [x] Add the public demo URL and exact no-login testing instructions
 - [x] Prepare project thumbnail and same-viewport MetroCare before/after screenshots in `submission-assets`

@@ -266,10 +266,10 @@ The video is one continuous live browser workflow: public download, Chrome exten
 - [x] Production compatibility monitor and clean-install CI passing
 - [x] All public links return HTTP 200
 - [x] No tracked `.env` files or common credential patterns found
-- [ ] Public YouTube URL saved in the Devpost draft and verified public
+- [x] Public YouTube URL saved in the Devpost draft and verified public
 - [x] `/feedback` Session ID added
 - [x] Truthful submitter country selected
-- [ ] Devpost preview proofread after all fields are saved
+- [x] Devpost preview proofread after all fields are saved
 - [ ] Final submission explicitly authorized by the user
 
 ## Final ten-minute submission sequence — only after authorization
