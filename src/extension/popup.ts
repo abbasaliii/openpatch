@@ -1,5 +1,12 @@
 import { patchMatchesUrl } from "../core/matcher";
 import { preflightPatchOnDocument, type SelectorPreflightResult } from "../core/preflight";
+import {
+  PUBLIC_REGISTRY_URL,
+  parsePublicRegistry,
+  registryMatchesUrl,
+  registryPatchUrl,
+  type RegistryPatchEntry
+} from "../core/remote-registry";
 import { comparePatchVersions, permissionOrigins } from "../core/registry";
 import type { OpenPatch, PatchHealth } from "../core/types";
 import { validatePatch } from "../core/validator";
@@ -17,6 +24,13 @@ type PageState = {
   matches: MatchedPatchState[];
 };
 
+type PendingImport = {
+  patch: OpenPatch;
+  hash: string;
+  preflight: SelectorPreflightResult;
+  source: "local-file" | "public-registry";
+};
+
 const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const host = byId<HTMLElement>("site-host");
 const icon = byId<HTMLElement>("site-icon");
@@ -31,10 +45,12 @@ const patchFile = byId<HTMLInputElement>("patch-file");
 const importPreview = byId<HTMLElement>("import-preview");
 const importStatus = byId<HTMLElement>("import-status");
 const installButton = byId<HTMLButtonElement>("install-button");
+const installFlow = byId<HTMLElement>("install-flow");
+const registryMatch = byId<HTMLElement>("registry-match");
 
 let currentTab: chrome.tabs.Tab | undefined;
 let currentPatch: MatchedPatchState | undefined;
-let pendingImport: { patch: OpenPatch; hash: string; preflight: SelectorPreflightResult } | undefined;
+let pendingImport: PendingImport | undefined;
 
 const CAPABILITY_LABELS: Record<string, string> = {
   layout: "Change allowlisted layout and visual properties",
@@ -113,6 +129,85 @@ function showImportPreview(patch: OpenPatch, hash: string, preflight: SelectorPr
   importPreview.classList.toggle("warning", installButton.disabled);
 }
 
+async function preparePatch(
+  raw: string,
+  source: PendingImport["source"],
+  registryEntry?: RegistryPatchEntry
+) {
+  pendingImport = undefined;
+  importPreview.hidden = true;
+  installButton.disabled = true;
+  if (new TextEncoder().encode(raw).byteLength > 256_000) throw new Error("Patch files must be smaller than 256 KB.");
+
+  const validation = validatePatch(JSON.parse(raw) as unknown);
+  if (!validation.ok) {
+    throw new Error(`Policy rejected ${validation.issues[0]?.path} ${validation.issues[0]?.message}`);
+  }
+  const patch = validation.patch;
+  if (registryEntry && (patch.id !== registryEntry.id || patch.version !== registryEntry.version)) {
+    throw new Error("Registry metadata does not match the downloaded patch.");
+  }
+  if (currentPatch?.patch.id === patch.id && comparePatchVersions(patch.version, currentPatch.patch.version) < 0) {
+    throw new Error(`Version ${patch.version} is older than the installed v${currentPatch.patch.version}.`);
+  }
+  if (!currentTab?.id || !currentTab.url?.startsWith("http")) throw new Error("Open the website this patch repairs first.");
+  if (!patchMatchesUrl(patch, new URL(currentTab.url))) throw new Error("This patch does not match the current domain and path.");
+
+  const results = await chrome.scripting.executeScript({
+    target: { tabId: currentTab.id },
+    func: preflightPatchOnDocument,
+    args: [patch]
+  });
+  const preflight = results[0]?.result as SelectorPreflightResult | undefined;
+  if (!preflight) throw new Error("Selector preflight did not return a result.");
+  const hash = await sha256(raw);
+  if (registryEntry && hash !== registryEntry.sha256) throw new Error("SHA-256 integrity check failed.");
+
+  pendingImport = { patch, hash, preflight, source };
+  showImportPreview(patch, hash, preflight);
+  return { patch, preflight };
+}
+
+function showRegistryOffer(entry: RegistryPatchEntry) {
+  empty.hidden = true;
+  matchDot.classList.add("active");
+  registryMatch.hidden = false;
+  installFlow.classList.add("registry-ready");
+  byId("install-eyebrow").textContent = "Public registry discovery";
+  byId("install-title").textContent = "A verified feature is ready";
+  byId("install-description").textContent = "OpenPatch checked its policy, SHA-256 receipt, domain scope, and live selectors on this page.";
+  byId("registry-match-name").textContent = `${entry.name} · v${entry.version}`;
+  byId("registry-match-proof").textContent = `${entry.verification.operations} constrained operations · ${entry.verification.assertions} automated assertions`;
+  byId("import-file-label").textContent = "Or choose a .openpatch.json instead";
+  installButton.textContent = "Install verified community feature";
+}
+
+async function discoverPublicPatch() {
+  if (!currentTab?.url?.startsWith("http")) return;
+  const indexResponse = await fetch(PUBLIC_REGISTRY_URL, { cache: "no-store" });
+  if (!indexResponse.ok) throw new Error(`Registry returned ${indexResponse.status}.`);
+  const registry = parsePublicRegistry(await indexResponse.json());
+  if (!registry) throw new Error("Registry metadata failed its safety policy.");
+  const candidates = registryMatchesUrl(registry, new URL(currentTab.url));
+  if (candidates.length === 0) return;
+  candidates.sort((left, right) => comparePatchVersions(right.version, left.version));
+  const entry = candidates[0];
+
+  if (currentPatch?.patch.id === entry.id && comparePatchVersions(currentPatch.patch.version, entry.version) >= 0) {
+    byId("publisher-status").textContent = "✓ Registry verified";
+    return;
+  }
+
+  showRegistryOffer(entry);
+  importStatus.textContent = "Downloading the verified registry artifact…";
+  const patchResponse = await fetch(registryPatchUrl(entry), { cache: "no-store" });
+  if (!patchResponse.ok) throw new Error(`Patch download returned ${patchResponse.status}.`);
+  const prepared = await preparePatch(await patchResponse.text(), "public-registry", entry);
+  importStatus.textContent = prepared.preflight.healthy === prepared.preflight.total
+    ? "Verified and healthy on this page. One click to install."
+    : "Blocked: one or more selectors no longer match this page.";
+}
+
 toggle.addEventListener("change", async () => {
   if (!currentPatch) return;
   toggle.disabled = true;
@@ -162,30 +257,8 @@ patchFile.addEventListener("change", async () => {
   }
   importStatus.textContent = "Validating policy and checking selectors…";
   try {
-    const raw = await file.text();
-    const parsed = JSON.parse(raw) as unknown;
-    const validation = validatePatch(parsed);
-    if (!validation.ok) {
-      importStatus.textContent = `Blocked by policy: ${validation.issues[0]?.path} ${validation.issues[0]?.message}`;
-      return;
-    }
-    if (currentPatch?.patch.id === validation.patch.id && comparePatchVersions(validation.patch.version, currentPatch.patch.version) < 0) {
-      throw new Error(`Version ${validation.patch.version} is older than the installed v${currentPatch.patch.version}.`);
-    }
-    if (!currentTab?.id || !currentTab.url?.startsWith("http")) throw new Error("Open the website this patch repairs first.");
-    const pageUrl = new URL(currentTab.url);
-    if (!patchMatchesUrl(validation.patch, pageUrl)) throw new Error("This patch does not match the current domain and path.");
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: currentTab.id },
-      func: preflightPatchOnDocument,
-      args: [validation.patch]
-    });
-    const preflight = results[0]?.result as SelectorPreflightResult | undefined;
-    if (!preflight) throw new Error("Selector preflight did not return a result.");
-    const hash = await sha256(raw);
-    pendingImport = { patch: validation.patch, hash, preflight };
-    showImportPreview(validation.patch, hash, preflight);
-    importStatus.textContent = preflight.healthy === preflight.total
+    const prepared = await preparePatch(await file.text(), "local-file");
+    importStatus.textContent = prepared.preflight.healthy === prepared.preflight.total
       ? "Policy passed. Review the receipt, then install."
       : "Blocked: one or more selectors no longer match this page.";
   } catch (error) {
@@ -195,10 +268,11 @@ patchFile.addEventListener("change", async () => {
 
 installButton.addEventListener("click", async () => {
   if (!pendingImport || pendingImport.preflight.healthy !== pendingImport.preflight.total || !currentTab?.id) return;
+  const candidate = pendingImport;
   installButton.disabled = true;
   importStatus.textContent = "Waiting for exact-domain permission…";
   try {
-    const origins = permissionOrigins(pendingImport.patch);
+    const origins = permissionOrigins(candidate.patch);
     const granted = await chrome.permissions.request({ origins });
     if (!granted) {
       importStatus.textContent = "Installation cancelled — no website access was granted.";
@@ -209,9 +283,9 @@ installButton.addEventListener("click", async () => {
     const installedPatches = (stored.installedPatches as Record<string, OpenPatch> | undefined) ?? {};
     const installedPatchMeta = (stored.installedPatchMeta as Record<string, unknown> | undefined) ?? {};
     const enabledPatches = (stored.enabledPatches as Record<string, boolean> | undefined) ?? {};
-    installedPatches[pendingImport.patch.id] = pendingImport.patch;
-    installedPatchMeta[pendingImport.patch.id] = { sha256: pendingImport.hash, installedAt: Date.now(), source: "local-file" };
-    enabledPatches[pendingImport.patch.id] = true;
+    installedPatches[candidate.patch.id] = candidate.patch;
+    installedPatchMeta[candidate.patch.id] = { sha256: candidate.hash, installedAt: Date.now(), source: candidate.source };
+    enabledPatches[candidate.patch.id] = true;
     await chrome.storage.local.set({ installedPatches, installedPatchMeta, enabledPatches });
     const refreshed = await chrome.runtime.sendMessage({ type: "OPENPATCH_REFRESH_RUNTIME" }) as { ok?: boolean; error?: string } | undefined;
     if (!refreshed?.ok) throw new Error(refreshed?.error ?? "Could not register the repair runtime.");
@@ -236,6 +310,13 @@ async function init() {
     renderState(state);
   } catch {
     empty.hidden = false;
+  }
+  try {
+    await discoverPublicPatch();
+  } catch (error) {
+    if (!registryMatch.hidden) {
+      importStatus.textContent = `Registry repair blocked: ${error instanceof Error ? error.message : "verification failed"}`;
+    }
   }
 }
 

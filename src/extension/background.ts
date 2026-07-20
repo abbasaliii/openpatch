@@ -1,12 +1,10 @@
 import civicPatchJson from "../registry/patches/civic-apply.openpatch.json";
-import metroCarePatchJson from "../registry/patches/metrocare-service-navigator.openpatch.json";
 import { buildPatchCatalog, contentScriptMatches, permissionOrigins } from "../core/registry";
 import type { OpenPatch } from "../core/types";
 
 const PATCH_ID = "org.openpatch.civicapply-accessible-draft";
-const METROCARE_PATCH_ID = "org.openpatch.metrocare-service-navigator";
 const RUNTIME_SCRIPT_ID = "openpatch-runtime";
-const bundled = [civicPatchJson as OpenPatch, metroCarePatchJson as OpenPatch];
+const bundled = [civicPatchJson as OpenPatch];
 let refreshQueue: Promise<void> = Promise.resolve();
 
 async function refreshRuntime() {
@@ -43,13 +41,13 @@ function queueRuntimeRefresh() {
 chrome.runtime.onInstalled.addListener(async () => {
   const stored = await chrome.storage.local.get(["enabledPatches", "installedPatches", "installedPatchMeta", "registryMeta"]);
   await chrome.storage.local.set({
-    enabledPatches: stored.enabledPatches ?? { [PATCH_ID]: false, [METROCARE_PATCH_ID]: false },
+    enabledPatches: stored.enabledPatches ?? { [PATCH_ID]: false },
     installedPatches: stored.installedPatches ?? {},
     installedPatchMeta: stored.installedPatchMeta ?? {},
     registryMeta: {
       ...(stored.registryMeta as Record<string, unknown> | undefined),
       lastSync: Date.now(),
-      channel: "local-community",
+      channel: "public-community",
       schemaVersion: 1
     }
   });

@@ -27,9 +27,9 @@ The original CivicApply proof remains in the registry as a second repair. Its 19
 
 On any page without a community patch, the extension can also create a **privacy-safe Repair Brief** for Codex. It includes the exact origin and path, viewport geometry, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, URL queries, or page text.
 
-OpenPatch v0.4 closes the community loop and proves safe feature augmentation: download any `.openpatch.json`, open its target page, and choose the file in the extension. Before installation, the extension validates the DSL, confirms the current URL is in scope, preflights every operation against the live DOM, computes a SHA-256 receipt, displays the exact capabilities, and requests Chrome access only for the declared domains. A failed selector or policy check blocks installation.
+OpenPatch v0.5 closes the community loop: open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. A failed hash, policy rule, scope, or selector blocks installation. Manual `.openpatch.json` import remains available for independent distribution.
 
-The flagship validator reports **10/10 healthy operations**, **8/8 publication assertions**, and SHA-256 receipt `e984431ee1d653eb214429badac793417a9c3d82c9ac9d10b910ae48512fd038`. Local filter preferences expire automatically after 24 hours.
+The flagship validator reports **10/10 healthy operations**, **8/8 publication assertions**, and SHA-256 receipt `c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698`. Local filter preferences expire automatically after 24 hours.
 
 | Before — twelve cards and no way to express a need | After — one private, accessible match |
 | --- | --- |
@@ -58,9 +58,9 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [OpenPatch extension v0.4.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.4.0.zip) — load-unpacked Chrome extension
+- [OpenPatch extension v0.5.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.5.0.zip) — load-unpacked Chrome extension
 - [OpenPatch Codex plugin v0.3.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.3.0.zip) — validated authoring plugin
-- Extension SHA-256: `9FA8855E3C4154D8EDDEDB08A6E1CC0027B2114B0E42A70F49AD235A8EDE6A39`
+- Extension SHA-256: `398F9D753940F6CFF0BF7F17365960C0EC58F93D1BD8CCC5D48866DE6444FD05`
 - Plugin SHA-256: `02F08D07A3130F6241189F75123C616504C13970B4C973B5A6358EFAAC9C3D3E`
 
 Then:
@@ -71,9 +71,10 @@ Then:
 2. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select the unzipped folder.
 3. Open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/).
 4. Observe twelve services and no search or filters—the directory works, but cannot express a person’s combined needs.
-5. Open the OpenPatch extension and enable **MetroCare: personal service navigator**.
-6. Choose **Wheelchair access**, **Urdu**, and **Accepting new patients**. The directory reduces to Harbor Family Clinic and announces `1 of 12 services match`.
-7. Reload to see the preferences restored locally; press `/` to focus search. The automated test also proves those interactions make zero network requests.
+5. Open the OpenPatch extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, and reports `10/10 operation targets healthy`.
+6. Choose **Install verified community feature**; the page reloads with the navigator active.
+7. Choose **Wheelchair access**, **Urdu**, and **Accepting new patients**. The directory reduces to Harbor Family Clinic and announces `1 of 12 services match`.
+8. Reload to see the preferences restored locally; press `/` to focus search. The automated test also proves those interactions make zero network requests.
 
 No account, test credential, API key, or external service is required.
 
@@ -98,10 +99,12 @@ The same skill is packaged as a distributable Codex plugin under `plugins/openpa
 
 ### Test community installation
 
-1. Open the registry home page and choose **Download safe patch**.
-2. Open the patch's target page.
-3. Open OpenPatch, choose the downloaded `.openpatch.json` under **Install or update a community patch**, and inspect the policy, scope, selector-health, and SHA-256 receipt.
-4. Choose **Install and activate repair**, approve Chrome's exact-domain prompt, and watch the page reload with the repair active.
+1. Open the patch's target page.
+2. Open OpenPatch. It fetches the machine-readable registry, selects only entries whose declared host and path match the active tab, and downloads only from the trusted registry origin.
+3. Inspect the verified registry badge, capabilities, live `10/10` selector preflight, and SHA-256 receipt.
+4. Choose **Install verified community feature**, approve Chrome's exact-domain prompt when required, and watch the page reload with the feature active.
+
+For transparent/offline distribution, **Download safe patch** and manual `.openpatch.json` import still run through the same independent policy, scope, hash, and live-selector checks.
 
 Imported patches are stored locally, run through the same constrained runtime, and can replace an older version only when their semantic version is equal or newer. Invalid stored entries are ignored rather than executed.
 
@@ -126,7 +129,7 @@ npm run verify
 
 Current results:
 
-- 31/31 unit, policy, registry, preflight, runtime, and privacy tests pass
+- 34/34 unit, policy, registry-discovery, preflight, runtime, and privacy tests pass
 - 12/12 desktop and 390px browser journeys pass, including the zero-install judge preview
 - 4/4 Manifest V3 extension integration tests pass with a dynamically installed patch plus both real public demo domains
 - 10/10 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
@@ -188,7 +191,7 @@ This project was created during the Build Week submission period in a single cor
 
 **Where GPT‑5.6 through Codex accelerated the work:** translating the concept into a judge-focused vertical slice; scaffolding the Manifest V3 extension and public registry; implementing and threat-modeling the DSL; authoring the CivicApply repair; building the privacy-safe extension-to-Codex Repair Brief; packaging the official repo skill and plugin; building unit and browser tests; running responsive visual QA; and turning browser failures into concrete layout and test-fixture fixes.
 
-**Key joint tradeoff:** the hackathon MVP publishes one real, fully tested community patch instead of pretending a production-scale catalog already exists. The registry is a genuine machine-readable endpoint with a version, scope, downloadable patch, operation/assertion counts, and SHA-256 receipt; the extension can now validate and install downloaded community patches on their exact domains. Automatic remote discovery, publisher signing, moderation, and revocation remain explicit next milestones.
+**Key joint tradeoff:** the hackathon MVP publishes two fully tested community patches instead of pretending a production-scale catalog already exists. The registry is a genuine machine-readable endpoint with versions, scopes, downloadable artifacts, operation/assertion counts, and SHA-256 receipts; the extension automatically discovers the matching verified entry, revalidates it, preflights the live page, and installs it on its exact domains. Publisher signing, moderation, and revocation remain explicit next milestones.
 
 Before final Devpost submission, the project thread's `/feedback` Codex Session ID will be added to the submission as required.
 
@@ -197,7 +200,8 @@ Before final Devpost submission, the project thread's `/feedback` Codex Session 
 OpenPatch treats patches, websites, registry metadata, and page content as untrusted.
 
 - Exact host and narrow path matching happens before execution.
-- Imported patches are policy-validated and live-selector-preflighted before Chrome requests exact-domain access.
+- Registry metadata is schema-checked, downloads are same-origin pinned, and SHA-256 integrity is verified before installation.
+- Discovered and imported patches are policy-validated and live-selector-preflighted before Chrome requests exact-domain access.
 - Operations are parsed into typed built-ins; patch code is never evaluated.
 - CSS properties and attributes use allowlists.
 - Critical singleton targets fail closed when selector counts drift.
@@ -207,7 +211,7 @@ OpenPatch treats patches, websites, registry metadata, and page content as untru
 - Patches never replace the site's actual authentication, submission, or server validation.
 - Repair Briefs exclude values, cookies, storage, query strings, and page text before anything is copied to Codex.
 
-The current MVP bundles one default repair and supports validated local installation from the public registry. Automatic registry sync, publisher signatures, moderation, and revocation are explicit next milestones.
+The current MVP bundles one offline repair and automatically discovers matching verified features from the public registry. Publisher signatures, moderation, revocation, and scheduled breakage checks are explicit next milestones.
 
 ## License
 
