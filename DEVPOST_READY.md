@@ -242,7 +242,7 @@ Use [VIDEO_UPLOAD.md](VIDEO_UPLOAD.md) as the authoritative upload source.
 - Video: `submission-assets/openpatch-demo.mp4`
 - Runtime: 1:58
 - Resolution: 1536×864, 16:9
-- Video SHA-256: `232A728EC8810BA11EFF0D6442B4791AC0459AF52DCBD6538BD37CE48D091A92`
+- Video SHA-256: `D5826F9D45F1E068974C5A4D3E407262CF940347766BA0CD19F895355549BCFA`
 - Thumbnail: `submission-assets/openpatch-youtube-thumbnail.png`
 - Captions: `submission-assets/openpatch-demo.srt`
 - Audience: Not made for kids

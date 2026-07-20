@@ -16,4 +16,4 @@ We reload the website. The installed repair runs again automatically, and the un
 
 Opening the extension again shows that the repair is active only on this website, every operation is healthy, and the permissions are reviewable. The user can disable or remove it at any time.
 
-Codex is needed only when someone authors and tests a new repair. Everyone downstream simply installs the verified community patch with no AI, no account, and no API key. That is OpenPatch: fix the web you have, and share the fix.
+GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence. Everyone else installs the result without AI, an account, or an API key. That is OpenPatch.

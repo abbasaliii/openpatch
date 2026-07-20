@@ -99,13 +99,13 @@ Opening the extension again shows that the repair is active only on this website
 The user can disable or remove it at any time.
 
 26
-00:01:45,126 --> 00:01:48,833
-Codex is needed only when someone authors and tests a new repair.
+00:01:45,126 --> 00:01:52,464
+GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence.
 
 27
-00:01:48,833 --> 00:01:54,763
-Everyone downstream simply installs the verified community patch with no AI, no account, and no API key.
+00:01:52,464 --> 00:01:56,867
+Everyone else installs the result without AI, an account, or an API key.
 
 28
-00:01:54,763 --> 00:01:58,128
-That is OpenPatch: fix the web you have, and share the fix.
+00:01:56,867 --> 00:01:57,968
+That is OpenPatch.

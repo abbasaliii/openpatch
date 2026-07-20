@@ -6,8 +6,8 @@
 - Runtime: 1:58.13
 - Format: 1536×864 (16:9) H.264 High, 30 fps, AAC-LC
 - Audio target: normalized to −16 LUFS with −1.5 dBTP ceiling
-- Size: 8,000,695 bytes
-- SHA-256: `232A728EC8810BA11EFF0D6442B4791AC0459AF52DCBD6538BD37CE48D091A92`
+- Size: 8,002,543 bytes
+- SHA-256: `D5826F9D45F1E068974C5A4D3E407262CF940347766BA0CD19F895355549BCFA`
 - Thumbnail: `submission-assets/openpatch-youtube-thumbnail.png` (1280×720)
 - Captions: `submission-assets/openpatch-demo.srt`
 - Narration source: `submission-assets/live-demo-narration.txt`

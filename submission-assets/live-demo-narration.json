@@ -37,6 +37,6 @@
   },
   {
     "title": "The public repair layer",
-    "text": "Codex is needed only when someone authors and tests a new repair. Everyone downstream simply installs the verified community patch with no AI, no account, and no API key. That is OpenPatch: fix the web you have, and share the fix."
+    "text": "GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence. Everyone else installs the result without AI, an account, or an API key. That is OpenPatch."
   }
 ]
