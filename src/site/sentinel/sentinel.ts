@@ -97,7 +97,7 @@ byId<HTMLButtonElement>("simulate-drift").addEventListener("click", (event) => {
   const active = state.classList.toggle("quarantined");
   state.querySelector(".state-icon")!.textContent = active ? "!" : "✓";
   state.querySelector("strong")!.textContent = active ? "Quarantined from discovery" : "Eligible for discovery";
-  state.querySelector("small")!.textContent = active ? "9/10 operations · directory target drifted" : "10/10 operations compatible";
+  state.querySelector("small")!.textContent = active ? "10/11 operations · directory target drifted" : "11/11 operations compatible";
   button.textContent = active ? "Restore healthy simulation" : "Simulate selector drift";
   byId("simulation-note").textContent = active
     ? "Discovery blocks this patch until a maintainer publishes and verifies an updated version."

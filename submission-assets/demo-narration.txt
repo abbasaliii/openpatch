@@ -1,0 +1,17 @@
+A website does not have to be broken to fail you. It can work exactly as its owner designed it and still omit the feature your life depends on. OpenPatch is a public feature layer for websites users do not control.
+
+MetroCare is a credible twelve-provider directory. Every card has useful information, but there is no search, no way to combine access needs, and no way to compare choices. To answer a simple question—who supports wheelchair access, Urdu, and new patients—you must inspect every card yourself.
+
+Here is the AI authoring boundary. OpenPatch produces a privacy-safe Repair Brief containing the origin, viewport, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, query strings, or page text.
+
+GPT-5.6 through Codex uses the OpenPatch authoring skill to inspect the DOM and screenshots, turn the complaint into acceptance criteria, choose constrained operations, and run policy and browser tests. It can declare trusted primitives such as collection filtering and comparison. It cannot provide JavaScript, HTML, callbacks, fetches, cookies, templates, or arbitrary page-text extraction.
+
+Now we apply that exact constrained runtime to the live directory. Eleven of eleven operations are healthy. I can select Harbor Family Clinic and Northside Community Health, then open a keyboard-accessible side-by-side table generated only from declared data attributes.
+
+I can clear the comparison and combine wheelchair access, Urdu, and accepting new patients. Twelve services become one understandable choice. Preferences stay on this device for twenty-four hours, result changes are announced, and slash focuses search. Our browser test proves filtering and comparison emit zero network requests.
+
+For everyone else, the extension discovers the matching community feature automatically. Before installation it shows the exact domain and path, permissions, patch SHA-256, scheduled compatibility receipt, and a fresh eleven-of-eleven preflight on the current page. One click installs it. No AI, account, or API key is required downstream.
+
+The Compatibility Sentinel opens every published target in Chromium every six hours, verifies the exact patch bytes, and fingerprints every operation. If the original site changes, the patch is quarantined before another user discovers it.
+
+OpenPatch was built during Build Week in this primary GPT-5.6 and Codex thread: forty unit and policy tests, fourteen desktop and mobile journeys, four packaged-extension tests, and thirty live operation targets. When a site will not add the feature people need, users still can. Fix the web you have.

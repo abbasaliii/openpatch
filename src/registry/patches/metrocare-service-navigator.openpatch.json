@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "org.openpatch.metrocare-service-navigator",
   "name": "MetroCare: personal service navigator",
-  "summary": "Adds private on-device search and access filters to a dense healthcare directory, improves its structure, and preserves the user's preferences.",
-  "version": "1.0.0",
+  "summary": "Adds private search, access filters, and side-by-side service comparison to a dense healthcare directory while preserving the user's preferences.",
+  "version": "1.1.0",
   "author": { "name": "OpenPatch Community", "verified": false },
   "match": {
     "hosts": ["localhost", "127.0.0.1", "openpatch-tau.vercel.app"],
@@ -11,6 +11,7 @@
   },
   "capabilities": [
     "content-filter",
+    "content-compare",
     "accessibility",
     "keyboard-navigation",
     "local-storage",
@@ -77,6 +78,63 @@
         }
       ],
       "persist": { "key": "service-needs-v1", "ttlMinutes": 1440 }
+    },
+    {
+      "id": "add-private-service-comparison",
+      "type": "collectionCompare",
+      "selector": "#care-directory",
+      "items": ".care-service",
+      "title": "Compare care without being tracked",
+      "description": "Select 2 or 3 services for a private side-by-side view. Nothing leaves this page.",
+      "itemTitleAttribute": "data-service-name",
+      "maxItems": 3,
+      "fields": [
+        {
+          "id": "care",
+          "label": "Type of care",
+          "attribute": "data-need",
+          "values": [
+            { "value": "primary-care", "label": "Primary care" },
+            { "value": "mental-health", "label": "Mental health" },
+            { "value": "dental", "label": "Dental care" },
+            { "value": "pharmacy", "label": "Pharmacy support" },
+            { "value": "family-support", "label": "Family support" }
+          ]
+        },
+        {
+          "id": "access",
+          "label": "Access options",
+          "attribute": "data-access",
+          "values": [
+            { "value": "wheelchair", "label": "Wheelchair access" },
+            { "value": "sensory-friendly", "label": "Sensory-friendly" },
+            { "value": "telehealth", "label": "Telehealth" },
+            { "value": "home-visit", "label": "Home visits" },
+            { "value": "delivery", "label": "Delivery" }
+          ]
+        },
+        {
+          "id": "languages",
+          "label": "Languages",
+          "attribute": "data-languages",
+          "values": [
+            { "value": "english", "label": "English" },
+            { "value": "urdu", "label": "Urdu" },
+            { "value": "spanish", "label": "Spanish" },
+            { "value": "asl", "label": "ASL" }
+          ]
+        },
+        {
+          "id": "availability",
+          "label": "Availability",
+          "attribute": "data-availability",
+          "values": [
+            { "value": "today", "label": "Available today" },
+            { "value": "this-week", "label": "Available this week" },
+            { "value": "new-patients", "label": "Accepting new patients" }
+          ]
+        }
+      ]
     },
     {
       "id": "hide-newsletter-promotion",
@@ -157,9 +215,11 @@
     { "type": "exists", "selector": ".openpatch-navigator", "min": 1, "max": 1 },
     { "type": "exists", "selector": ".openpatch-navigator input[type='search']", "min": 1, "max": 1 },
     { "type": "exists", "selector": ".openpatch-navigator select", "min": 4, "max": 4 },
+    { "type": "exists", "selector": ".openpatch-compare", "min": 1, "max": 1 },
+    { "type": "exists", "selector": ".openpatch-compare__select", "min": 12, "max": 12 },
     { "type": "attribute", "selector": "#care-directory", "name": "role", "value": "region" },
     { "type": "attribute", "selector": ".care-service-grid", "name": "role", "value": "list" },
     { "type": "attribute", "selector": ".care-community-promo", "name": "aria-hidden", "value": "true" }
   ],
-  "changelog": "Initial community-feature patch: private multi-facet service search, locally saved access preferences, accessible result announcements, keyboard shortcut, structural semantics, and mobile refinements."
+  "changelog": "Adds a trusted private comparison workflow for up to three services, with an accessible side-by-side table generated only from declared data attributes. Retains private multi-facet search, locally saved preferences, result announcements, keyboard support, structural semantics, and mobile refinements."
 }

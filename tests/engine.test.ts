@@ -104,10 +104,11 @@ describe("safe collection navigator runtime", () => {
   it("adds accessible search and facets without patch-authored HTML or script", () => {
     const health = applyPatch(metroCarePatchJson as OpenPatch);
     expect(health.applied).toBe(true);
-    expect(health.healthy).toBe(10);
+    expect(health.healthy).toBe(11);
     expect(document.querySelectorAll(".openpatch-navigator input[type='search']")).toHaveLength(1);
     expect(document.querySelectorAll(".openpatch-navigator select")).toHaveLength(4);
     expect(document.querySelector(".openpatch-navigator__status")?.getAttribute("aria-live")).toBe("polite");
+    expect(document.querySelectorAll(".openpatch-compare__select")).toHaveLength(12);
   });
 
   it("combines real access needs into one matching service", () => {
@@ -151,5 +152,30 @@ describe("safe collection navigator runtime", () => {
     search.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     expect(search.value).toBe("");
     expect(document.querySelector(".openpatch-navigator__status")?.textContent).toBe("12 of 12 services match");
+  });
+
+  it("builds a keyboard-accessible comparison table from declared data attributes", () => {
+    applyPatch(metroCarePatchJson as OpenPatch);
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>(".openpatch-compare__select")];
+    buttons[0].click();
+    buttons[2].click();
+    buttons[1].click();
+    expect(buttons[0].getAttribute("aria-pressed")).toBe("true");
+    expect(buttons[3].disabled).toBe(true);
+    expect(document.querySelector(".openpatch-compare__status")?.getAttribute("aria-live")).toBe("polite");
+    expect(document.querySelector(".openpatch-compare__status")?.textContent).toContain("3 items selected");
+
+    document.querySelector<HTMLButtonElement>(".openpatch-compare__action:not(.secondary)")?.click();
+    const table = document.querySelector(".openpatch-compare table");
+    expect(table).not.toBeNull();
+    expect(table?.textContent).toContain("Harbor Family Clinic");
+    expect(table?.textContent).toContain("Northside Community Health");
+    expect(table?.textContent).toContain("Wheelchair access");
+    expect(table?.textContent).toContain("Urdu");
+    expect(table?.textContent).toContain("Spanish");
+    expect(table?.querySelector("thead th")?.getAttribute("scope")).toBe("col");
+    expect(table?.querySelector("tbody th")?.getAttribute("scope")).toBe("row");
+    expect(table?.getAttribute("aria-labelledby")).toBe(document.querySelector(".openpatch-compare__result h3")?.id);
+    expect(table?.getAttribute("aria-describedby")).toBe(document.querySelector(".openpatch-compare__result p")?.id);
   });
 });

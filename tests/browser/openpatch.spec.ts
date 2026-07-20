@@ -75,8 +75,8 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   expect(patchResponse.ok()).toBe(true);
   expect((await patchResponse.json()).schemaVersion).toBe(1);
   const navigator = registry.patches.find((patch) => patch.id === "org.openpatch.metrocare-service-navigator");
-  expect(navigator?.verification).toEqual({ status: "verified", operations: 10, assertions: 8 });
-  expect(navigator?.compatibility).toMatchObject({ status: "healthy", healthy: 10, total: 10 });
+  expect(navigator?.verification).toEqual({ status: "verified", operations: 11, assertions: 10 });
+  expect(navigator?.compatibility).toMatchObject({ status: "healthy", healthy: 11, total: 11 });
   expect(navigator?.compatibility.fingerprint).toMatch(/^[a-f0-9]{64}$/);
   await expect(page.locator("#compatibility-receipt")).toContainText("Compatibility Sentinel: healthy");
   const compatibilityResponse = await page.request.get("/registry/compatibility.json");
@@ -90,9 +90,9 @@ test("the Compatibility Console explains live evidence and quarantines simulated
   await page.goto("/sentinel/");
   await expect(page.locator("#hero-status")).toHaveText("All 2 patches compatible");
   await expect(page.locator("#metric-healthy")).toHaveText("2/2");
-  await expect(page.locator("#metric-operations")).toHaveText("29");
+  await expect(page.locator("#metric-operations")).toHaveText("30");
   await expect(page.locator(".patch-row")).toHaveCount(2);
-  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "10/10 live"]);
+  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "11/11 live"]);
   await page.locator("#simulate-drift").click();
   await expect(page.locator("#simulation-state")).toHaveClass(/quarantined/);
   await expect(page.locator("#simulation-state strong")).toHaveText("Quarantined from discovery");
@@ -105,6 +105,7 @@ test("the original care directory is usable but forces people to inspect every s
   await expect(page.locator(".care-service:visible")).toHaveCount(12);
   await expect(page.locator("#care-directory input[type='search']")).toHaveCount(0);
   await expect(page.locator("#care-directory select")).toHaveCount(0);
+  await expect(page.locator(".openpatch-compare")).toHaveCount(0);
   await expect(page.locator(".care-community-promo")).toBeVisible();
   await expect(page.locator("#judge-preview")).toHaveText(/Preview OpenPatch instantly/);
 });
@@ -113,9 +114,10 @@ test("the instant judge preview invokes the same constrained runtime", async ({ 
   await page.goto("/care/");
   await page.locator("#judge-preview").click();
   await expect(page.locator(".openpatch-navigator")).toBeVisible();
-  await expect(page.locator("#judge-preview")).toHaveAttribute("data-healthy", "10");
-  await expect(page.locator("#judge-preview")).toHaveAttribute("data-total", "10");
-  await expect(page.locator("#judge-preview")).toHaveText("✓ OpenPatch active · 10/10 healthy");
+  await expect(page.locator(".openpatch-compare")).toBeVisible();
+  await expect(page.locator("#judge-preview")).toHaveAttribute("data-healthy", "11");
+  await expect(page.locator("#judge-preview")).toHaveAttribute("data-total", "11");
+  await expect(page.locator("#judge-preview")).toHaveText("✓ OpenPatch active · 11/11 healthy");
 });
 
 test("the feature patch privately combines access needs, persists them, and supports the keyboard", async ({ page }, testInfo) => {
@@ -126,10 +128,24 @@ test("the feature patch privately combines access needs, persists them, and supp
   await page.goto("/care/");
   await page.addScriptTag({ path: runtimePath });
   const health = await page.evaluate(() => (window as Window & { __applyMetroCarePatch: () => { healthy: number; total: number } }).__applyMetroCarePatch());
-  expect(health).toMatchObject({ healthy: 10, total: 10 });
+  expect(health).toMatchObject({ healthy: 11, total: 11 });
   await expect(page.locator(".openpatch-navigator")).toBeVisible();
   await expect(page.locator(".care-community-promo")).toBeHidden();
   page.on("request", (request) => postPatchRequests.push(request.url()));
+
+  await page.getByRole("button", { name: "Add Harbor Family Clinic to comparison" }).click();
+  await page.getByRole("button", { name: "Add Northside Community Health to comparison" }).click();
+  await page.getByRole("button", { name: "Compare selected" }).click();
+  await expect(page.locator(".openpatch-compare table")).toBeVisible();
+  await expect(page.locator(".openpatch-compare table")).toContainText("Harbor Family Clinic");
+  await expect(page.locator(".openpatch-compare table")).toContainText("Northside Community Health");
+  await expect(page.locator(".openpatch-compare table")).toContainText("Urdu");
+  await expect(page.locator(".openpatch-compare__result h3")).toBeFocused();
+  if (testInfo.project.name === "mobile-chromium") {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
+  }
+  await page.getByRole("button", { name: "Close comparison" }).click();
+  await page.getByRole("button", { name: "Clear", exact: true }).click();
 
   await page.locator("select[id$='-access']").selectOption("wheelchair");
   await page.locator("select[id$='-language']").selectOption("urdu");

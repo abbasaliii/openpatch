@@ -1,0 +1,89 @@
+1
+00:00:00,000 --> 00:00:07,500
+A website does not have to be broken to fail you.
+It can work exactly as its owner designed it.
+
+2
+00:00:07,500 --> 00:00:15,300
+And still omit the feature your life depends on.
+OpenPatch is a public feature layer for websites users do not control.
+
+3
+00:00:15,300 --> 00:00:23,800
+MetroCare is a credible twelve-provider directory.
+But there is no search, combined filtering, or comparison.
+
+4
+00:00:23,800 --> 00:00:32,100
+To find wheelchair access, Urdu, and new patients,
+you must inspect every card yourself.
+
+5
+00:00:32,100 --> 00:00:38,500
+OpenPatch creates a privacy-safe Repair Brief
+with bounded structural signals for Codex.
+
+6
+00:00:38,500 --> 00:00:44,800
+Field values, cookies, storage, query strings,
+and page text never enter the brief.
+
+7
+00:00:44,800 --> 00:00:54,500
+GPT-5.6 through Codex inspects the DOM and screenshots,
+defines acceptance criteria, and chooses constrained operations.
+
+8
+00:00:54,500 --> 00:01:04,600
+It cannot provide JavaScript, HTML, callbacks, fetches,
+cookies, templates, or arbitrary page-text extraction.
+
+9
+00:01:04,600 --> 00:01:11,800
+Now the exact constrained runtime is active.
+Eleven of eleven operations are healthy.
+
+10
+00:01:11,800 --> 00:01:19,200
+Two providers become a keyboard-accessible comparison table
+built only from declared data attributes.
+
+11
+00:01:19,200 --> 00:01:28,000
+Wheelchair access, Urdu, and accepting new patients
+reduce twelve services to one understandable choice.
+
+12
+00:01:28,000 --> 00:01:36,800
+Preferences stay local, results are announced,
+and our browser test proves the interactions emit zero requests.
+
+13
+00:01:36,800 --> 00:01:45,800
+The extension discovers the community feature automatically
+and shows scope, permissions, integrity, and compatibility.
+
+14
+00:01:45,800 --> 00:01:54,700
+One click installs it. Everyone downstream needs
+no AI, account, or API key.
+
+15
+00:01:54,700 --> 00:02:01,300
+The Compatibility Sentinel checks every published target
+in Chromium every six hours.
+
+16
+00:02:01,300 --> 00:02:07,800
+If the original site changes, the patch is quarantined
+before another user discovers it.
+
+17
+00:02:07,800 --> 00:02:17,000
+Built in this primary GPT-5.6 and Codex thread:
+40 unit tests, 14 browser journeys, and 4 extension tests.
+
+18
+00:02:17,000 --> 00:02:26,100
+When a site will not add the feature people need, users still can.
+Fix the web you have.

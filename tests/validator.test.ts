@@ -38,6 +38,24 @@ describe("OpenPatch policy validator", () => {
     if (!result.ok) expect(result.issues.some((issue) => issue.path.endsWith("persist.ttlMinutes"))).toBe(true);
   });
 
+  it("keeps collection comparison bounded to declared data attributes", () => {
+    const unsafe = structuredClone(metroCarePatch) as typeof metroCarePatch;
+    const comparison = unsafe.operations.find((operation) => operation.type === "collectionCompare") as unknown as {
+      itemTitleAttribute: string;
+      maxItems: number;
+      fields: Array<{ attribute: string }>;
+    };
+    comparison.itemTitleAttribute = "textContent";
+    comparison.fields[0].attribute = "onclick";
+    comparison.maxItems = 20;
+    const result = validatePatch(unsafe);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues.filter((issue) => issue.message.includes("data-*")).length).toBeGreaterThanOrEqual(2);
+      expect(result.issues.some((issue) => issue.path.endsWith("maxItems"))).toBe(true);
+    }
+  });
+
   it("rejects arbitrary script operations", () => {
     const unsafe = structuredClone(civicPatch) as unknown as Record<string, unknown>;
     unsafe.operations = [{ id: "run-script", type: "script", code: "fetch('https://evil.test')" }];

@@ -40,6 +40,7 @@ const CAPABILITIES = new Set<PatchCapability>([
   "keyboard-navigation",
   "validation",
   "content-filter",
+  "content-compare",
   "hide-elements",
   "reorganize"
 ]);

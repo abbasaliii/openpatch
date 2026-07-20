@@ -12,11 +12,12 @@ Built for OpenAI Build Week 2026 with Codex and GPT‑5.6.
 
 The flagship MetroCare demo is deliberately not a broken toy. It is a credible healthcare directory that works as its owner designed it—but forces a person to inspect twelve cards to compare access, language, availability, and type of care. The site is missing the feature that person actually needs.
 
-OpenPatch’s community patch adds a complete service navigator using ten declarative operations:
+OpenPatch’s community patch adds a complete find-and-compare workspace using eleven declarative operations:
 
 - Search existing services using only declared `data-*` attributes
 - Combine type-of-care, access, language, and availability filters
 - Reduce “wheelchair access + Urdu + accepting new patients” to one matching provider
+- Select two or three providers and compare care type, access, language, and availability side by side
 - Announce result counts through an ARIA live region
 - Support `/` to focus search and Escape to clear
 - Preserve only the user’s filter preferences locally for 24 hours
@@ -27,11 +28,15 @@ The original CivicApply proof remains in the registry as a second repair. Its 19
 
 On any page without a community patch, the extension can also create a **privacy-safe Repair Brief** for Codex. It includes the exact origin and path, viewport geometry, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, URL queries, or page text.
 
-OpenPatch v0.6 closes the community loop and watches it after publication. Open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. The Compatibility Sentinel also opens every published target in Chromium every six hours, records an operation-by-operation structural fingerprint, and quarantines drifted or unreachable patches from discovery. A failed hash, policy rule, scope, compatibility receipt, or selector blocks installation. Manual `.openpatch.json` import remains available for independent distribution.
+OpenPatch v0.7 makes that missing-feature story substantially deeper. Its trusted `collectionCompare` primitive creates the selection controls, live status, bounded tray, and accessible comparison table itself. A patch may name only one exact collection, safe `data-*` attributes, explicit display maps, and a two-to-four item limit. It still cannot provide HTML, JavaScript, callbacks, templates, or URLs.
+
+OpenPatch also closes the community loop and watches it after publication. Open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. The Compatibility Sentinel opens every published target in Chromium every six hours, records an operation-by-operation structural fingerprint, and quarantines drifted or unreachable patches from discovery. A new workspace-monitor mode fingerprints local patch bytes against the live target before registry publication, so evidence never depends on trusting an already-published artifact.
 
 ![Compatibility Sentinel showing a simulated patch quarantine](submission-assets/compatibility-sentinel-quarantine.png)
 
-The flagship validator reports **10/10 healthy operations**, **8/8 publication assertions**, and SHA-256 receipt `c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698`. Local filter preferences expire automatically after 24 hours.
+The flagship validator reports **11/11 healthy operations**, **10/10 publication assertions**, and SHA-256 receipt `8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d`. Local filter preferences expire automatically after 24 hours.
+
+![OpenPatch private service comparison](submission-assets/metrocare-compare-desktop.png)
 
 | Before — twelve cards and no way to express a need | After — one private, accessible match |
 | --- | --- |
@@ -52,7 +57,7 @@ flowchart LR
   G --> H[Anyone gets the repair\nNo AI or account]
 ```
 
-The patch language supports eight capabilities: bounded collection filtering, allowlisted styles, safe attributes, explicit hiding, same-page reorganization, non-sensitive form persistence, local validation, and keyboard navigation. It has no operation for scripts, patch-authored HTML, network requests, cookies, or cross-origin data. The trusted collection navigator can read only explicitly declared `data-*` attributes, never page text or field values.
+The patch language supports nine capabilities: bounded collection filtering, bounded collection comparison, allowlisted styles, safe attributes, explicit hiding, same-page reorganization, non-sensitive form persistence, local validation, and keyboard navigation. It has no operation for scripts, patch-authored HTML, network requests, cookies, or cross-origin data. Trusted collection features can read only explicitly declared `data-*` attributes, never page text or field values.
 
 ## Judge quick start
 
@@ -60,23 +65,24 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [OpenPatch extension v0.6.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.6.0.zip) — load-unpacked Chrome extension
-- [OpenPatch Codex plugin v0.3.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.3.0.zip) — validated authoring plugin
-- Extension SHA-256: `728577E853298F62003C0BFD162CFFCBFFCE788DC20310198A24600ECED2646A`
-- Plugin SHA-256: `02F08D07A3130F6241189F75123C616504C13970B4C973B5A6358EFAAC9C3D3E`
+- [OpenPatch extension v0.7.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.7.0.zip) — load-unpacked Chrome extension
+- [OpenPatch Codex plugin v0.4.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.4.0.zip) — validated authoring plugin
+- Extension SHA-256: `84D5BA1FE1D947771C92097B9A930EB74D90CD4DD88AAE9990448451F7409665`
+- Plugin SHA-256: `E78D5ACC07F5F4E17BE4D8E2EB37905A56BACA14E591DFBA7403BB3E4BFEDED9`
 
 Then:
 
-**Zero-install judge preview:** open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/) and choose **Preview OpenPatch instantly**. This invokes the same constrained runtime and reports `10/10 healthy`; the steps below verify the real extension distribution path.
+**Zero-install judge preview:** open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/) and choose **Preview OpenPatch instantly**. This invokes the same constrained runtime and reports `11/11 healthy`; the steps below verify the real extension distribution path.
 
 1. Download and unzip the public extension artifact above.
 2. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select the unzipped folder.
 3. Open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/).
 4. Observe twelve services and no search or filters—the directory works, but cannot express a person’s combined needs.
-5. Open the OpenPatch extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, shows the scheduled `10/10` live-compatibility result, and independently reports `10/10 operation targets healthy` on your current tab.
+5. Open the OpenPatch extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, shows the scheduled `11/11` live-compatibility result, and independently reports `11/11 operation targets healthy` on your current tab.
 6. Choose **Install verified community feature**; the page reloads with the navigator active.
-7. Choose **Wheelchair access**, **Urdu**, and **Accepting new patients**. The directory reduces to Harbor Family Clinic and announces `1 of 12 services match`.
-8. Reload to see the preferences restored locally; press `/` to focus search. The automated test also proves those interactions make zero network requests.
+7. Select Harbor Family Clinic and Northside Community Health, then choose **Compare selected**. OpenPatch creates an accessible side-by-side decision table without sending a request.
+8. Clear the comparison, choose **Wheelchair access**, **Urdu**, and **Accepting new patients**, and watch the directory reduce to Harbor Family Clinic with `1 of 12 services match`.
+9. Reload to see the preferences restored locally; press `/` to focus search. The automated test proves filtering and comparison make zero network requests.
 
 No account, test credential, API key, or external service is required.
 
@@ -103,7 +109,7 @@ The same skill is packaged as a distributable Codex plugin under `plugins/openpa
 
 1. Open the patch's target page.
 2. Open OpenPatch. It fetches the machine-readable registry, selects only entries whose declared host and path match the active tab, and downloads only from the trusted registry origin.
-3. Inspect the verified registry badge, capabilities, live `10/10` selector preflight, and SHA-256 receipt.
+3. Inspect the verified registry badge, capabilities, live `11/11` selector preflight, and SHA-256 receipt.
 4. Choose **Install verified community feature**, approve Chrome's exact-domain prompt when required, and watch the page reload with the feature active.
 
 For transparent/offline distribution, **Download safe patch** and manual `.openpatch.json` import still run through the same independent policy, scope, hash, and live-selector checks.
@@ -132,16 +138,16 @@ npm run verify
 
 Current results:
 
-- 38/38 unit, policy, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests pass
+- 40/40 unit, policy, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests pass
 - 14/14 desktop and 390px browser journeys pass, including the zero-install judge preview and interactive quarantine console
 - 4/4 Manifest V3 extension integration tests pass with a dynamically installed patch plus both real public demo domains
-- 10/10 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
-- 8/8 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy
+- 11/11 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
+- 10/10 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy
 - Production site and Manifest V3 extension build successfully
 - Public `/registry/index.json` and versioned patch download are generated with a SHA-256 receipt
 - Public `/registry/compatibility.json` exposes live-page fingerprints and per-operation health; a scheduled GitHub workflow reruns it every six hours
 
-Browser tests prove both product claims: MetroCare starts as a realistic but filterless directory, then privately combines access needs, persists preferences, announces results, supports the keyboard, fits mobile, and emits no interaction requests; CivicApply still proves layout repair, local draft restoration, specific accessible errors, and arrow-key focus movement.
+Browser tests prove both product claims: MetroCare starts as a realistic directory with no search, filters, or comparison, then privately combines access needs, compares providers, persists preferences, announces results, supports the keyboard, fits mobile, and emits no interaction requests; CivicApply still proves layout repair, local draft restoration, specific accessible errors, and arrow-key focus movement.
 
 ## Repository map
 
@@ -198,7 +204,7 @@ This project was created during the Build Week submission period in a single cor
 
 **Key joint tradeoff:** the hackathon MVP publishes two fully tested community patches instead of pretending a production-scale catalog already exists. The registry is a genuine machine-readable endpoint with versions, scopes, downloadable artifacts, operation/assertion counts, SHA-256 receipts, and live compatibility fingerprints; the extension automatically discovers the matching verified entry, rejects quarantined patches, revalidates it, preflights the current page, and installs it on its exact domains. Publisher signing, moderation, and revocation remain explicit next milestones.
 
-Before final Devpost submission, the project thread's `/feedback` Codex Session ID will be added to the submission as required.
+The full [Build Week engineering record](BUILD_WEEK.md) maps human decisions, GPT‑5.6/Codex contributions, dated commits, iteration failures, source artifacts, and executable evidence. The project thread's `/feedback` Codex Session ID is submitted in Devpost's required private field.
 
 ## Security model
 

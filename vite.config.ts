@@ -9,7 +9,7 @@ const root = __dirname;
 const siteOut = resolve(root, "dist/site");
 const patchSourceDir = resolve(root, "src/registry/patches");
 const compatibilitySourcePath = resolve(root, "src/registry/compatibility.json");
-const releaseFiles = ["openpatch-extension-v0.6.0.zip", "openpatch-codex-plugin-v0.3.0.zip"];
+const releaseFiles = ["openpatch-extension-v0.7.0.zip", "openpatch-codex-plugin-v0.4.0.zip"];
 
 async function loadRegistryArtifacts() {
   const compatibilityReport = JSON.parse(await readFile(compatibilitySourcePath, "utf8")) as RegistryCompatibilityReport;

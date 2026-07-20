@@ -29,7 +29,7 @@
           <p class="hero-lede">A site is missing the feature you need? OpenPatch turns one person’s complaint into a safe, tested community upgrade—then gives it to everyone without AI.</p>
           <div class="hero-actions">
             <a class="primary-action" href="/care/">Try the missing-feature demo <span>→</span></a>
-            <a class="secondary-action" href="/downloads/openpatch-extension-v0.6.0.zip" download>Download extension ↓</a>
+            <a class="secondary-action" href="/downloads/openpatch-extension-v0.7.0.zip" download>Download extension ↓</a>
           </div>
           <div class="trust-strip">
             <span><i>✓</i> No API key</span>
@@ -64,6 +64,7 @@
             </div>
             <div class="directory-after">
               <div class="navigator-preview"><strong>Find care that fits you</strong><span>Combine access needs privately.</span><div><i>Wheelchair</i><i>Urdu</i><i>New patients</i></div></div>
+              <div class="compare-preview"><span>⇄</span><strong>Compare providers privately</strong><small>2 selected</small></div>
               <div class="match-preview"><span>HF</span><div><strong>Harbor Family Clinic</strong><small>1 of 12 services match</small></div></div>
             </div>
             <span class="after-label">OpenPatched</span>
@@ -72,13 +73,13 @@
           <aside class="floating-patch-card">
             <div><span class="patch-spark">✦</span><strong>Feature active</strong></div>
             <p>MetroCare: personal service navigator</p>
-            <div class="health"><i></i> 10/10 operations healthy</div>
+            <div class="health"><i></i> 11/11 operations healthy</div>
           </aside>
         </div>
       </section>
 
       <section class="proof-bar" aria-label="OpenPatch facts">
-        <div><strong>8</strong><span>safe feature capabilities</span></div>
+        <div><strong>9</strong><span>safe feature capabilities</span></div>
         <div><strong>0</strong><span>lines of patch JavaScript</span></div>
         <div><strong>6h</strong><span>live compatibility checks</span></div>
         <div><strong>Local</strong><span>private preferences</span></div>
@@ -97,7 +98,7 @@
           <div class="registry-preview civic-preview">
             <div class="preview-top"><span>M+</span><strong>MetroCare</strong><i>Community services</i></div>
             <div class="preview-screen">
-              <span class="preview-saved">✓ Private filters active</span>
+              <span class="preview-saved">✓ Private find + compare active</span>
               <b>Find care that fits you</b>
               <i></i><i></i><i></i>
             </div>
@@ -105,12 +106,12 @@
           <div class="registry-info">
             <div class="registry-meta"><span class="category">Community feature</span><span id="registry-version">Loading registry…</span></div>
             <h3>MetroCare: personal service navigator</h3>
-            <p>Adds private search and combined filters for access, language, availability, and type of care—functionality the original portal never shipped.</p>
-            <div class="capabilities"><span>Search</span><span>Multi-filter</span><span>Local preferences</span><span>ARIA live</span><span>Keyboard</span></div>
+            <p>Adds private search, combined access filters, and side-by-side service comparison—functionality the original portal never shipped.</p>
+            <div class="capabilities"><span>Search</span><span>Multi-filter</span><span>Compare</span><span>Local preferences</span><span>ARIA live</span><span>Keyboard</span></div>
             <div class="publisher">
               <span class="publisher-avatar">OP</span>
               <div><small>Published by</small><strong>OpenPatch Community <i>✓ Policy checked</i></strong></div>
-              <div class="installs"><small>Patch health</small><strong id="registry-health"><i></i> 10/10</strong></div>
+              <div class="installs"><small>Patch health</small><strong id="registry-health"><i></i> 11/11</strong></div>
             </div>
             <a class="compatibility-receipt" id="compatibility-receipt" href="/sentinel/">Compatibility Sentinel checking live pages…</a>
             <p class="registry-receipt" id="registry-receipt">Loading publication receipt…</p>
@@ -131,7 +132,7 @@
           <h2>Powerful repairs.<br />Not a code injection marketplace.</h2>
           <p>Codex authors a small declarative patch. OpenPatch validates every operation against an allowlist, tests every selector, and shows users a plain-language permission receipt before anything runs.</p>
           <ul>
-            <li><span>01</span><div><strong>Declarative transformations only</strong><p>Filtering, layout, accessibility, persistence, navigation, validation, explicit hiding, and reorganization.</p></div></li>
+            <li><span>01</span><div><strong>Declarative transformations only</strong><p>Filtering, comparison, layout, accessibility, persistence, navigation, validation, explicit hiding, and reorganization.</p></div></li>
             <li><span>02</span><div><strong>Exact domain and path scope</strong><p>A university portal patch cannot touch your bank, inbox, or another page.</p></div></li>
             <li><span>03</span><div><strong>Compatibility Sentinel + local preflight</strong><p>Scheduled live checks quarantine drifted registry entries, while every device tests selectors again before install and apply.</p></div></li>
           </ul>
@@ -150,6 +151,11 @@
       <span class="key">"items"</span>: <span class="string">".care-service"</span>,
       <span class="key">"search"</span>: <span class="muted">{</span> <span class="key">"attributes"</span>: [<span class="string">"data-service-name"</span>] <span class="muted">}</span>,
       <span class="key">"filters"</span>: [<span class="muted">{</span> <span class="key">"attribute"</span>: <span class="string">"data-access"</span> <span class="muted">}</span>]
+    <span class="muted">}</span>,
+    <span class="muted">{</span>
+      <span class="key">"type"</span>: <span class="string">"collectionCompare"</span>,
+      <span class="key">"itemTitleAttribute"</span>: <span class="string">"data-service-name"</span>,
+      <span class="key">"fields"</span>: [<span class="muted">{</span> <span class="key">"attribute"</span>: <span class="string">"data-access"</span> <span class="muted">}</span>]
     <span class="muted">}</span>
   ]
 <span class="muted">}</span></code></pre>
@@ -164,7 +170,7 @@
         </div>
         <div class="steps-grid">
           <article><span class="step-number">01</span><div class="step-icon talk">“</div><h3>Describe what you need</h3><p>Open the website and tell Codex what the site makes unnecessarily difficult.</p><blockquote>“Help me find wheelchair-accessible care with Urdu support.”</blockquote></article>
-          <article><span class="step-number">02</span><div class="step-icon inspect">✦</div><h3>Codex authors & tests</h3><p>Codex inspects the live DOM and screenshots, produces only safe operations, and verifies behavior before publishing.</p><div class="mini-checks"><span>✓ 10 operations healthy</span><span>✓ 8 assertions pass</span></div></article>
+          <article><span class="step-number">02</span><div class="step-icon inspect">✦</div><h3>Codex authors & tests</h3><p>Codex inspects the live DOM and screenshots, produces only safe operations, and verifies behavior before publishing.</p><div class="mini-checks"><span>✓ 11 operations healthy</span><span>✓ 10 assertions pass</span></div></article>
           <article><span class="step-number">03</span><div class="step-icon share">⌁</div><h3>Everyone gets the feature</h3><p>The patch enters the public registry. Other people install it without AI, an account, or an API key.</p><div class="people"><i>AM</i><i>JK</i><i>RS</i><i>+2k</i></div></article>
         </div>
       </section>
@@ -178,7 +184,7 @@
     <footer class="site-footer">
       <a class="brand" href="/"><span class="brand-symbol"><i></i><i></i></span><span>OpenPatch</span></a>
       <p>Fix the web you have.</p>
-      <div class="footer-links"><a href="/downloads/openpatch-extension-v0.6.0.zip" download>Chrome extension</a><a href="/downloads/openpatch-codex-plugin-v0.3.0.zip" download>Codex plugin</a></div>
+      <div class="footer-links"><a href="/downloads/openpatch-extension-v0.7.0.zip" download>Chrome extension</a><a href="/downloads/openpatch-codex-plugin-v0.4.0.zip" download>Codex plugin</a><a href="https://github.com/abbasaliii/openpatch" rel="noreferrer">Source</a><a href="https://github.com/abbasaliii/openpatch/blob/main/BUILD_WEEK.md" rel="noreferrer">Build record</a></div>
       <span>Built with Codex + GPT‑5.6 for OpenAI Build Week 2026</span>
     </footer>
     <script type="module" src="/main.ts"></script>
