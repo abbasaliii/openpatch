@@ -95,18 +95,36 @@ test("the packaged extension repairs the real public demo domain", async () => {
   await expect(page.locator("html")).toHaveAttribute("data-openpatch-applied", /org\.openpatch\.civicapply-accessible-draft@1\.2\.0/);
 });
 
-test("the production extension activates the bundled MetroCare feature repair", async () => {
+test("the production extension discovers and installs MetroCare from the verified public registry", async () => {
   let worker = context.serviceWorkers()[0];
   if (!worker) worker = await context.waitForEvent("serviceworker");
-  await worker.evaluate(async () => {
-    const stored = await chrome.storage.local.get("enabledPatches");
-    const enabledPatches = (stored.enabledPatches ?? {}) as Record<string, boolean>;
-    enabledPatches["org.openpatch.metrocare-service-navigator"] = true;
-    await chrome.storage.local.set({ enabledPatches });
-  });
 
+  const popup = await context.newPage();
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:4174/care/");
+  await expect(page.locator(".openpatch-navigator")).toHaveCount(0);
+
+  const extensionId = new URL(worker.url()).host;
+  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+  await expect(popup.locator("#registry-match")).toBeVisible();
+  await expect(popup.locator("#registry-match-name")).toContainText("MetroCare: personal service navigator");
+  await expect(popup.locator("#import-health")).toHaveText("10/10 operation targets healthy");
+  await expect(popup.locator("#import-status")).toContainText("Verified and healthy");
+  await popup.locator("body").screenshot({
+    path: resolve(import.meta.dirname, "../../submission-assets/openpatch-registry-discovery.png")
+  });
+  await popup.locator("#install-button").click();
+
+  await expect.poll(async () => worker.evaluate(async () => {
+    const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches"]);
+    const id = "org.openpatch.metrocare-service-navigator";
+    return {
+      installed: Boolean((stored.installedPatches as Record<string, unknown> | undefined)?.[id]),
+      source: ((stored.installedPatchMeta as Record<string, { source?: string }> | undefined)?.[id])?.source,
+      enabled: Boolean((stored.enabledPatches as Record<string, boolean> | undefined)?.[id])
+    };
+  })).toEqual({ installed: true, source: "public-registry", enabled: true });
+
   await expect(page.locator(".openpatch-navigator")).toBeVisible();
   await page.locator("select[id$='-access']").selectOption("wheelchair");
   await page.locator("select[id$='-language']").selectOption("urdu");
@@ -115,7 +133,7 @@ test("the production extension activates the bundled MetroCare feature repair", 
   await expect(page.locator("html")).toHaveAttribute("data-openpatch-applied", /org\.openpatch\.metrocare-service-navigator@1\.0\.0/);
 });
 
-test("the packaged extension adds the feature on the real public MetroCare domain", async () => {
+test("the registry-installed feature also runs on the real public MetroCare domain", async () => {
   const page = await context.newPage();
   await page.goto("https://openpatch-tau.vercel.app/care/");
   await expect(page.locator(".openpatch-navigator")).toBeVisible();

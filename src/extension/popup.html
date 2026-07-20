@@ -80,13 +80,21 @@
         <p class="brief-status" id="brief-status" role="status" aria-live="polite"></p>
       </section>
 
-      <div class="flow-divider"><span>Install or update a community patch</span></div>
-      <section class="install-flow" aria-labelledby="install-title">
-        <span class="eyebrow">Install without AI</span>
+      <div class="flow-divider" id="flow-divider"><span>Install or update a community patch</span></div>
+      <section class="install-flow" id="install-flow" aria-labelledby="install-title">
+        <span class="eyebrow" id="install-eyebrow">Install without AI</span>
         <h2 id="install-title">Check a patch on this page</h2>
-        <p>OpenPatch validates the file and every selector before requesting access to its exact domains.</p>
+        <p id="install-description">OpenPatch validates the file and every selector before requesting access to its exact domains.</p>
+        <div class="registry-match" id="registry-match" hidden>
+          <span class="registry-spark" aria-hidden="true">&#10022;</span>
+          <div>
+            <strong>Verified registry match</strong>
+            <span id="registry-match-name"></span>
+            <small id="registry-match-proof"></small>
+          </div>
+        </div>
         <input id="patch-file" class="file-input" type="file" accept="application/json,.json,.openpatch.json" />
-        <label class="import-button" for="patch-file">Choose .openpatch.json</label>
+        <label class="import-button" id="import-file-label" for="patch-file">Choose .openpatch.json</label>
         <div class="import-preview" id="import-preview" hidden>
           <div class="import-head"><span class="import-check">✓</span><div><strong id="import-name"></strong><small id="import-version"></small></div></div>
           <dl>
