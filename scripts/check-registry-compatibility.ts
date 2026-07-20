@@ -12,7 +12,7 @@ import {
 import type { SelectorPreflightResult } from "../src/core/preflight";
 import { canonicalPatchSource } from "../src/core/patch-source";
 import { parsePublicRegistry } from "../src/core/remote-registry";
-import type { OpenPatch } from "../src/core/types";
+import type { CommunityPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
 
 const option = (name: string, fallback: string) => {
@@ -21,14 +21,14 @@ const option = (name: string, fallback: string) => {
 };
 
 const positionalOutput = process.argv.slice(2).find((argument) => !argument.startsWith("--"));
-const registryUrl = option("--registry", "https://openpatch-tau.vercel.app/registry/index.json");
+const registryUrl = option("--registry", "https://patch-the-web.vercel.app/registry/index.json");
 const outputPath = resolve(option("--out", positionalOutput ?? "compatibility-report.json"));
 const runtimePath = resolve(import.meta.dirname, "../dist/test/preflight-runtime.js");
 const patchSourceDir = resolve(import.meta.dirname, "../src/registry/patches");
 const workspaceMode = process.argv.includes("--workspace");
 const checkedAt = new Date().toISOString();
 
-function publicPageUrl(patch: OpenPatch) {
+function publicPageUrl(patch: CommunityPatch) {
   const host = patch.match.hosts.find((candidate) => candidate !== "localhost" && candidate !== "127.0.0.1");
   if (!host) throw new Error("Patch has no monitorable public host.");
   const path = patch.match.paths[0]?.replace(/\*.*$/, "") || "/";
@@ -39,7 +39,7 @@ type MonitorEntry = {
   id: string;
   version: string;
   sha256: string;
-  scope: OpenPatch["match"];
+  scope: CommunityPatch["match"];
   verification: { operations: number };
   raw?: string;
   download?: string;
@@ -47,7 +47,7 @@ type MonitorEntry = {
 
 let entries: MonitorEntry[];
 if (workspaceMode) {
-  const files = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".openpatch.json")).sort();
+  const files = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".patch-the-web.json")).sort();
   entries = await Promise.all(files.map(async (file) => {
     const raw = canonicalPatchSource(await readFile(resolve(patchSourceDir, file), "utf8"));
     const validation = validatePatch(JSON.parse(raw) as unknown);
@@ -95,7 +95,7 @@ try {
         if (!navigation?.ok()) throw new Error(`Monitored page returned ${navigation?.status() ?? "no response"}.`);
         await page.addScriptTag({ path: runtimePath });
         const serializedPatch = JSON.stringify(patch).replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029");
-        const preflight = await page.evaluate<SelectorPreflightResult>(`window.__preflightOpenPatch(${serializedPatch})`);
+        const preflight = await page.evaluate<SelectorPreflightResult>(`window.__preflightPatchTheWeb(${serializedPatch})`);
         const evidence = compatibilityEvidence(sha256, preflight);
         const fingerprint = createHash("sha256").update(evidence).digest("hex");
         reports.push({

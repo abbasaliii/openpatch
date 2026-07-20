@@ -28,7 +28,7 @@ async function loadRegistryReceipt() {
     const response = await fetch("/registry/index.json", { cache: "no-store" });
     if (!response.ok) throw new Error(`Registry returned ${response.status}`);
     const index = await response.json() as RegistryIndex;
-    const patch = index.patches.find((entry) => entry.id === "org.openpatch.metrocare-service-navigator");
+    const patch = index.patches.find((entry) => entry.id === "org.patchtheweb.metrocare-service-navigator");
     if (!patch) throw new Error("Flagship patch is missing");
     const version = document.getElementById("registry-version");
     const health = document.getElementById("registry-health");

@@ -1,10 +1,10 @@
 import { preflightPatchOnDocument } from "../src/core/preflight";
-import type { OpenPatch } from "../src/core/types";
+import type { CommunityPatch } from "../src/core/types";
 
 declare global {
   interface Window {
-    __preflightOpenPatch: (patch: OpenPatch) => ReturnType<typeof preflightPatchOnDocument>;
+    __preflightPatchTheWeb: (patch: CommunityPatch) => ReturnType<typeof preflightPatchOnDocument>;
   }
 }
 
-window.__preflightOpenPatch = (patch) => preflightPatchOnDocument(patch);
+window.__preflightPatchTheWeb = (patch) => preflightPatchOnDocument(patch);

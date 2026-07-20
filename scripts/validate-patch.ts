@@ -4,17 +4,17 @@ import { resolve } from "node:path";
 import { JSDOM } from "jsdom";
 import { applyPatch } from "../src/core/engine";
 import { canonicalPatchSource } from "../src/core/patch-source";
-import type { OpenPatch } from "../src/core/types";
+import type { CommunityPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
 
-const patchPath = resolve(process.argv[2] ?? "src/registry/patches/civic-apply.openpatch.json");
+const patchPath = resolve(process.argv[2] ?? "src/registry/patches/civic-apply.patch-the-web.json");
 const htmlPath = resolve(process.argv[3] ?? "src/site/demo/index.html");
 const raw = canonicalPatchSource(await readFile(patchPath, "utf8"));
 const candidate: unknown = JSON.parse(raw);
 const result = validatePatch(candidate);
 
 if (!result.ok) {
-  console.error("Patch rejected by the OpenPatch policy validator:\n");
+  console.error("Patch rejected by the Patch the Web policy validator:\n");
   result.issues.forEach((issue) => console.error(`  ✗ ${issue.path}: ${issue.message}`));
   process.exitCode = 1;
 } else {
@@ -40,7 +40,7 @@ if (!result.ok) {
   }
 }
 
-function verifyAssertions(patch: OpenPatch, document: Document) {
+function verifyAssertions(patch: CommunityPatch, document: Document) {
   const issues: string[] = [];
   for (const assertion of patch.verify) {
     const matches = [...document.querySelectorAll(assertion.selector)];

@@ -1,16 +1,16 @@
-import civicPatchJson from "../registry/patches/civic-apply.openpatch.json";
+import civicPatchJson from "../registry/patches/civic-apply.patch-the-web.json";
 import { buildPatchCatalog, contentScriptMatches, permissionOrigins } from "../core/registry";
-import type { OpenPatch } from "../core/types";
+import type { CommunityPatch } from "../core/types";
 
-const PATCH_ID = "org.openpatch.civicapply-accessible-draft";
-const RUNTIME_SCRIPT_ID = "openpatch-runtime";
-const bundled = [civicPatchJson as OpenPatch];
+const PATCH_ID = "org.patchtheweb.civicapply-accessible-draft";
+const RUNTIME_SCRIPT_ID = "patch-the-web-runtime";
+const bundled = [civicPatchJson as CommunityPatch];
 let refreshQueue: Promise<void> = Promise.resolve();
 
 async function refreshRuntime() {
   const stored = await chrome.storage.local.get("installedPatches");
   const catalog = buildPatchCatalog(bundled, stored.installedPatches);
-  const allowed: OpenPatch[] = [];
+  const allowed: CommunityPatch[] = [];
 
   for (const { patch } of catalog.patches) {
     const origins = permissionOrigins(patch);
@@ -55,7 +55,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type !== "OPENPATCH_REFRESH_RUNTIME") return;
+  if (message?.type !== "PATCH_THE_WEB_REFRESH_RUNTIME") return;
   void queueRuntimeRefresh()
     .then(() => sendResponse({ ok: true }))
     .catch((error) => sendResponse({ ok: false, error: error instanceof Error ? error.message : "Runtime refresh failed" }));

@@ -23,7 +23,7 @@ try {
   }
   await desktop.evaluate(() => window.scrollTo(0, 0));
   await desktop.waitForTimeout(250);
-  await desktop.screenshot({ path: resolve(previewDir, "openpatch-landing.png"), fullPage: true });
+  await desktop.screenshot({ path: resolve(previewDir, "patch-the-web-landing.png"), fullPage: true });
 
   const sentinel = await browser.newPage({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 1 });
   await sentinel.goto("http://127.0.0.1:4173/sentinel/", { waitUntil: "networkidle" });
@@ -51,7 +51,7 @@ try {
   await mobile.goto("http://127.0.0.1:4173/demo/", { waitUntil: "networkidle" });
   await mobile.screenshot({ path: resolve(previewDir, "civicapply-before-mobile.png") });
   await mobile.addScriptTag({ path: runtimePath });
-  await mobile.evaluate(() => window.__applyOpenPatchDemo());
+  await mobile.evaluate(() => window.__applyPatchTheWebDemo());
   await mobile.screenshot({ path: resolve(previewDir, "civicapply-after-mobile.png") });
   await mobile.screenshot({ path: resolve(previewDir, "civicapply-after-mobile-full.png"), fullPage: true });
 
@@ -80,16 +80,16 @@ try {
     });
   });
   await popup.goto(`file://${resolve(root, "dist/extension/popup.html").replaceAll("\\", "/")}`, { waitUntil: "load" });
-  await popup.screenshot({ path: resolve(previewDir, "openpatch-repair-brief.png"), fullPage: true });
+  await popup.screenshot({ path: resolve(previewDir, "patch-the-web-repair-brief.png"), fullPage: true });
 
   const installedPopup = await browser.newPage({ viewport: { width: 430, height: 780 }, deviceScaleFactor: 1 });
   await installedPopup.addInitScript(() => {
     const patch = {
-      id: "org.openpatch.metrocare-service-navigator",
+      id: "org.patchtheweb.metrocare-service-navigator",
       name: "MetroCare: personal service navigator",
       summary: "Adds private search, combined access filters, and accessible provider comparison.",
       version: "1.1.0",
-      author: { name: "OpenPatch Community" },
+      author: { name: "Patch the Web Community" },
       match: { hosts: ["example.gov"], paths: ["/services/*"] },
       capabilities: ["content-filter", "content-compare", "accessibility", "keyboard-navigation", "local-storage"],
       operationCount: 11
@@ -110,7 +110,7 @@ try {
   });
   await installedPopup.goto(`file://${resolve(root, "dist/extension/popup.html").replaceAll("\\", "/")}`, { waitUntil: "load" });
   await installedPopup.locator("#remove-patch").waitFor({ state: "visible" });
-  await installedPopup.screenshot({ path: resolve(previewDir, "openpatch-installed-controls.png"), fullPage: true });
+  await installedPopup.screenshot({ path: resolve(previewDir, "patch-the-web-installed-controls.png"), fullPage: true });
 } finally {
   await browser.close();
   await server.close();

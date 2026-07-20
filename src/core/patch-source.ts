@@ -1,5 +1,5 @@
 /**
- * Patch receipts are calculated from the bytes that OpenPatch publishes.
+ * Patch receipts are calculated from the bytes that Patch the Web publishes.
  * Git may check text files out with platform-specific line endings, so the
  * registry always publishes and hashes a canonical LF representation.
  */

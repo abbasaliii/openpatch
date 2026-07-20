@@ -1,15 +1,15 @@
 import { patchMatchesUrl } from "./matcher";
-import type { OpenPatch, PatchCapability } from "./types";
+import type { CommunityPatch, PatchCapability } from "./types";
 
-export const PUBLIC_REGISTRY_URL = "https://openpatch-tau.vercel.app/registry/index.json";
+export const PUBLIC_REGISTRY_URL = "https://patch-the-web.vercel.app/registry/index.json";
 
 export type RegistryPatchEntry = {
   id: string;
   name: string;
   summary: string;
   version: string;
-  scope: OpenPatch["match"];
-  capabilities: OpenPatch["capabilities"];
+  scope: CommunityPatch["match"];
+  capabilities: CommunityPatch["capabilities"];
   download: string;
   sha256: string;
   verification: { status: "verified"; operations: number; assertions: number };
@@ -55,7 +55,7 @@ function safeEntry(value: unknown): value is RegistryPatchEntry {
   if (!isRecord(value) || !isRecord(value.scope) || !isRecord(value.verification)) return false;
   if (!isShortString(value.id, 120) || !isShortString(value.name, 160) || !isShortString(value.summary, 500)) return false;
   if (!isShortString(value.version, 50) || !isShortString(value.download, 240) || !isShortString(value.sha256, 64)) return false;
-  if (!/^\/registry\/patches\/[a-z0-9._-]+\.openpatch\.json$/i.test(String(value.download))) return false;
+  if (!/^\/registry\/patches\/[a-z0-9._-]+\.patch-the-web\.json$/i.test(String(value.download))) return false;
   if (!/^[a-f0-9]{64}$/.test(String(value.sha256))) return false;
   if (!isStringArray(value.scope.hosts, 20) || !isStringArray(value.scope.paths, 30)) return false;
   if (!Array.isArray(value.capabilities) || value.capabilities.length > CAPABILITIES.size) return false;
@@ -76,7 +76,7 @@ function safeEntry(value: unknown): value is RegistryPatchEntry {
     if (!value.compatibility.driftedOperationIds.every((id) => isShortString(id, 120))) return false;
     try {
       const monitoredUrl = new URL(String(value.compatibility.pageUrl));
-      if (!patchMatchesUrl({ match: value.scope } as OpenPatch, monitoredUrl)) return false;
+      if (!patchMatchesUrl({ match: value.scope } as CommunityPatch, monitoredUrl)) return false;
     } catch { return false; }
     if (value.compatibility.status === "healthy" && (value.compatibility.healthy !== value.compatibility.total || value.compatibility.driftedOperationIds.length > 0)) return false;
     if (value.compatibility.status === "drifted" && value.compatibility.healthy === value.compatibility.total) return false;
@@ -94,7 +94,7 @@ export function registryMatchesUrl(index: PublicRegistryIndex, url: URL) {
   return index.patches.filter((entry) =>
     entry.compatibility?.status !== "drifted"
     && entry.compatibility?.status !== "unreachable"
-    && patchMatchesUrl({ match: entry.scope } as OpenPatch, url)
+    && patchMatchesUrl({ match: entry.scope } as CommunityPatch, url)
   );
 }
 

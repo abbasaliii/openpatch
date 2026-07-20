@@ -1,9 +1,9 @@
 import { patchMatchesUrl } from "./matcher";
-import type { OpenPatch } from "./types";
+import type { CommunityPatch } from "./types";
 import { validatePatch } from "./validator";
 
 export type CatalogPatch = {
-  patch: OpenPatch;
+  patch: CommunityPatch;
   source: "bundled" | "local";
 };
 
@@ -25,7 +25,7 @@ export function comparePatchVersions(left: string, right: string) {
   return left.localeCompare(right);
 }
 
-export function buildPatchCatalog(bundled: OpenPatch[], stored: unknown): CatalogResult {
+export function buildPatchCatalog(bundled: CommunityPatch[], stored: unknown): CatalogResult {
   const byId = new Map<string, CatalogPatch>();
   let rejected = 0;
 
@@ -59,7 +59,7 @@ export function matchingCatalogPatches(catalog: CatalogPatch[], url: URL) {
   return catalog.filter(({ patch }) => patchMatchesUrl(patch, url));
 }
 
-export function contentScriptMatches(patches: OpenPatch[]) {
+export function contentScriptMatches(patches: CommunityPatch[]) {
   const matches = new Set<string>();
   for (const patch of patches) {
     for (const host of patch.match.hosts) {
@@ -70,7 +70,7 @@ export function contentScriptMatches(patches: OpenPatch[]) {
   return [...matches].sort();
 }
 
-export function permissionOrigins(patch: Pick<OpenPatch, "match">) {
+export function permissionOrigins(patch: Pick<CommunityPatch, "match">) {
   return [...new Set(patch.match.hosts.map((host) => {
     const scheme = host === "localhost" || host === "127.0.0.1" ? "http" : "*";
     return `${scheme}://${host}/*`;

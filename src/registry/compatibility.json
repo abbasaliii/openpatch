@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-20T11:30:31.990Z",
+  "generatedAt": "2026-07-20T20:40:12.718Z",
   "registryUrl": "workspace:src/registry/patches",
   "summary": {
     "healthy": 2,
@@ -10,15 +10,15 @@
   },
   "patches": [
     {
-      "id": "org.openpatch.civicapply-accessible-draft",
+      "id": "org.patchtheweb.civicapply-accessible-draft",
       "version": "1.2.0",
-      "pageUrl": "https://openpatch-tau.vercel.app/demo/",
+      "pageUrl": "https://patch-the-web.vercel.app/demo/",
       "status": "healthy",
-      "checkedAt": "2026-07-20T11:30:31.990Z",
-      "patchSha256": "34427b68a8004c90edd33c287db8472cb356854215ba3a8d46c26032674d2721",
+      "checkedAt": "2026-07-20T20:40:12.718Z",
+      "patchSha256": "cccfb834ba58a8012a4ba40f4f064c64eee139605dd6ecbe5c3780e27d946954",
       "healthy": 19,
       "total": 19,
-      "fingerprint": "7748cb22e659e4b19196ab4a420497c2a3783466236742305b7baf5f6f43c767",
+      "fingerprint": "0b8e63ef955be33ae86fb0e23d27d435b0583c6d10026794072dc62ce5ea6762",
       "driftedOperationIds": [],
       "results": [
         {
@@ -119,15 +119,15 @@
       ]
     },
     {
-      "id": "org.openpatch.metrocare-service-navigator",
+      "id": "org.patchtheweb.metrocare-service-navigator",
       "version": "1.1.0",
-      "pageUrl": "https://openpatch-tau.vercel.app/care/",
+      "pageUrl": "https://patch-the-web.vercel.app/care/",
       "status": "healthy",
-      "checkedAt": "2026-07-20T11:30:31.990Z",
-      "patchSha256": "14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c",
+      "checkedAt": "2026-07-20T20:40:12.718Z",
+      "patchSha256": "943ce97c0115f3e2a8b5c011495e9ef6b78cf1da48ab549c0ffd47f4f3c8800c",
       "healthy": 11,
       "total": 11,
-      "fingerprint": "fe13b736e909a09dbee8d4d6f0c38f2249076ba7de47276ad1efb751cc94b4f9",
+      "fingerprint": "0f8f33b9f517d80851583716314be0fd0de4fab5c82325cd22e579cdb7a09a43",
       "driftedOperationIds": [],
       "results": [
         {

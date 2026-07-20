@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { applyPatch } from "../src/core/engine";
-import civicPatchJson from "../src/registry/patches/civic-apply.openpatch.json";
-import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
-import type { OpenPatch } from "../src/core/types";
+import civicPatchJson from "../src/registry/patches/civic-apply.patch-the-web.json";
+import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
+import type { CommunityPatch } from "../src/core/types";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -35,14 +35,14 @@ const fixture = `
 
 describe("constrained patch runtime", () => {
   beforeEach(() => {
-    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
     document.documentElement.className = "";
     document.body.innerHTML = fixture;
     localStorage.clear();
   });
 
   it("applies all bundled operations without executing patch code", () => {
-    const health = applyPatch(civicPatchJson as OpenPatch);
+    const health = applyPatch(civicPatchJson as CommunityPatch);
     expect(health.applied).toBe(true);
     expect(health.healthy).toBe(health.total);
     expect((document.querySelector(".survey-wall") as HTMLElement).hidden).toBe(true);
@@ -51,7 +51,7 @@ describe("constrained patch runtime", () => {
   });
 
   it("restores every eligible field, preserves repeated controls, and excludes sensitive data", () => {
-    applyPatch(civicPatchJson as OpenPatch);
+    applyPatch(civicPatchJson as CommunityPatch);
     const setValue = (id: string, value: string) => {
       const field = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
       field.value = value;
@@ -80,10 +80,10 @@ describe("constrained patch runtime", () => {
     expect(saved).not.toContain("938204");
     expect(saved).not.toContain("DISABLED PRIVATE");
 
-    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
     document.documentElement.className = "";
     document.body.innerHTML = fixture;
-    applyPatch(civicPatchJson as OpenPatch);
+    applyPatch(civicPatchJson as CommunityPatch);
     expect((document.getElementById("full-name") as HTMLInputElement).value).toBe("Alex Morgan");
     expect((document.getElementById("email") as HTMLInputElement).value).toBe("alex@example.com");
     expect((document.getElementById("phone") as HTMLInputElement).value).toBe("555-0142");
@@ -95,29 +95,29 @@ describe("constrained patch runtime", () => {
     expect((document.getElementById("account-password") as HTMLInputElement).value).toBe("");
     expect((document.getElementById("payment-card") as HTMLInputElement).value).toBe("");
     expect((document.getElementById("verification-code") as HTMLInputElement).value).toBe("");
-    expect(document.querySelector(".openpatch-save-status")?.textContent).toContain("Draft restored");
+    expect(document.querySelector(".patch-the-web-save-status")?.textContent).toContain("Draft restored");
   });
 
   it("expires locally stored drafts after the declared retention window", () => {
     const now = 1_800_000_000_000;
     const dateNow = vi.spyOn(Date, "now").mockReturnValue(now);
-    applyPatch(civicPatchJson as OpenPatch);
+    applyPatch(civicPatchJson as CommunityPatch);
     const name = document.getElementById("full-name") as HTMLInputElement;
     name.value = "Alex Morgan";
     name.dispatchEvent(new Event("input", { bubbles: true }));
 
-    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
     document.documentElement.className = "";
     document.body.innerHTML = fixture;
     dateNow.mockReturnValue(now + (24 * 60 + 1) * 60_000);
-    applyPatch(civicPatchJson as OpenPatch);
+    applyPatch(civicPatchJson as CommunityPatch);
 
     expect((document.getElementById("full-name") as HTMLInputElement).value).toBe("");
-    expect(document.querySelector(".openpatch-save-status")?.textContent).toContain("expired");
+    expect(document.querySelector(".patch-the-web-save-status")?.textContent).toContain("expired");
   });
 
   it("adds specific accessible validation, focuses the first error, and clears repaired errors live", () => {
-    applyPatch(civicPatchJson as OpenPatch);
+    applyPatch(civicPatchJson as CommunityPatch);
     const form = document.getElementById("benefits-form") as HTMLFormElement;
     form.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true }));
     const name = document.getElementById("full-name") as HTMLInputElement;
@@ -125,7 +125,7 @@ describe("constrained patch runtime", () => {
     const household = document.getElementById("household-size") as HTMLSelectElement;
     const address = document.getElementById("address") as HTMLTextAreaElement;
     expect(document.activeElement).toBe(name);
-    expect(document.querySelectorAll(".openpatch-field-error")).toHaveLength(4);
+    expect(document.querySelectorAll(".patch-the-web-field-error")).toHaveLength(4);
     expect(name.getAttribute("aria-invalid")).toBe("true");
     expect(email.getAttribute("aria-invalid")).toBe("true");
     expect(document.getElementById(email.getAttribute("aria-describedby") ?? "")?.textContent).toContain("email address");
@@ -146,11 +146,11 @@ describe("constrained patch runtime", () => {
     household.dispatchEvent(new Event("change", { bubbles: true }));
     address.value = "12 Green Street";
     address.dispatchEvent(new Event("input", { bubbles: true }));
-    expect(document.querySelectorAll(".openpatch-field-error")).toHaveLength(0);
+    expect(document.querySelectorAll(".patch-the-web-field-error")).toHaveLength(0);
   });
 
   it("adds wrapping arrow, Home, and End navigation to progress controls", () => {
-    applyPatch(civicPatchJson as OpenPatch);
+    applyPatch(civicPatchJson as CommunityPatch);
     const buttons = [...document.querySelectorAll<HTMLButtonElement>("#progress-steps button")];
     buttons[0].focus();
     buttons[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
@@ -170,7 +170,7 @@ const careFixture = readFileSync(resolve(import.meta.dirname, "../src/site/care/
 describe("safe collection navigator runtime", () => {
   beforeEach(() => {
     const parsed = new DOMParser().parseFromString(careFixture, "text/html");
-    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
     document.documentElement.className = "";
     document.head.innerHTML = parsed.head.innerHTML;
     document.body.innerHTML = parsed.body.innerHTML;
@@ -178,17 +178,17 @@ describe("safe collection navigator runtime", () => {
   });
 
   it("adds accessible search and facets without patch-authored HTML or script", () => {
-    const health = applyPatch(metroCarePatchJson as OpenPatch);
+    const health = applyPatch(metroCarePatchJson as CommunityPatch);
     expect(health.applied).toBe(true);
     expect(health.healthy).toBe(11);
-    expect(document.querySelectorAll(".openpatch-navigator input[type='search']")).toHaveLength(1);
-    expect(document.querySelectorAll(".openpatch-navigator select")).toHaveLength(4);
-    expect(document.querySelector(".openpatch-navigator__status")?.getAttribute("aria-live")).toBe("polite");
-    expect(document.querySelectorAll(".openpatch-compare__select")).toHaveLength(12);
+    expect(document.querySelectorAll(".patch-the-web-navigator input[type='search']")).toHaveLength(1);
+    expect(document.querySelectorAll(".patch-the-web-navigator select")).toHaveLength(4);
+    expect(document.querySelector(".patch-the-web-navigator__status")?.getAttribute("aria-live")).toBe("polite");
+    expect(document.querySelectorAll(".patch-the-web-compare__select")).toHaveLength(12);
   });
 
   it("combines real access needs into one matching service", () => {
-    applyPatch(metroCarePatchJson as OpenPatch);
+    applyPatch(metroCarePatchJson as CommunityPatch);
     const select = (id: string, value: string) => {
       const element = document.querySelector<HTMLSelectElement>(`select[id$='-${id}']`)!;
       element.value = value;
@@ -200,69 +200,69 @@ describe("safe collection navigator runtime", () => {
     const visible = [...document.querySelectorAll<HTMLElement>(".care-service")].filter((item) => !item.hidden);
     expect(visible).toHaveLength(1);
     expect(visible[0].dataset.serviceName).toBe("Harbor Family Clinic");
-    expect(document.querySelector(".openpatch-navigator__status")?.textContent).toBe("1 of 12 services match");
+    expect(document.querySelector(".patch-the-web-navigator__status")?.textContent).toBe("1 of 12 services match");
   });
 
   it("keeps access preferences local and restores them within the TTL", () => {
-    applyPatch(metroCarePatchJson as OpenPatch);
+    applyPatch(metroCarePatchJson as CommunityPatch);
     const language = document.querySelector<HTMLSelectElement>("select[id$='-language']")!;
     language.value = "urdu";
     language.dispatchEvent(new Event("change", { bubbles: true }));
     expect([...Object.values(localStorage)].join(" ")).toContain("urdu");
 
     const parsed = new DOMParser().parseFromString(careFixture, "text/html");
-    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
     document.documentElement.className = "";
     document.body.innerHTML = parsed.body.innerHTML;
-    applyPatch(metroCarePatchJson as OpenPatch);
+    applyPatch(metroCarePatchJson as CommunityPatch);
     expect(document.querySelector<HTMLSelectElement>("select[id$='-language']")?.value).toBe("urdu");
-    document.querySelector<HTMLButtonElement>(".openpatch-navigator__clear")?.click();
+    document.querySelector<HTMLButtonElement>(".patch-the-web-navigator__clear")?.click();
     expect([...Object.keys(localStorage)].some((key) => key.includes("metrocare"))).toBe(false);
   });
 
   it("expires collection preferences after the declared TTL", () => {
     const now = 1_800_000_000_000;
     const dateNow = vi.spyOn(Date, "now").mockReturnValue(now);
-    applyPatch(metroCarePatchJson as OpenPatch);
+    applyPatch(metroCarePatchJson as CommunityPatch);
     const language = document.querySelector<HTMLSelectElement>("select[id$='-language']")!;
     language.value = "urdu";
     language.dispatchEvent(new Event("change", { bubbles: true }));
 
     const parsed = new DOMParser().parseFromString(careFixture, "text/html");
-    document.documentElement.removeAttribute("data-openpatch-applied");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
     document.documentElement.className = "";
     document.body.innerHTML = parsed.body.innerHTML;
     dateNow.mockReturnValue(now + (24 * 60 + 1) * 60_000);
-    applyPatch(metroCarePatchJson as OpenPatch);
+    applyPatch(metroCarePatchJson as CommunityPatch);
     expect(document.querySelector<HTMLSelectElement>("select[id$='-language']")?.value).toBe("");
     expect([...Object.keys(localStorage)].some((key) => key.includes("metrocare"))).toBe(false);
   });
 
   it("supports slash-to-search and Escape-to-clear", () => {
-    applyPatch(metroCarePatchJson as OpenPatch);
-    const search = document.querySelector<HTMLInputElement>(".openpatch-navigator input[type='search']")!;
+    applyPatch(metroCarePatchJson as CommunityPatch);
+    const search = document.querySelector<HTMLInputElement>(".patch-the-web-navigator input[type='search']")!;
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "/", bubbles: true, cancelable: true }));
     expect(document.activeElement).toBe(search);
     search.value = "therapy";
     search.dispatchEvent(new Event("input", { bubbles: true }));
     search.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     expect(search.value).toBe("");
-    expect(document.querySelector(".openpatch-navigator__status")?.textContent).toBe("12 of 12 services match");
+    expect(document.querySelector(".patch-the-web-navigator__status")?.textContent).toBe("12 of 12 services match");
   });
 
   it("builds a keyboard-accessible comparison table from declared data attributes", () => {
-    applyPatch(metroCarePatchJson as OpenPatch);
-    const buttons = [...document.querySelectorAll<HTMLButtonElement>(".openpatch-compare__select")];
+    applyPatch(metroCarePatchJson as CommunityPatch);
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>(".patch-the-web-compare__select")];
     buttons[0].click();
     buttons[2].click();
     buttons[1].click();
     expect(buttons[0].getAttribute("aria-pressed")).toBe("true");
     expect(buttons[3].disabled).toBe(true);
-    expect(document.querySelector(".openpatch-compare__status")?.getAttribute("aria-live")).toBe("polite");
-    expect(document.querySelector(".openpatch-compare__status")?.textContent).toContain("3 items selected");
+    expect(document.querySelector(".patch-the-web-compare__status")?.getAttribute("aria-live")).toBe("polite");
+    expect(document.querySelector(".patch-the-web-compare__status")?.textContent).toContain("3 items selected");
 
-    document.querySelector<HTMLButtonElement>(".openpatch-compare__action:not(.secondary)")?.click();
-    const table = document.querySelector(".openpatch-compare table");
+    document.querySelector<HTMLButtonElement>(".patch-the-web-compare__action:not(.secondary)")?.click();
+    const table = document.querySelector(".patch-the-web-compare table");
     expect(table).not.toBeNull();
     expect(table?.textContent).toContain("Harbor Family Clinic");
     expect(table?.textContent).toContain("Northside Community Health");
@@ -271,9 +271,9 @@ describe("safe collection navigator runtime", () => {
     expect(table?.textContent).toContain("Spanish");
     expect(table?.querySelector("thead th")?.getAttribute("scope")).toBe("col");
     expect(table?.querySelector("tbody th")?.getAttribute("scope")).toBe("row");
-    expect(table?.getAttribute("aria-labelledby")).toBe(document.querySelector(".openpatch-compare__result h3")?.id);
-    expect(table?.getAttribute("aria-describedby")).toBe(document.querySelector(".openpatch-compare__result p")?.id);
-    const tableWrap = document.querySelector<HTMLElement>(".openpatch-compare__table-wrap");
+    expect(table?.getAttribute("aria-labelledby")).toBe(document.querySelector(".patch-the-web-compare__result h3")?.id);
+    expect(table?.getAttribute("aria-describedby")).toBe(document.querySelector(".patch-the-web-compare__result p")?.id);
+    const tableWrap = document.querySelector<HTMLElement>(".patch-the-web-compare__table-wrap");
     expect(tableWrap?.tabIndex).toBe(0);
     expect(tableWrap?.getAttribute("role")).toBe("region");
     expect(tableWrap?.getAttribute("aria-label")).toBe("Scrollable service comparison");

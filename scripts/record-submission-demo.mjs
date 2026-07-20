@@ -6,7 +6,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const outputDir = resolve(root, "dist/video");
 const rawDir = resolve(outputDir, `raw-${Date.now()}`);
-const finalPath = resolve(root, "submission-assets/openpatch-demo-silent.webm");
+const finalPath = resolve(root, "submission-assets/patch-the-web-demo-silent.webm");
 const timingPath = resolve(outputDir, "demo-timings.json");
 const timings = JSON.parse((await readFile(timingPath, "utf8")).replace(/^\uFEFF/, ""));
 if (!Array.isArray(timings.sections) || timings.sections.length !== 9) {
@@ -48,7 +48,7 @@ async function runSection(index, action) {
   if (remaining > 0) await hold(remaining);
 }
 
-async function showCard({ eyebrow, title, copy, footer = "OpenPatch · The public feature layer for the web" }) {
+async function showCard({ eyebrow, title, copy, footer = "Patch the Web · The public feature layer for the web" }) {
   await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>
     *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 76% 18%,rgba(65,221,157,.22),transparent 34%),linear-gradient(145deg,#071b15,#123f30);color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}.shell{width:min(1320px,88vw);animation:enter .55s ease both}.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:9px 14px;border:1px solid rgba(121,229,183,.35);border-radius:999px;color:#79e5b7;background:rgba(121,229,183,.08);font-size:14px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.eyebrow:before{content:"";width:8px;height:8px;border-radius:50%;background:#79e5b7;box-shadow:0 0 0 5px rgba(121,229,183,.12)}h1{max-width:1180px;margin:28px 0 24px;font-size:86px;line-height:.98;letter-spacing:-.06em}p{max-width:950px;margin:0;color:#c8ded5;font-size:27px;line-height:1.5}.footer{position:fixed;left:6vw;bottom:40px;color:#86a99b;font-size:14px;font-weight:750;letter-spacing:.04em}@keyframes enter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
   </style></head><body><main class="shell"><span class="eyebrow">${escapeHtml(eyebrow)}</span><h1>${escapeHtml(title)}</h1><p>${escapeHtml(copy)}</p></main><div class="footer">${escapeHtml(footer)}</div></body></html>`);
@@ -88,14 +88,14 @@ async function showBeforeAfter() {
   const after = await readFile(resolve(root, "submission-assets/civicapply-after-mobile-full.png"));
   await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>
     *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:45px 64px;background:#edf6f1;color:#102c22;font-family:Inter,Segoe UI,Arial,sans-serif}header{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px}h1{margin:0;font-size:49px;letter-spacing:-.05em}header p{max-width:600px;margin:0;color:#536b61;font-size:18px;line-height:1.45}.pair{display:grid;grid-template-columns:1fr 1fr;gap:30px;height:710px}.panel{position:relative;display:grid;place-items:center;overflow:hidden;padding:18px;border:1px solid #c8ddd3;border-radius:24px;background:#fff;box-shadow:0 18px 55px rgba(16,44,34,.09)}.label{position:absolute;left:22px;top:20px;z-index:2;padding:9px 13px;border-radius:999px;color:#fff;font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.before{background:#b94a3c}.after{background:#0b966b}.panel img{display:block;max-width:100%;max-height:660px;object-fit:contain}
-  </style></head><body><header><h1>The same engine repairs broken forms.</h1><p>Mobile layout, accessible errors, keyboard navigation, and unfinished progress preserved locally.</p></header><main class="pair"><section class="panel"><span class="label before">Before</span><img src="data:image/png;base64,${before.toString("base64")}" alt=""></section><section class="panel"><span class="label after">After OpenPatch</span><img src="data:image/png;base64,${after.toString("base64")}" alt=""></section></main></body></html>`);
+  </style></head><body><header><h1>The same engine repairs broken forms.</h1><p>Mobile layout, accessible errors, keyboard navigation, and unfinished progress preserved locally.</p></header><main class="pair"><section class="panel"><span class="label before">Before</span><img src="data:image/png;base64,${before.toString("base64")}" alt=""></section><section class="panel"><span class="label after">After Patch the Web</span><img src="data:image/png;base64,${after.toString("base64")}" alt=""></section></main></body></html>`);
 }
 
 async function addCallout(text, tone = "green") {
   await page.evaluate(({ text, tone }) => {
-    document.getElementById("openpatch-demo-callout")?.remove();
+    document.getElementById("patch-the-web-demo-callout")?.remove();
     const callout = document.createElement("div");
-    callout.id = "openpatch-demo-callout";
+    callout.id = "patch-the-web-demo-callout";
     callout.textContent = text;
     Object.assign(callout.style, {
       position: "fixed", zIndex: "2147483647", left: "50%", top: "24px", transform: "translateX(-50%)",
@@ -135,10 +135,10 @@ try {
 
   await runSection(3, async () => {
     await showImage(
-      "submission-assets/openpatch-repair-brief.png",
+      "submission-assets/patch-the-web-repair-brief.png",
       "One person starts the repair",
       "Describe the problem. Copy a private brief to Codex.",
-      "OpenPatch sends structure—not private content. Codex then inspects the live DOM and screenshots through the authoring skill."
+      "Patch the Web sends structure—not private content. Codex then inspects the live DOM and screenshots through the authoring skill."
     );
   });
 
@@ -147,8 +147,8 @@ try {
     await hold(durationMs * 0.56);
     await page.goto("http://127.0.0.1:4175/care/", { waitUntil: "networkidle" });
     await page.locator("#judge-preview").click();
-    await smoothScroll(".openpatch-navigator", "center");
-    await addCallout("AFTER OPENPATCH: 11/11 safe operations applied", "green");
+    await smoothScroll(".patch-the-web-navigator", "center");
+    await addCallout("AFTER PATCH_THE_WEB: 11/11 safe operations applied", "green");
   });
 
   await runSection(5, async () => {
@@ -163,19 +163,19 @@ try {
   });
 
   await runSection(6, async () => {
-    await page.locator(".openpatch-navigator__clear").click();
+    await page.locator(".patch-the-web-navigator__clear").click();
     await page.getByRole("button", { name: "Add Harbor Family Clinic to comparison" }).click();
     await hold(650);
     await page.getByRole("button", { name: "Add Northside Community Health to comparison" }).click();
     await hold(650);
     await page.getByRole("button", { name: "Compare selected" }).click();
-    await smoothScroll(".openpatch-compare", "center");
+    await smoothScroll(".patch-the-web-compare", "center");
     await addCallout("A real feature: private, keyboard-accessible comparison", "green");
   });
 
   await runSection(7, async () => {
     await showImage(
-      "submission-assets/openpatch-registry-discovery.png",
+      "submission-assets/patch-the-web-registry-discovery.png",
       "Everyone else skips the AI step",
       "A verified repair is ready to install.",
       "The extension checks the exact domain, declared permissions, SHA-256 receipt, scheduled compatibility, and current selectors before installation."
@@ -191,10 +191,10 @@ try {
     await showBeforeAfter();
     await hold(durationMs * 0.16);
     await showCard({
-      eyebrow: "OpenPatch",
+      eyebrow: "Patch the Web",
       title: "Fix the web you have.",
       copy: "One person authors a safe repair. Every other person gets the missing feature—without AI, an account, or an API key.",
-      footer: "openpatch-tau.vercel.app · github.com/abbasaliii/openpatch"
+      footer: "patch-the-web.vercel.app · github.com/abbasaliii/patch-the-web"
     });
   });
 

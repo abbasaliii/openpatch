@@ -5,6 +5,8 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     environment: "jsdom",
-    restoreMocks: true
+    restoreMocks: true,
+    pool: "threads",
+    maxWorkers: 1
   }
 });

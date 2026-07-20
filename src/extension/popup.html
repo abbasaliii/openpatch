@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OpenPatch</title>
+    <title>Patch the Web</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <header class="topbar">
       <div class="brand-mark" aria-hidden="true"><span></span><span></span></div>
       <div>
-        <strong>OpenPatch</strong>
+        <strong>Patch the Web</strong>
         <p>Make the web work for you.</p>
       </div>
       <span class="safe-pill">Safe DSL</span>
@@ -38,8 +38,8 @@
         <p class="summary" id="patch-summary"></p>
 
         <div class="author-row">
-          <span class="avatar">OP</span>
-          <span>by <strong id="patch-author">OpenPatch Community</strong></span>
+          <span class="avatar">PW</span>
+          <span>by <strong id="patch-author">Patch the Web Community</strong></span>
           <span class="verified" id="publisher-status">✓ Policy checked</span>
         </div>
 
@@ -74,7 +74,7 @@
         <span class="empty-mark">⌁</span>
         <span class="eyebrow">No community repair yet</span>
         <h1>Start a repair with Codex</h1>
-        <p>Describe what is broken. OpenPatch will copy a privacy-safe brief for the <strong>$openpatch-author</strong> skill.</p>
+        <p>Describe what is broken. Patch the Web will copy a privacy-safe brief for the <strong>$patch-the-web-author</strong> skill.</p>
         <label class="complaint-label" for="repair-complaint">What should work better?</label>
         <textarea id="repair-complaint" maxlength="1000" rows="4" placeholder="This form loses my progress, overflows on mobile, and its errors are inaccessible."></textarea>
         <button class="author-button" id="author-button" type="button"><span aria-hidden="true">✦</span> Copy Codex repair brief</button>
@@ -86,7 +86,7 @@
       <section class="install-flow" id="install-flow" aria-labelledby="install-title">
         <span class="eyebrow" id="install-eyebrow">Install without AI</span>
         <h2 id="install-title">Check a patch on this page</h2>
-        <p id="install-description">OpenPatch validates the file and every selector before requesting access to its exact domains.</p>
+        <p id="install-description">Patch the Web validates the file and every selector before requesting access to its exact domains.</p>
         <div class="registry-match" id="registry-match" hidden>
           <span class="registry-spark" aria-hidden="true">&#10022;</span>
           <div>
@@ -95,8 +95,8 @@
             <small id="registry-match-proof"></small>
           </div>
         </div>
-        <input id="patch-file" class="file-input" type="file" accept="application/json,.json,.openpatch.json" />
-        <label class="import-button" id="import-file-label" for="patch-file">Choose .openpatch.json</label>
+        <input id="patch-file" class="file-input" type="file" accept="application/json,.json,.patch-the-web.json" />
+        <label class="import-button" id="import-file-label" for="patch-file">Choose .patch-the-web.json</label>
         <div class="import-preview" id="import-preview" hidden>
           <div class="import-head"><span class="import-check">✓</span><div><strong id="import-name"></strong><small id="import-version"></small></div></div>
           <dl>

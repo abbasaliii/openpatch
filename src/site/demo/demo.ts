@@ -17,7 +17,7 @@ form.addEventListener("submit", (event) => {
   genericError.hidden = true;
   success.hidden = true;
   queueMicrotask(() => {
-    if (document.documentElement.classList.contains("openpatch-active")) {
+    if (document.documentElement.classList.contains("patch-the-web-active")) {
       if (!form.querySelector('[aria-invalid="true"]')) {
         success.hidden = false;
         success.scrollIntoView({ behavior: "smooth", block: "center" });

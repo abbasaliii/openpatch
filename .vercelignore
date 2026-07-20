@@ -1,6 +1,9 @@
 .agents
+dist
 plugins
 submission-assets
 tests
 playwright-report
 test-results
+release/DEVPOST_PRIVATE_VALUES.txt
+release/*submission-handoff.zip

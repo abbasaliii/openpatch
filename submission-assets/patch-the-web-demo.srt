@@ -1,0 +1,111 @@
+1
+00:00:00,000 --> 00:00:05,544
+This is Patch the Web from the very beginning, in one uninterrupted browser recording.
+
+2
+00:00:05,544 --> 00:00:12,507
+Patch the Web lets people repair websites they do not own, then share that repair safely with everyone else.
+
+3
+00:00:12,518 --> 00:00:17,095
+First, download the extension from the public Patch the Web site.
+
+4
+00:00:17,095 --> 00:00:22,869
+Unzip it, open Chrome extensions, enable Developer mode, and choose Load unpacked.
+
+5
+00:00:22,869 --> 00:00:29,910
+This clean demo profile now shows the real Patch the Web version zero point eight extension running.
+
+6
+00:00:29,917 --> 00:00:32,643
+Now we open the MetroCare directory.
+
+7
+00:00:32,643 --> 00:00:39,231
+The original website has twelve services, but no search, no filters, and no comparison.
+
+8
+00:00:39,231 --> 00:00:44,834
+A person has to read every card to find accessible care in their language.
+
+9
+00:00:44,842 --> 00:00:47,780
+We open the actual extension on this website.
+
+10
+00:00:47,780 --> 00:00:54,960
+Patch the Web checks the public registry and discovers a community repair made for this exact domain and path.
+
+11
+00:00:54,960 --> 00:01:02,533
+It verifies the publisher policy, the patch hash, and all eleven live selector targets before offering installation.
+
+12
+00:01:02,538 --> 00:01:06,320
+One click installs and activates the verified feature.
+
+13
+00:01:06,320 --> 00:01:11,292
+This is a constrained Patch the Web document, not arbitrary JavaScript.
+
+14
+00:01:11,292 --> 00:01:17,665
+It may use only declared operations, and it receives access only to the website it repairs.
+
+15
+00:01:41,750 --> 00:01:46,041
+The page reloads with the missing feature added by the extension.
+
+16
+00:01:46,041 --> 00:01:51,059
+We select two real listings and open the new keyboard-accessible comparison.
+
+17
+00:01:51,059 --> 00:01:57,001
+The original website remains intact; Patch the Web adds a personal usability layer on top.
+
+18
+00:01:57,003 --> 00:02:02,526
+Next we filter for wheelchair access, Urdu, and providers accepting new patients.
+
+19
+00:02:02,526 --> 00:02:05,117
+Twelve cards become one useful result.
+
+20
+00:02:05,117 --> 00:02:12,959
+The filtering happens locally in the browser, so private preferences are not sent to MetroCare or to Patch the Web.
+
+21
+00:02:12,962 --> 00:02:14,434
+We reload the website.
+
+22
+00:02:14,434 --> 00:02:20,858
+The installed repair runs again automatically, and the unfinished filter choices are still here.
+
+23
+00:02:20,858 --> 00:02:27,349
+This proves that the result is a working browser feature, not a screenshot or a one-time preview.
+
+24
+00:02:27,353 --> 00:02:36,548
+Opening the extension again shows that the repair is active only on this website, every operation is healthy, and the permissions are reviewable.
+
+25
+00:02:36,548 --> 00:02:39,465
+The user can disable or remove it at any time.
+
+26
+00:02:39,468 --> 00:02:48,719
+GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence.
+
+27
+00:02:48,719 --> 00:02:54,269
+Everyone else installs the result without AI, an account, or an API key.
+
+28
+00:02:54,269 --> 00:02:55,965
+That is Patch the Web.

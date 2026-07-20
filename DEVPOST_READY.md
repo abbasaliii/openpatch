@@ -1,4 +1,4 @@
-# OpenPatch — final Devpost handoff
+# Patch the Web — final Devpost handoff
 
 > **Preparation only. Do not upload, publish, or click `Submit project` yet.**
 
@@ -29,7 +29,7 @@ Do not submit with either placeholder still present.
 **Project name**
 
 ```text
-OpenPatch
+Patch the Web
 ```
 
 **Tagline — under Devpost's 140-character limit**
@@ -41,12 +41,12 @@ Safe, shareable features for websites users do not own—built with Codex, insta
 **Project gallery thumbnail**
 
 ```text
-submission-assets/openpatch-devpost-thumbnail.png
+submission-assets/patch-the-web-devpost-thumbnail.png
 ```
 
 - 1536×1024, exact 3:2 ratio
-- PNG, 1,562,464 bytes
-- SHA-256: `3D00A40A2866CB959033C8D21DD2362B4DF9573AD49CADD4CFDF7946E7C4C0A3`
+- PNG, 620,862 bytes
+- SHA-256: `06C1EB249AA704DA4DEBDE0EBB2B83D16DC0C893831573AFAF46B7554240DB87`
 
 ## Step 3 — Project details
 
@@ -57,13 +57,13 @@ Paste the Markdown below into **Project story**.
 ```markdown
 ## Inspiration
 
-People are forced to use websites they did not choose and cannot change: government forms, university portals, healthcare directories, marketplaces, and legacy work tools. Those sites do not need to be visibly broken to fail someone. A directory can work exactly as designed and still omit the filter an access need requires. The usual answer is “wait for the owner.” OpenPatch gives users another answer.
+People are forced to use websites they did not choose and cannot change: government forms, university portals, healthcare directories, marketplaces, and legacy work tools. Those sites do not need to be visibly broken to fail someone. A directory can work exactly as designed and still omit the filter an access need requires. The usual answer is “wait for the owner.” Patch the Web gives users another answer.
 
 ## What it does
 
-OpenPatch is a public feature layer for the web: a Manifest V3 browser extension, a constrained transformation language, a Codex patch-authoring skill and plugin, and a machine-readable community registry.
+Patch the Web is a public feature layer for the web: a Manifest V3 browser extension, a constrained transformation language, a Codex patch-authoring skill and plugin, and a machine-readable community registry.
 
-One person describes a missing capability to GPT-5.6 through Codex. The OpenPatch authoring workflow inspects the DOM and screenshots, turns the complaint into observable acceptance criteria, chooses safe built-in operations, validates every selector and permission, and runs behavior tests. The published patch is declarative data scoped to exact hosts and paths. It cannot contain arbitrary JavaScript, HTML, callbacks, fetches, cookies, templates, or page-text extraction.
+One person describes a missing capability to GPT-5.6 through Codex. The Patch the Web authoring workflow inspects the DOM and screenshots, turns the complaint into observable acceptance criteria, chooses safe built-in operations, validates every selector and permission, and runs behavior tests. The published patch is declarative data scoped to exact hosts and paths. It cannot contain arbitrary JavaScript, HTML, callbacks, fetches, cookies, templates, or page-text extraction.
 
 Everyone downstream gets the repair without AI, an account, or an API key. The extension discovers a matching registry patch, validates the DSL and scope again, verifies its SHA-256 receipt, checks the current DOM, requests only the declared Chrome domains, and installs it locally.
 
@@ -76,7 +76,7 @@ CivicApply is a second independently verified patch. Its nineteen constrained op
 - TypeScript safe-transformation DSL with nine bounded capabilities
 - Manifest V3 extension with automatic registry discovery, manual import, exact-domain permissions, SHA-256 verification, and live selector preflight
 - Trusted collection filter and comparison builders that read only declared `data-*` attributes
-- Repository-discovered `.agents/skills/openpatch-author` workflow plus an installable Codex plugin
+- Repository-discovered `.agents/skills/patch-the-web-author` workflow plus an installable Codex plugin
 - Vite public product, two realistic demo targets, and machine-readable registry artifacts
 - Playwright, Vitest, JSDOM, and axe accessibility tests
 - GitHub Actions clean-install CI and a six-hour Compatibility Sentinel
@@ -115,7 +115,7 @@ Publisher signing, moderation, community review, reputation and rollback control
 
 ## Test it now
 
-Open the live MetroCare directory and choose **Preview OpenPatch instantly**. No build, login, credential, API key, or extension is required. For the full distribution path, the README includes a prebuilt Chrome extension, exact installation steps, supported platforms, and integrity hashes.
+Open the live MetroCare directory and choose **Preview Patch the Web instantly**. No build, login, credential, API key, or extension is required. For the full distribution path, the README includes a prebuilt Chrome extension, exact installation steps, supported platforms, and integrity hashes.
 ```
 
 ### Built with tags
@@ -141,11 +141,11 @@ JSDOM
 
 Add in this order:
 
-1. **OpenPatch — live product:** https://openpatch-tau.vercel.app/
-2. **Flagship no-install demo:** https://openpatch-tau.vercel.app/care/
-3. **Compatibility Sentinel:** https://openpatch-tau.vercel.app/sentinel/
-4. **CivicApply second repair:** https://openpatch-tau.vercel.app/demo/
-5. **Public repository:** https://github.com/abbasaliii/openpatch
+1. **Patch the Web — live product:** https://patch-the-web.vercel.app/
+2. **Flagship no-install demo:** https://patch-the-web.vercel.app/care/
+3. **Compatibility Sentinel:** https://patch-the-web.vercel.app/sentinel/
+4. **CivicApply second repair:** https://patch-the-web.vercel.app/demo/
+5. **Public repository:** https://github.com/abbasaliii/patch-the-web
 
 ### Video demo link
 
@@ -160,16 +160,16 @@ The link must be a public YouTube URL with embedding allowed. Verify it while si
 Recommended order and captions:
 
 1. `submission-assets/metrocare-before-desktop.png`
-   - **Caption:** Before OpenPatch: twelve useful providers, but no search, combined access filters, or comparison.
+   - **Caption:** Before Patch the Web: twelve useful providers, but no search, combined access filters, or comparison.
 2. `submission-assets/metrocare-after-desktop.png`
    - **Caption:** The constrained community patch adds a private service navigator and reduces combined needs to one match.
 3. `submission-assets/metrocare-compare-desktop.png`
    - **Caption:** A keyboard-accessible comparison table built only from declared `data-*` attributes.
-4. `submission-assets/openpatch-registry-discovery.png`
+4. `submission-assets/patch-the-web-registry-discovery.png`
    - **Caption:** The extension verifies scope, policy, SHA-256 integrity, scheduled compatibility, and a fresh live preflight before install.
 5. `submission-assets/compatibility-sentinel-quarantine.png`
    - **Caption:** Compatibility Sentinel simulates website drift and quarantines an unsafe registry entry.
-6. `submission-assets/openpatch-repair-brief.png`
+6. `submission-assets/patch-the-web-repair-brief.png`
    - **Caption:** A privacy-safe Repair Brief for Codex excludes field values, page text, cookies, storage, and URL queries.
 
 If Devpost limits the gallery, keep images 1–4.
@@ -185,18 +185,18 @@ Apps for Your Life
 ### Code repository
 
 ```text
-https://github.com/abbasaliii/openpatch
+https://github.com/abbasaliii/patch-the-web
 ```
 
 - Public: **Yes**
 - License: **MIT**
 - Default branch: `main`
-- Latest prepared release: https://github.com/abbasaliii/openpatch/releases/tag/v0.8.0
+- Latest prepared release: https://github.com/abbasaliii/patch-the-web/releases/tag/v0.8.0
 
 ### Is this project new?
 
 ```text
-Yes. OpenPatch was created during the Build Week submission period. The first public commit is dated July 19, 2026, and BUILD_WEEK.md maps each milestone, human decision, GPT-5.6/Codex contribution, and executable proof.
+Yes. Patch the Web was created during the Build Week submission period. The first public commit is dated July 19, 2026, and BUILD_WEEK.md maps each milestone, human decision, GPT-5.6/Codex contribution, and executable proof.
 ```
 
 ### How Codex and GPT-5.6 were used / how the project improved
@@ -218,13 +218,13 @@ Obtain this from the primary build thread immediately before final submission.
 ```text
 No account, credential, API key, or rebuild is required.
 
-1. Open https://openpatch-tau.vercel.app/care/ and observe twelve service cards with no search, filters, or comparison.
-2. Choose “Preview OpenPatch instantly.” The same constrained runtime used by the extension applies and reports 11/11 healthy operations.
+1. Open https://patch-the-web.vercel.app/care/ and observe twelve service cards with no search, filters, or comparison.
+2. Choose “Preview Patch the Web instantly.” The same constrained runtime used by the extension applies and reports 11/11 healthy operations.
 3. Select Harbor Family Clinic and Northside Community Health, then choose “Compare selected” to open the keyboard-accessible private decision table.
 4. Close and clear the comparison. Choose Wheelchair access, Urdu, and Accepting new patients. Observe “1 of 12 services match” and Harbor Family Clinic.
 5. Reload to confirm the preferences stay on-device; press / to focus search.
-6. Optional full distribution test: download the prebuilt extension from https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.8.0.zip, unzip it, open chrome://extensions, enable Developer mode, choose Load unpacked, and select the unzipped folder. Reopen MetroCare: the extension discovers the matching verified registry patch, checks its receipt and 11/11 current targets, and installs it on the exact domain. The installed patch can then be disabled or removed from the same popup.
-7. Open https://openpatch-tau.vercel.app/sentinel/ to inspect live compatibility evidence and simulate quarantine.
+6. Optional full distribution test: download the prebuilt extension from https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.8.0.zip, unzip it, open chrome://extensions, enable Developer mode, choose Load unpacked, and select the unzipped folder. Reopen MetroCare: the extension discovers the matching verified registry patch, checks its receipt and 11/11 current targets, and installs it on the exact domain. The installed patch can then be disabled or removed from the same popup.
+7. Open https://patch-the-web.vercel.app/sentinel/ to inspect live compatibility evidence and simulate quarantine.
 
 Supported platform: Chrome/Chromium 120+ on Windows, macOS, and Linux. The live demos work in any modern browser.
 ```
@@ -232,19 +232,19 @@ Supported platform: Chrome/Chromium 120+ on Windows, macOS, and Linux. The live 
 ### Third-party and content disclosure
 
 ```text
-OpenPatch is original work created during the submission period and released under MIT. It uses standard open-source development libraries including TypeScript, Vite, Playwright, Vitest, JSDOM, esbuild, and axe-core under their respective licenses. MetroCare, CivicApply, their organizations, domains, providers, contact details, and workflows are fictional demonstration data. The project is not medical guidance. The demo contains no copyrighted music. Narration uses the local Microsoft Zira text-to-speech voice; all depicted product interactions are recordings of the working build.
+Patch the Web is original work created during the submission period and released under MIT. It uses standard open-source development libraries including TypeScript, Vite, Playwright, Vitest, JSDOM, esbuild, and axe-core under their respective licenses. MetroCare, CivicApply, their organizations, domains, providers, contact details, and workflows are fictional demonstration data. The project is not medical guidance. The demo contains no copyrighted music. Narration uses the local Microsoft Zira text-to-speech voice; all depicted product interactions are recordings of the working build.
 ```
 
 ## YouTube upload packet
 
 Use [VIDEO_UPLOAD.md](VIDEO_UPLOAD.md) as the authoritative upload source.
 
-- Video: `submission-assets/openpatch-demo.mp4`
-- Runtime: 1:58
+- Video: `submission-assets/patch-the-web-demo.mp4`
+- Runtime: 2:56
 - Resolution: 1536×864, 16:9
-- Video SHA-256: `D5826F9D45F1E068974C5A4D3E407262CF940347766BA0CD19F895355549BCFA`
-- Thumbnail: `submission-assets/openpatch-youtube-thumbnail.png`
-- Captions: `submission-assets/openpatch-demo.srt`
+- Video SHA-256: `14E66B641E41E4161780B2B5E1D354ED8CB41D87F3592333D4487BFAE9881316`
+- Thumbnail: `submission-assets/patch-the-web-youtube-thumbnail.png`
+- Captions: `submission-assets/patch-the-web-demo.srt`
 - Audience: Not made for kids
 - Visibility when authorized: Public
 - Embedding: Allowed

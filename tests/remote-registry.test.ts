@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
+import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
 import {
   parsePublicRegistry,
   registryMatchesUrl,
@@ -25,13 +25,13 @@ const registryFixture: PublicRegistryIndex = {
       "hide-elements",
       "reorganize"
     ],
-    download: "/registry/patches/metrocare-service-navigator.openpatch.json",
+    download: "/registry/patches/metrocare-service-navigator.patch-the-web.json",
     sha256: "14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c",
     verification: { status: "verified", operations: 11, assertions: 10 },
     compatibility: {
       status: "healthy",
       checkedAt: "2026-07-20T00:52:08.768Z",
-      pageUrl: "https://openpatch-tau.vercel.app/care/",
+      pageUrl: "https://patch-the-web.vercel.app/care/",
       patchSha256: "14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c",
       healthy: 11,
       total: 11,
@@ -45,15 +45,15 @@ describe("public registry discovery", () => {
   it("finds the verified patch for the current domain and path", () => {
     const registry = parsePublicRegistry(registryFixture);
     expect(registry).not.toBeNull();
-    const matches = registryMatchesUrl(registry!, new URL("https://openpatch-tau.vercel.app/care/"));
+    const matches = registryMatchesUrl(registry!, new URL("https://patch-the-web.vercel.app/care/"));
     expect(matches).toHaveLength(1);
-    expect(matches[0].id).toBe("org.openpatch.metrocare-service-navigator");
-    expect(registryPatchUrl(matches[0])).toBe("https://openpatch-tau.vercel.app/registry/patches/metrocare-service-navigator.openpatch.json");
+    expect(matches[0].id).toBe("org.patchtheweb.metrocare-service-navigator");
+    expect(registryPatchUrl(matches[0])).toBe("https://patch-the-web.vercel.app/registry/patches/metrocare-service-navigator.patch-the-web.json");
   });
 
   it("does not offer a patch outside its declared path", () => {
     const registry = parsePublicRegistry(registryFixture)!;
-    expect(registryMatchesUrl(registry, new URL("https://openpatch-tau.vercel.app/account/"))).toEqual([]);
+    expect(registryMatchesUrl(registry, new URL("https://patch-the-web.vercel.app/account/"))).toEqual([]);
   });
 
   it("rejects unverified metadata and cross-origin downloads", () => {
@@ -72,7 +72,7 @@ describe("public registry discovery", () => {
     drifted.patches[0].compatibility!.driftedOperationIds = ["add-private-service-navigator"];
     const parsed = parsePublicRegistry(drifted);
     expect(parsed).not.toBeNull();
-    expect(registryMatchesUrl(parsed!, new URL("https://openpatch-tau.vercel.app/care/"))).toEqual([]);
+    expect(registryMatchesUrl(parsed!, new URL("https://patch-the-web.vercel.app/care/"))).toEqual([]);
 
     drifted.patches[0].compatibility!.fingerprint = "not-a-hash";
     expect(parsePublicRegistry(drifted)).toBeNull();

@@ -7,3 +7,10 @@ compatibility-report.json
 *.log
 
 .vercel
+.env*.local
+
+# Private submission handoff and reproducible recording intermediates
+release/DEVPOST_PRIVATE_VALUES.txt
+release/*submission-handoff.zip
+submission-assets/*-continuous-*.webm
+submission-assets/*-live-walkthrough.mp4

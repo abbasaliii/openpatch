@@ -8,7 +8,7 @@ import {
   type RegistryPatchEntry
 } from "../core/remote-registry";
 import { comparePatchVersions, permissionOrigins } from "../core/registry";
-import type { OpenPatch, PatchHealth } from "../core/types";
+import type { CommunityPatch, PatchHealth } from "../core/types";
 import { validatePatch } from "../core/validator";
 import { buildRepairBrief, collectPageInventory } from "./repair-brief";
 
@@ -16,7 +16,7 @@ type MatchedPatchState = {
   enabled: boolean;
   health: PatchHealth | null;
   source: "bundled" | "local";
-  patch: Pick<OpenPatch, "id" | "name" | "summary" | "version" | "capabilities" | "author" | "match"> & { operationCount: number };
+  patch: Pick<CommunityPatch, "id" | "name" | "summary" | "version" | "capabilities" | "author" | "match"> & { operationCount: number };
 };
 
 type PageState = {
@@ -25,7 +25,7 @@ type PageState = {
 };
 
 type PendingImport = {
-  patch: OpenPatch;
+  patch: CommunityPatch;
   hash: string;
   preflight: SelectorPreflightResult;
   source: "local-file" | "public-registry";
@@ -122,7 +122,7 @@ async function sha256(raw: string) {
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function showImportPreview(patch: OpenPatch, hash: string, preflight: SelectorPreflightResult) {
+function showImportPreview(patch: CommunityPatch, hash: string, preflight: SelectorPreflightResult) {
   importPreview.hidden = false;
   byId("import-name").textContent = patch.name;
   byId("import-version").textContent = `v${patch.version} · ${patch.author.name}`;
@@ -180,13 +180,13 @@ function showRegistryOffer(entry: RegistryPatchEntry) {
   installFlow.classList.add("registry-ready");
   byId("install-eyebrow").textContent = "Public registry discovery";
   byId("install-title").textContent = "A verified feature is ready";
-  byId("install-description").textContent = "OpenPatch checked its policy, SHA-256 receipt, domain scope, and live selectors on this page.";
+  byId("install-description").textContent = "Patch the Web checked its policy, SHA-256 receipt, domain scope, and live selectors on this page.";
   byId("registry-match-name").textContent = `${entry.name} · v${entry.version}`;
   const sentinelProof = entry.compatibility
     ? ` · live compatibility ${entry.compatibility.healthy}/${entry.compatibility.total}`
     : "";
   byId("registry-match-proof").textContent = `${entry.verification.operations} constrained operations · ${entry.verification.assertions} assertions${sentinelProof}`;
-  byId("import-file-label").textContent = "Or choose a .openpatch.json instead";
+  byId("import-file-label").textContent = "Or choose a .patch-the-web.json instead";
   installButton.textContent = "Install verified community feature";
 }
 
@@ -233,7 +233,7 @@ removePatchButton.addEventListener("click", async () => {
   removeStatus.textContent = "Removing the patch and its local metadata…";
   try {
     const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches"]);
-    const installedPatches = (stored.installedPatches as Record<string, OpenPatch> | undefined) ?? {};
+    const installedPatches = (stored.installedPatches as Record<string, CommunityPatch> | undefined) ?? {};
     const installedPatchMeta = (stored.installedPatchMeta as Record<string, unknown> | undefined) ?? {};
     const enabledPatches = (stored.enabledPatches as Record<string, boolean> | undefined) ?? {};
     const removed = installedPatches[currentPatch.patch.id];
@@ -241,7 +241,7 @@ removePatchButton.addEventListener("click", async () => {
     delete installedPatchMeta[currentPatch.patch.id];
     delete enabledPatches[currentPatch.patch.id];
     await chrome.storage.local.set({ installedPatches, installedPatchMeta, enabledPatches });
-    const refreshed = await chrome.runtime.sendMessage({ type: "OPENPATCH_REFRESH_RUNTIME" }) as { ok?: boolean; error?: string } | undefined;
+    const refreshed = await chrome.runtime.sendMessage({ type: "PATCH_THE_WEB_REFRESH_RUNTIME" }) as { ok?: boolean; error?: string } | undefined;
     if (!refreshed?.ok) throw new Error(refreshed?.error ?? "Could not refresh the repair runtime.");
 
     if (removed) {
@@ -319,14 +319,14 @@ installButton.addEventListener("click", async () => {
       return;
     }
     const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches"]);
-    const installedPatches = (stored.installedPatches as Record<string, OpenPatch> | undefined) ?? {};
+    const installedPatches = (stored.installedPatches as Record<string, CommunityPatch> | undefined) ?? {};
     const installedPatchMeta = (stored.installedPatchMeta as Record<string, unknown> | undefined) ?? {};
     const enabledPatches = (stored.enabledPatches as Record<string, boolean> | undefined) ?? {};
     installedPatches[candidate.patch.id] = candidate.patch;
     installedPatchMeta[candidate.patch.id] = { sha256: candidate.hash, installedAt: Date.now(), source: candidate.source };
     enabledPatches[candidate.patch.id] = true;
     await chrome.storage.local.set({ installedPatches, installedPatchMeta, enabledPatches });
-    const refreshed = await chrome.runtime.sendMessage({ type: "OPENPATCH_REFRESH_RUNTIME" }) as { ok?: boolean; error?: string } | undefined;
+    const refreshed = await chrome.runtime.sendMessage({ type: "PATCH_THE_WEB_REFRESH_RUNTIME" }) as { ok?: boolean; error?: string } | undefined;
     if (!refreshed?.ok) throw new Error(refreshed?.error ?? "Could not register the repair runtime.");
     importStatus.textContent = "Installed safely. Reloading this page…";
     await chrome.tabs.reload(currentTab.id);
@@ -345,7 +345,7 @@ async function init() {
   icon.textContent = hostname.charAt(0).toUpperCase();
   if (!currentTab?.id) return;
   try {
-    const state = await chrome.tabs.sendMessage(currentTab.id, { type: "OPENPATCH_GET_STATE" }) as PageState;
+    const state = await chrome.tabs.sendMessage(currentTab.id, { type: "PATCH_THE_WEB_GET_STATE" }) as PageState;
     renderState(state);
   } catch {
     empty.hidden = false;

@@ -1,5 +1,5 @@
 import type {
-  OpenPatch,
+  CommunityPatch,
   PatchCapability,
   PatchOperation,
   ValidationIssue,
@@ -439,7 +439,7 @@ export function validatePatch(value: unknown): ValidationResult {
   if (!text(value.changelog, 500)) issues.push({ path: "changelog", message: "must describe this version" });
 
   if (issues.length > 0) return { ok: false, issues, warnings };
-  return { ok: true, patch: value as unknown as OpenPatch, warnings };
+  return { ok: true, patch: value as unknown as CommunityPatch, warnings };
 }
 
 export function requiredCapabilities(operations: PatchOperation[]): PatchCapability[] {

@@ -47,7 +47,7 @@ function markdownSummary(report: RegistryCompatibilityReport) {
       return `| ${escapeCell(patch.id)} | ${icon} ${patch.status} | ${patch.healthy}/${patch.total} | ${escapeCell(patch.checkedAt)} |`;
     });
   return [
-    "## OpenPatch Compatibility Sentinel",
+    "## Patch the Web Compatibility Sentinel",
     "",
     `Checked ${report.summary.total} patches: ${report.summary.healthy} healthy, ${report.summary.drifted} drifted, ${report.summary.unreachable} unreachable.`,
     "",

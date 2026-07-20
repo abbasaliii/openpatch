@@ -1,19 +1,19 @@
-This is OpenPatch from the very beginning, in one uninterrupted browser recording. OpenPatch lets people repair websites they do not own, then share that repair safely with everyone else.
+This is Patch the Web from the very beginning, in one uninterrupted browser recording. Patch the Web lets people repair websites they do not own, then share that repair safely with everyone else.
 
-First, download the extension from the public OpenPatch site. Unzip it, open Chrome extensions, enable Developer mode, and choose Load unpacked. This clean demo profile now shows the real OpenPatch version zero point eight extension running.
+First, download the extension from the public Patch the Web site. Unzip it, open Chrome extensions, enable Developer mode, and choose Load unpacked. This clean demo profile now shows the real Patch the Web version zero point eight extension running.
 
 Now we open the MetroCare directory. The original website has twelve services, but no search, no filters, and no comparison. A person has to read every card to find accessible care in their language.
 
-We open the actual extension on this website. OpenPatch checks the public registry and discovers a community repair made for this exact domain and path. It verifies the publisher policy, the patch hash, and all eleven live selector targets before offering installation.
+We open the actual extension on this website. Patch the Web checks the public registry and discovers a community repair made for this exact domain and path. It verifies the publisher policy, the patch hash, and all eleven live selector targets before offering installation.
 
-One click installs and activates the verified feature. This is a constrained OpenPatch document, not arbitrary JavaScript. It may use only declared operations, and it receives access only to the website it repairs.
+One click installs and activates the verified feature. This is a constrained Patch the Web document, not arbitrary JavaScript. It may use only declared operations, and it receives access only to the website it repairs.
 
-The page reloads with the missing feature added by the extension. We select two real listings and open the new keyboard-accessible comparison. The original website remains intact; OpenPatch adds a personal usability layer on top.
+The page reloads with the missing feature added by the extension. We select two real listings and open the new keyboard-accessible comparison. The original website remains intact; Patch the Web adds a personal usability layer on top.
 
-Next we filter for wheelchair access, Urdu, and providers accepting new patients. Twelve cards become one useful result. The filtering happens locally in the browser, so private preferences are not sent to MetroCare or to OpenPatch.
+Next we filter for wheelchair access, Urdu, and providers accepting new patients. Twelve cards become one useful result. The filtering happens locally in the browser, so private preferences are not sent to MetroCare or to Patch the Web.
 
 We reload the website. The installed repair runs again automatically, and the unfinished filter choices are still here. This proves that the result is a working browser feature, not a screenshot or a one-time preview.
 
 Opening the extension again shows that the repair is active only on this website, every operation is healthy, and the permissions are reviewable. The user can disable or remove it at any time.
 
-GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence. Everyone else installs the result without AI, an account, or an API key. That is OpenPatch.
+GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence. Everyone else installs the result without AI, an account, or an API key. That is Patch the Web.

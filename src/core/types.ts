@@ -126,7 +126,7 @@ export type PatchAssertion =
   | { type: "exists"; selector: string; min?: number; max?: number }
   | { type: "attribute"; selector: string; name: string; value: string };
 
-export type OpenPatch = {
+export type CommunityPatch = {
   schemaVersion: 1;
   id: string;
   name: string;
@@ -146,7 +146,7 @@ export type ValidationIssue = {
 };
 
 export type ValidationResult =
-  | { ok: true; patch: OpenPatch; warnings: ValidationIssue[] }
+  | { ok: true; patch: CommunityPatch; warnings: ValidationIssue[] }
   | { ok: false; issues: ValidationIssue[]; warnings: ValidationIssue[] };
 
 export type OperationHealth = {

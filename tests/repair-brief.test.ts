@@ -37,7 +37,7 @@ describe("privacy-safe Codex repair briefs", () => {
 
   it("produces a ready-to-run constrained skill prompt", () => {
     const brief = buildRepairBrief("The form loses my progress and the error is inaccessible.", collectPageInventory());
-    expect(brief).toContain("Use $openpatch-author");
+    expect(brief).toContain("Use $patch-the-web-author");
     expect(brief).toContain("The form loses my progress");
     expect(brief).toContain("never collect field values");
     expect(brief).toContain("run unit and browser tests");

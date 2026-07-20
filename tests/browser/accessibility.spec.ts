@@ -19,8 +19,8 @@ async function expectNoWcagViolations(page: Page) {
 test("the patched CivicApply workflow has no automated WCAG A/AA violations", async ({ page }) => {
   await page.goto("/demo/");
   await page.addScriptTag({ path: runtimePath });
-  await page.evaluate(() => (window as Window & { __applyOpenPatchDemo: () => unknown }).__applyOpenPatchDemo());
-  await expect(page.locator(".openpatch-save-status")).toBeVisible();
+  await page.evaluate(() => (window as Window & { __applyPatchTheWebDemo: () => unknown }).__applyPatchTheWebDemo());
+  await expect(page.locator(".patch-the-web-save-status")).toBeVisible();
   await expectNoWcagViolations(page);
 });
 
@@ -30,7 +30,7 @@ test("the patched MetroCare navigator and comparison have no automated WCAG A/AA
   await page.getByRole("button", { name: "Add Harbor Family Clinic to comparison" }).click();
   await page.getByRole("button", { name: "Add Northside Community Health to comparison" }).click();
   await page.getByRole("button", { name: "Compare selected" }).click();
-  await expect(page.locator(".openpatch-compare table")).toBeVisible();
+  await expect(page.locator(".patch-the-web-compare table")).toBeVisible();
   await expectNoWcagViolations(page);
 });
 

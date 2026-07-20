@@ -10,11 +10,11 @@ const require = createRequire(import.meta.url);
 const ffmpegPath = require("ffmpeg-static");
 const root = resolve(import.meta.dirname, "..");
 const videoDir = resolve(root, "dist/video");
-const silentPath = resolve(root, "submission-assets/openpatch-demo-silent.webm");
-const narrationPath = resolve(videoDir, "openpatch-demo-narration.wav");
-const stagedPath = resolve(videoDir, "openpatch-demo-final.mp4");
-const finalPath = resolve(root, "submission-assets/openpatch-demo.mp4");
-const contactSheetPath = resolve(videoDir, "openpatch-demo-contact-sheet-v2.png");
+const silentPath = resolve(root, "submission-assets/patch-the-web-demo-silent.webm");
+const narrationPath = resolve(videoDir, "patch-the-web-demo-narration.wav");
+const stagedPath = resolve(videoDir, "patch-the-web-demo-final.mp4");
+const finalPath = resolve(root, "submission-assets/patch-the-web-demo.mp4");
+const contactSheetPath = resolve(videoDir, "patch-the-web-demo-contact-sheet-v2.png");
 await mkdir(videoDir, { recursive: true });
 
 await run(ffmpegPath, [

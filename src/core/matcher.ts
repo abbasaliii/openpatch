@@ -1,4 +1,4 @@
-import type { OpenPatch } from "./types";
+import type { CommunityPatch } from "./types";
 
 function hostMatches(pattern: string, host: string) {
   if (pattern.startsWith("*.")) {
@@ -13,7 +13,7 @@ function pathMatches(pattern: string, pathname: string) {
   return pattern === pathname;
 }
 
-export function patchMatchesUrl(patch: OpenPatch, url: URL) {
+export function patchMatchesUrl(patch: CommunityPatch, url: URL) {
   return patch.match.hosts.some((host) => hostMatches(host, url.hostname)) &&
     patch.match.paths.some((path) => pathMatches(path, url.pathname));
 }

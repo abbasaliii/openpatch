@@ -37,7 +37,7 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run the complete OpenPatch release gate
+      - name: Run the complete Patch the Web release gate
         run: npm run verify
 
       - name: Preserve browser failure evidence

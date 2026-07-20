@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
-import civicPatch from "../src/registry/patches/civic-apply.openpatch.json";
-import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
+import civicPatch from "../src/registry/patches/civic-apply.patch-the-web.json";
+import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
 import { patchMatchesUrl } from "../src/core/matcher";
-import type { OpenPatch } from "../src/core/types";
+import type { CommunityPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
 
-describe("OpenPatch policy validator", () => {
+describe("Patch the Web policy validator", () => {
   it("accepts the bundled CivicApply repair", () => {
     const result = validatePatch(civicPatch);
     expect(result.ok).toBe(true);
@@ -84,9 +84,9 @@ describe("OpenPatch policy validator", () => {
   });
 
   it("keeps patches on their declared host and path", () => {
-    const patch = civicPatch as OpenPatch;
+    const patch = civicPatch as CommunityPatch;
     expect(patchMatchesUrl(patch, new URL("http://localhost/demo/"))).toBe(true);
-    expect(patchMatchesUrl(patch, new URL("https://openpatch-tau.vercel.app/demo/"))).toBe(true);
+    expect(patchMatchesUrl(patch, new URL("https://patch-the-web.vercel.app/demo/"))).toBe(true);
     expect(patchMatchesUrl(patch, new URL("http://localhost/bank/"))).toBe(false);
     expect(patchMatchesUrl(patch, new URL("https://example.com/demo/"))).toBe(false);
   });

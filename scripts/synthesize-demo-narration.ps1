@@ -3,8 +3,8 @@ param(
   [int]$Rate = 0,
   [string]$NarrationFile = "demo-narration.json",
   [string]$TimingFile = "demo-timings.json",
-  [string]$CaptionFile = "openpatch-demo.srt",
-  [string]$OutputStem = "openpatch-demo"
+  [string]$CaptionFile = "patch-the-web-demo.srt",
+  [string]$OutputStem = "patch-the-web-demo"
 )
 
 $ErrorActionPreference = "Stop"

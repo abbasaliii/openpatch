@@ -69,7 +69,7 @@ describe("compatibility sentinel", () => {
         total: 1
       },
       patches: [{
-        id: "org.openpatch.example",
+        id: "org.patchtheweb.example",
         version: "1.0.0",
         pageUrl: "https://example.test/",
         status,

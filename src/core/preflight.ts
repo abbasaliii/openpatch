@@ -1,4 +1,4 @@
-import type { OpenPatch } from "./types";
+import type { CommunityPatch } from "./types";
 
 export type SelectorPreflightResult = {
   healthy: number;
@@ -6,7 +6,7 @@ export type SelectorPreflightResult = {
   results: Array<{ id: string; matched: number; healthy: boolean }>;
 };
 
-export function preflightPatchOnDocument(candidate: OpenPatch): SelectorPreflightResult {
+export function preflightPatchOnDocument(candidate: CommunityPatch): SelectorPreflightResult {
   const count = (selector: string, root: ParentNode = document) => {
     try { return root.querySelectorAll(selector).length; } catch { return 0; }
   };

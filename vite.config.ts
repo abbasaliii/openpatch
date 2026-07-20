@@ -10,14 +10,14 @@ const root = __dirname;
 const siteOut = resolve(root, "dist/site");
 const patchSourceDir = resolve(root, "src/registry/patches");
 const compatibilitySourcePath = resolve(root, "src/registry/compatibility.json");
-const releaseFiles = ["openpatch-extension-v0.8.0.zip", "openpatch-codex-plugin-v0.4.0.zip"];
+const releaseFiles = ["patch-the-web-extension-v0.8.0.zip", "patch-the-web-codex-plugin-v0.4.0.zip"];
 
 async function loadRegistryArtifacts() {
   const compatibilityReport = JSON.parse(await readFile(compatibilitySourcePath, "utf8")) as RegistryCompatibilityReport;
   if (compatibilityReport.schemaVersion !== 1 || !Array.isArray(compatibilityReport.patches)) {
     throw new Error("Registry compatibility baseline is malformed.");
   }
-  const patchFiles = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".openpatch.json")).sort();
+  const patchFiles = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".patch-the-web.json")).sort();
   const artifacts = await Promise.all(patchFiles.map(async (fileName) => {
     const sourcePath = resolve(patchSourceDir, fileName);
     const raw = canonicalPatchSource(await readFile(sourcePath, "utf8"));
@@ -66,7 +66,7 @@ async function loadRegistryArtifacts() {
 }
 
 const registryPlugin: Plugin = {
-  name: "openpatch-public-registry",
+  name: "patch-the-web-public-registry",
   configureServer(server) {
     server.middlewares.use(async (request, response, next) => {
       const pathname = request.url?.split("?", 1)[0];

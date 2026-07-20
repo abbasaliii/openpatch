@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "id": "org.patchtheweb.civicapply-accessible-draft",
+  "name": "CivicApply: accessible & autosaved",
+  "summary": "Repairs the mobile application flow, preserves unfinished progress, adds accessible validation, and removes the obstructive survey.",
+  "version": "1.2.0",
+  "author": { "name": "Patch the Web Community", "verified": false },
+  "match": {
+    "hosts": ["localhost", "127.0.0.1", "patch-the-web.vercel.app"],
+    "paths": ["/demo/*"]
+  },
+  "capabilities": [
+    "layout",
+    "accessibility",
+    "local-storage",
+    "keyboard-navigation",
+    "validation",
+    "hide-elements",
+    "reorganize"
+  ],
+  "operations": [
+    {
+      "id": "hide-obstructive-survey",
+      "type": "hide",
+      "selector": ".survey-wall"
+    },
+    {
+      "id": "hide-conflicting-save-state",
+      "type": "hide",
+      "selector": ".draft-badge"
+    },
+    {
+      "id": "repair-page-width",
+      "type": "style",
+      "selector": ".application-shell",
+      "styles": {
+        "max-width": "900px",
+        "width": "calc(100% - 32px)",
+        "margin": "0 auto",
+        "grid-template-columns": "minmax(0, 1fr)",
+        "gap": "32px"
+      }
+    },
+    {
+      "id": "repair-mobile-layout",
+      "type": "style",
+      "selector": ".application-shell",
+      "when": { "maxWidth": 760 },
+      "styles": {
+        "display": "flex",
+        "flex-direction": "column",
+        "width": "calc(100% - 24px)",
+        "gap": "16px"
+      }
+    },
+    {
+      "id": "mobile-form-spacing",
+      "type": "style",
+      "selector": ".application-main",
+      "when": { "maxWidth": 760 },
+      "styles": {
+        "padding": "20px",
+        "border-radius": "18px"
+      }
+    },
+    {
+      "id": "mobile-header-width",
+      "type": "style",
+      "selector": ".government-header, .session-warning",
+      "when": { "maxWidth": 760 },
+      "styles": {
+        "width": "100%",
+        "max-width": "100%",
+        "padding-left": "16px",
+        "padding-right": "16px",
+        "flex-wrap": "wrap"
+      }
+    },
+    {
+      "id": "mobile-preserve-agency-nav",
+      "type": "style",
+      "selector": ".government-header nav",
+      "when": { "maxWidth": 760 },
+      "styles": {
+        "display": "flex",
+        "order": "3",
+        "width": "100%",
+        "margin-left": "0",
+        "overflow-x": "auto",
+        "padding-bottom": "10px"
+      }
+    },
+    {
+      "id": "mobile-content-width",
+      "type": "style",
+      "selector": ".application-heading, .progress-steps",
+      "when": { "maxWidth": 760 },
+      "styles": {
+        "width": "calc(100% - 24px)",
+        "max-width": "100%",
+        "margin-left": "auto",
+        "margin-right": "auto",
+        "overflow-x": "auto"
+      }
+    },
+    {
+      "id": "mobile-progress-gaps",
+      "type": "style",
+      "selector": ".progress-steps > i",
+      "when": { "maxWidth": 760 },
+      "styles": {
+        "width": "42px",
+        "margin-left": "6px",
+        "margin-right": "6px"
+      }
+    },
+    {
+      "id": "readable-fields",
+      "type": "style",
+      "selector": ".field-row",
+      "styles": {
+        "display": "grid",
+        "grid-template-columns": "minmax(0, 1fr)",
+        "gap": "8px",
+        "margin-bottom": "20px"
+      }
+    },
+    {
+      "id": "move-help-before-form",
+      "type": "move",
+      "selector": ".help-card",
+      "target": "#benefits-form",
+      "position": "before"
+    },
+    {
+      "id": "help-card-layout",
+      "type": "style",
+      "selector": ".help-card",
+      "styles": {
+        "margin-bottom": "20px",
+        "background-color": "#effcf6",
+        "border-color": "#b7ebd0"
+      }
+    },
+    {
+      "id": "progress-semantics",
+      "type": "attributes",
+      "selector": "#progress-steps",
+      "attributes": {
+        "role": "group",
+        "aria-label": "Application progress"
+      }
+    },
+    {
+      "id": "progress-keyboard",
+      "type": "keyboardNavigation",
+      "container": "#progress-steps",
+      "items": "button",
+      "orientation": "horizontal",
+      "wrap": true
+    },
+    {
+      "id": "label-required-email",
+      "type": "attributes",
+      "selector": "#email",
+      "attributes": {
+        "aria-required": "true",
+        "autocomplete": "email",
+        "inputmode": "email"
+      }
+    },
+    {
+      "id": "label-required-name",
+      "type": "attributes",
+      "selector": "#full-name",
+      "attributes": {
+        "aria-required": "true",
+        "autocomplete": "name"
+      }
+    },
+    {
+      "id": "label-other-required-fields",
+      "type": "attributes",
+      "selector": "#household-size, #address",
+      "attributes": { "aria-required": "true" }
+    },
+    {
+      "id": "persist-draft",
+      "type": "persistForm",
+      "selector": "#benefits-form",
+      "key": "housing-support-draft-v1",
+      "include": ["input", "select", "textarea"],
+      "ttlMinutes": 1440,
+      "statusText": "Draft saved on this device for 24 hours"
+    },
+    {
+      "id": "accessible-validation",
+      "type": "validation",
+      "selector": "#benefits-form",
+      "fields": [
+        {
+          "selector": "#full-name",
+          "rules": [
+            { "kind": "required", "message": "Enter your full name so we can continue." },
+            { "kind": "minLength", "value": 3, "message": "Your full name must contain at least 3 characters." }
+          ]
+        },
+        {
+          "selector": "#email",
+          "rules": [
+            { "kind": "required", "message": "Enter an email address for application updates." },
+            { "kind": "email", "message": "Enter an email address in the format name@example.com." }
+          ]
+        },
+        {
+          "selector": "#household-size",
+          "rules": [
+            { "kind": "required", "message": "Select the number of people in your household." }
+          ]
+        },
+        {
+          "selector": "#address",
+          "rules": [
+            { "kind": "required", "message": "Enter your current street address." }
+          ]
+        }
+      ]
+    }
+  ],
+  "verify": [
+    { "type": "exists", "selector": "#benefits-form", "min": 1, "max": 1 },
+    { "type": "exists", "selector": "#progress-steps button", "min": 3, "max": 3 },
+    { "type": "exists", "selector": ".help-card", "min": 1, "max": 1 },
+    { "type": "exists", "selector": ".patch-the-web-save-status", "min": 1, "max": 1 },
+    { "type": "attribute", "selector": ".survey-wall", "name": "aria-hidden", "value": "true" },
+    { "type": "attribute", "selector": ".draft-badge", "name": "aria-hidden", "value": "true" },
+    { "type": "attribute", "selector": "#progress-steps", "name": "role", "value": "group" },
+    { "type": "attribute", "selector": "#email", "name": "aria-required", "value": "true" },
+    { "type": "attribute", "selector": "#household-size", "name": "aria-required", "value": "true" },
+    { "type": "attribute", "selector": "#address", "name": "aria-required", "value": "true" }
+  ],
+  "changelog": "Added the permanent public demo domain while preserving the hardened mobile navigation, required-field semantics, 24-hour draft expiry, and publication assertions."
+}

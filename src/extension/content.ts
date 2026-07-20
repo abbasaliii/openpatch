@@ -1,16 +1,16 @@
-import civicPatchJson from "../registry/patches/civic-apply.openpatch.json";
+import civicPatchJson from "../registry/patches/civic-apply.patch-the-web.json";
 import { applyPatch } from "../core/engine";
 import { buildPatchCatalog, matchingCatalogPatches } from "../core/registry";
-import type { OpenPatch, PatchHealth } from "../core/types";
+import type { CommunityPatch, PatchHealth } from "../core/types";
 
 type RuntimePatchState = {
   enabled: boolean;
   health: PatchHealth | null;
   source: "bundled" | "local";
-  patch: Pick<OpenPatch, "id" | "name" | "summary" | "version" | "capabilities" | "author" | "match"> & { operationCount: number };
+  patch: Pick<CommunityPatch, "id" | "name" | "summary" | "version" | "capabilities" | "author" | "match"> & { operationCount: number };
 };
 
-const bundled = [civicPatchJson as OpenPatch];
+const bundled = [civicPatchJson as CommunityPatch];
 let matches: RuntimePatchState[] = [];
 
 async function initialize() {
@@ -42,7 +42,7 @@ async function initialize() {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type === "OPENPATCH_GET_STATE") {
+  if (message?.type === "PATCH_THE_WEB_GET_STATE") {
     sendResponse({ matched: matches.length > 0, matches });
   }
 });

@@ -1,17 +1,17 @@
-# OpenPatch Build Week engineering record
+# Patch the Web Build Week engineering record
 
-OpenPatch was created during the OpenAI Build Week submission period. The first repository commit is dated July 19, 2026, and every product milestone below was built in the primary GPT-5.6/Codex thread.
+Patch the Web was created during the OpenAI Build Week submission period. The first repository commit is dated July 19, 2026, and every product milestone below was built in the primary GPT-5.6/Codex thread.
 
 This record is intentionally specific. It documents what the human decided, what GPT-5.6 through Codex helped produce, where those decisions exist in source, and which executable evidence verifies the result.
 
 ## Why GPT-5.6 and Codex are part of the product
 
-OpenPatch does not put a chatbot inside the extension. GPT-5.6 operates through Codex at the high-judgment authoring boundary:
+Patch the Web does not put a chatbot inside the extension. GPT-5.6 operates through Codex at the high-judgment authoring boundary:
 
 1. A person describes a missing capability on a website they do not control.
 2. The extension produces a privacy-safe structural Repair Brief.
 3. GPT-5.6 through Codex inspects the DOM and screenshots, translates the complaint into acceptance criteria, chooses constrained DSL operations, and authors selectors and behavior tests.
-4. The `$openpatch-author` skill validates policy, scope, live selectors, behavior, accessibility, and network silence before packaging the patch.
+4. The `$patch-the-web-author` skill validates policy, scope, live selectors, behavior, accessibility, and network silence before packaging the patch.
 5. The published artifact is declarative data. Everyone downstream installs and runs it without a model, API key, or account.
 
 That separation is deliberate: AI handles ambiguous intent and iterative engineering once; the community receives a deterministic, reviewable, reusable result.
@@ -20,12 +20,12 @@ That separation is deliberate: AI handles ambiguous intent and iterative enginee
 
 | Product or engineering decision | Human judgment | GPT-5.6/Codex contribution | Source evidence |
 | --- | --- | --- | --- |
-| Public feature layer, not a personal theme editor | Make one repair reusable by everyone affected by the same site | Turned the concept into a browser-extension, registry, and patch-authoring architecture | `src/extension/`, `src/registry/`, `.agents/skills/openpatch-author/` |
+| Public feature layer, not a personal theme editor | Make one repair reusable by everyone affected by the same site | Turned the concept into a browser-extension, registry, and patch-authoring architecture | `src/extension/`, `src/registry/`, `.agents/skills/patch-the-web-author/` |
 | Constrained DSL, never arbitrary community JavaScript | Accept less expressiveness in exchange for inspectable permissions and deterministic execution | Implemented and adversarially tested operation, selector, capability, CSS, attribute, persistence, and scope policies | `src/core/types.ts`, `src/core/validator.ts`, `tests/validator.test.ts` |
-| Repair genuinely missing capabilities | Replace the early form-only proof with a credible directory that works as designed but fails a real access need | Designed MetroCare, then authored `collectionFilter` and `collectionCompare` as trusted runtime primitives | `src/site/care/`, `src/core/engine.ts`, `src/registry/patches/metrocare-service-navigator.openpatch.json` |
+| Repair genuinely missing capabilities | Replace the early form-only proof with a credible directory that works as designed but fails a real access need | Designed MetroCare, then authored `collectionFilter` and `collectionCompare` as trusted runtime primitives | `src/site/care/`, `src/core/engine.ts`, `src/registry/patches/metrocare-service-navigator.patch-the-web.json` |
 | Keep authoring context private | Never send field values, page text, cookies, storage, or URL queries to Codex | Built a bounded Repair Brief and tests that prove those exclusions | `src/extension/repair-brief.ts`, `tests/repair-brief.test.ts` |
 | Treat website drift as a product state | A community feature must stop being recommended when the original site changes underneath it | Built SHA-bound Chromium compatibility checks, per-operation fingerprints, quarantine behavior, and the public Sentinel | `scripts/check-registry-compatibility.ts`, `src/core/compatibility.ts`, `src/site/sentinel/` |
-| Prove privacy and accessibility behavior | Visual polish alone is not evidence | Added assertions for focus movement, ARIA relationships, selection limits, mobile width, persistence, zero interaction requests, and strict axe WCAG A/AA scans | `tests/browser/accessibility.spec.ts`, `tests/browser/openpatch.spec.ts`, `tests/engine.test.ts`, `tests/extension/openpatch-extension.spec.ts` |
+| Prove privacy and accessibility behavior | Visual polish alone is not evidence | Added assertions for focus movement, ARIA relationships, selection limits, mobile width, persistence, zero interaction requests, and strict axe WCAG A/AA scans | `tests/browser/accessibility.spec.ts`, `tests/browser/patch-the-web.spec.ts`, `tests/engine.test.ts`, `tests/extension/patch-the-web-extension.spec.ts` |
 
 ## Dated milestone trail
 
@@ -76,7 +76,7 @@ npm run monitor:workspace -- src/registry/compatibility.json
 - MetroCare: 11/11 constrained operations and 10/10 publishing assertions
 - CivicApply: 19/19 constrained operations and 10/10 publishing assertions
 - Public compatibility ledger: 30 operation targets, checked every six hours
-- Extension archive SHA-256: `84D5BA1FE1D947771C92097B9A930EB74D90CD4DD88AAE9990448451F7409665`
-- Codex plugin archive SHA-256: `E78D5ACC07F5F4E17BE4D8E2EB37905A56BACA14E591DFBA7403BB3E4BFEDED9`
+- Extension archive SHA-256: `30C472E6B23E5A75BD709EA3040EEFCD62FBC35A669773D8400FDFE1E1CD4F50`
+- Codex plugin archive SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 
 The required `/feedback` Session ID is submitted in the private Devpost field from this primary build thread. It is not used as a substitute for the public source, history, tests, and receipts above.

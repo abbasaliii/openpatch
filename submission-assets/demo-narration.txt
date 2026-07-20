@@ -1,10 +1,10 @@
 1. The problem
 
-Some websites are impossible to avoid: government forms, university portals, and health directories. When one is confusing or missing a feature, you normally have to wait for the owner to fix it. OpenPatch gives users another option: safely repair the website for themselves, then share that repair with everyone.
+Some websites are impossible to avoid: government forms, university portals, and health directories. When one is confusing or missing a feature, you normally have to wait for the owner to fix it. Patch the Web gives users another option: safely repair the website for themselves, then share that repair with everyone.
 
 2. The whole product
 
-Here is the whole product. One person tells Codex what the website needs. Codex inspects the page and creates a small, constrained patch. OpenPatch tests it and publishes it for that exact domain. Everyone else installs the repair without using AI, creating an account, or entering an API key.
+Here is the whole product. One person tells Codex what the website needs. Codex inspects the page and creates a small, constrained patch. Patch the Web tests it and publishes it for that exact domain. Everyone else installs the repair without using AI, creating an account, or entering an API key.
 
 3. A real missing feature
 
@@ -12,7 +12,7 @@ Take this fictional MetroCare directory. It has twelve useful providers, but no 
 
 4. One person authors the repair
 
-The user describes the problem in OpenPatch and copies a privacy-safe Repair Brief into Codex. The brief contains page structure and selector candidates, never form values, cookies, storage, private page text, or URL queries. Codex then uses the OpenPatch authoring skill to inspect the page, choose approved building blocks, and test the result.
+The user describes the problem in Patch the Web and copies a privacy-safe Repair Brief into Codex. The brief contains page structure and selector candidates, never form values, cookies, storage, private page text, or URL queries. Codex then uses the Patch the Web authoring skill to inspect the page, choose approved building blocks, and test the result.
 
 5. A constrained patch
 
@@ -24,12 +24,12 @@ The missing controls now appear directly inside MetroCare. I choose wheelchair a
 
 7. More than a cosmetic change
 
-OpenPatch can add real product capability. I clear the filters, select two providers, and open a keyboard-accessible comparison table. The trusted runtime builds this table only from fields the patch declared in advance. Nothing is scraped from arbitrary page text, and nothing leaves the browser.
+Patch the Web can add real product capability. I clear the filters, select two providers, and open a keyboard-accessible comparison table. The trusted runtime builds this table only from fields the patch declared in advance. Nothing is scraped from arbitrary page text, and nothing leaves the browser.
 
 8. Everyone else installs without AI
 
-After one person authors the repair, everyone else gets a normal extension experience. OpenPatch finds the matching community patch, shows the exact website scope, permissions, version, SHA-256 receipt, scheduled compatibility result, and a fresh live selector check. One click installs it. AI was needed once; every later user needs only the patch.
+After one person authors the repair, everyone else gets a normal extension experience. Patch the Web finds the matching community patch, shows the exact website scope, permissions, version, SHA-256 receipt, scheduled compatibility result, and a fresh live selector check. One click installs it. AI was needed once; every later user needs only the patch.
 
 9. A public repair layer
 
-Websites change, so the Compatibility Sentinel checks every published repair in Chromium every six hours. If a selector breaks, the patch is quarantined before another user discovers it. The same safe engine can repair a mobile form, preserve unfinished progress, and add accessible errors. OpenPatch is a public feature layer for the web: when the owner will not fix it, users still can.
+Websites change, so the Compatibility Sentinel checks every published repair in Chromium every six hours. If a selector breaks, the patch is quarantined before another user discovers it. The same safe engine can repair a mobile form, preserve unfinished progress, and add accessible errors. Patch the Web is a public feature layer for the web: when the owner will not fix it, users still can.

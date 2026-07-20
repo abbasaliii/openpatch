@@ -1,20 +1,20 @@
-# OpenPatch
+# Patch the Web
 
-[![CI](https://github.com/abbasaliii/openpatch/actions/workflows/ci.yml/badge.svg)](https://github.com/abbasaliii/openpatch/actions/workflows/ci.yml) [![Compatibility Sentinel](https://github.com/abbasaliii/openpatch/actions/workflows/compatibility-monitor.yml/badge.svg)](https://github.com/abbasaliii/openpatch/actions/workflows/compatibility-monitor.yml)
+[![CI](https://github.com/abbasaliii/patch-the-web/actions/workflows/ci.yml/badge.svg)](https://github.com/abbasaliii/patch-the-web/actions/workflows/ci.yml) [![Compatibility Sentinel](https://github.com/abbasaliii/patch-the-web/actions/workflows/compatibility-monitor.yml/badge.svg)](https://github.com/abbasaliii/patch-the-web/actions/workflows/compatibility-monitor.yml)
 
 **Fix the web you have.**
 
-OpenPatch is a safe, public feature layer for websites users do not own. A user shows Codex a missing capability or inaccessible workflow and gets a constrained, domain-scoped patch. Everyone else can install that community upgrade with one click—without AI, an account, or an API key.
+Patch the Web is a safe, public feature layer for websites users do not own. A user shows Codex a missing capability or inaccessible workflow and gets a constrained, domain-scoped patch. Everyone else can install that community upgrade with one click—without AI, an account, or an API key.
 
 Built for OpenAI Build Week 2026 with Codex and GPT‑5.6.
 
-**Live product:** [openpatch-tau.vercel.app](https://openpatch-tau.vercel.app/) · [Flagship MetroCare demo](https://openpatch-tau.vercel.app/care/) · [CivicApply repair](https://openpatch-tau.vercel.app/demo/) · [Public registry](https://openpatch-tau.vercel.app/registry/index.json) · [Compatibility Sentinel](https://openpatch-tau.vercel.app/registry/compatibility.json)
+**Live product:** [patch-the-web.vercel.app](https://patch-the-web.vercel.app/) · [Flagship MetroCare demo](https://patch-the-web.vercel.app/care/) · [CivicApply repair](https://patch-the-web.vercel.app/demo/) · [Public registry](https://patch-the-web.vercel.app/registry/index.json) · [Compatibility Sentinel](https://patch-the-web.vercel.app/registry/compatibility.json)
 
 ## The demo
 
 The flagship MetroCare demo is deliberately not a broken toy. It is a credible healthcare directory that works as its owner designed it—but forces a person to inspect twelve cards to compare access, language, availability, and type of care. The site is missing the feature that person actually needs.
 
-OpenPatch’s community patch adds a complete find-and-compare workspace using eleven declarative operations:
+Patch the Web’s community patch adds a complete find-and-compare workspace using eleven declarative operations:
 
 - Search existing services using only declared `data-*` attributes
 - Combine type-of-care, access, language, and availability filters
@@ -30,28 +30,28 @@ The original CivicApply proof remains in the registry as a second repair. Its 19
 
 On any page without a community patch, the extension can also create a **privacy-safe Repair Brief** for Codex. It includes the exact origin and path, viewport geometry, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, URL queries, or page text.
 
-OpenPatch v0.7 makes that missing-feature story substantially deeper. Its trusted `collectionCompare` primitive creates the selection controls, live status, bounded tray, and accessible comparison table itself. A patch may name only one exact collection, safe `data-*` attributes, explicit display maps, and a two-to-four item limit. It still cannot provide HTML, JavaScript, callbacks, templates, or URLs.
+Patch the Web v0.7 makes that missing-feature story substantially deeper. Its trusted `collectionCompare` primitive creates the selection controls, live status, bounded tray, and accessible comparison table itself. A patch may name only one exact collection, safe `data-*` attributes, explicit display maps, and a two-to-four item limit. It still cannot provide HTML, JavaScript, callbacks, templates, or URLs.
 
-OpenPatch also closes the community loop and watches it after publication. Open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. The Compatibility Sentinel opens every published target in Chromium every six hours, records an operation-by-operation structural fingerprint, and quarantines drifted or unreachable patches from discovery. A new workspace-monitor mode fingerprints local patch bytes against the live target before registry publication, so evidence never depends on trusting an already-published artifact.
+Patch the Web also closes the community loop and watches it after publication. Open a supported page and the extension discovers its matching repair in the public registry. Before showing the install button, it validates registry metadata and the full DSL, pins the download to the trusted registry origin, confirms the current URL is in scope, verifies the SHA-256 receipt, and preflights every operation against the live DOM. The Compatibility Sentinel opens every published target in Chromium every six hours, records an operation-by-operation structural fingerprint, and quarantines drifted or unreachable patches from discovery. A new workspace-monitor mode fingerprints local patch bytes against the live target before registry publication, so evidence never depends on trusting an already-published artifact.
 
 ![Compatibility Sentinel showing a simulated patch quarantine](submission-assets/compatibility-sentinel-quarantine.png)
 
 The flagship validator reports **11/11 healthy operations**, **10/10 publication assertions**, and SHA-256 receipt `14cef4195ec8227fe62c16845fedc683fae1dcb4fd3a752296cef7a1bf9a936c`. Local filter preferences expire automatically after 24 hours.
 
-![OpenPatch private service comparison](submission-assets/metrocare-compare-desktop.png)
+![Patch the Web private service comparison](submission-assets/metrocare-compare-desktop.png)
 
 | Before — twelve cards and no way to express a need | After — one private, accessible match |
 | --- | --- |
-| ![Original MetroCare directory](submission-assets/metrocare-before-desktop.png) | ![OpenPatched MetroCare service navigator](submission-assets/metrocare-after-desktop.png) |
+| ![Original MetroCare directory](submission-assets/metrocare-before-desktop.png) | ![Patched by Patch the Web MetroCare service navigator](submission-assets/metrocare-after-desktop.png) |
 
 ## Why this is different
 
-User-script tools can already inject arbitrary JavaScript. OpenPatch deliberately cannot.
+User-script tools can already inject arbitrary JavaScript. Patch the Web deliberately cannot.
 
 ```mermaid
 flowchart LR
   A[User describes a broken page] --> B[Codex inspects DOM + screenshots]
-  B --> C[Constrained .openpatch.json]
+  B --> C[Constrained .patch-the-web.json]
   C --> D[Policy validator]
   D --> E[Selector + browser tests]
   E --> F[Public patch registry]
@@ -67,25 +67,25 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [OpenPatch extension v0.8.0](https://openpatch-tau.vercel.app/downloads/openpatch-extension-v0.8.0.zip) — load-unpacked Chrome extension
-- [OpenPatch Codex plugin v0.4.0](https://openpatch-tau.vercel.app/downloads/openpatch-codex-plugin-v0.4.0.zip) — validated authoring plugin
-- Extension SHA-256: `7ED1F10FFBD98F93BC8CBBA44DB53B26ECCD5915289983960D631E5922F2CE75`
-- Plugin SHA-256: `E78D5ACC07F5F4E17BE4D8E2EB37905A56BACA14E591DFBA7403BB3E4BFEDED9`
+- [Patch the Web extension v0.8.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.8.0.zip) — load-unpacked Chrome extension
+- [Patch the Web Codex plugin v0.4.0](https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.0.zip) — validated authoring plugin
+- Extension SHA-256: `30C472E6B23E5A75BD709EA3040EEFCD62FBC35A669773D8400FDFE1E1CD4F50`
+- Plugin SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 
 Then:
 
-**Zero-install judge preview:** open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/) and choose **Preview OpenPatch instantly**. This invokes the same constrained runtime and reports `11/11 healthy`; the steps below verify the real extension distribution path.
+**Zero-install judge preview:** open [the live MetroCare demo](https://patch-the-web.vercel.app/care/) and choose **Preview Patch the Web instantly**. This invokes the same constrained runtime and reports `11/11 healthy`; the steps below verify the real extension distribution path.
 
 1. Download and unzip the public extension artifact above.
 2. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select the unzipped folder.
-3. Open [the live MetroCare demo](https://openpatch-tau.vercel.app/care/).
+3. Open [the live MetroCare demo](https://patch-the-web.vercel.app/care/).
 4. Observe twelve services and no search or filters—the directory works, but cannot express a person’s combined needs.
-5. Open the OpenPatch extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, shows the scheduled `11/11` live-compatibility result, and independently reports `11/11 operation targets healthy` on your current tab.
+5. Open the Patch the Web extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, shows the scheduled `11/11` live-compatibility result, and independently reports `11/11 operation targets healthy` on your current tab.
 6. Choose **Install verified community feature**; the page reloads with the navigator active.
-7. Select Harbor Family Clinic and Northside Community Health, then choose **Compare selected**. OpenPatch creates an accessible side-by-side decision table without sending a request.
+7. Select Harbor Family Clinic and Northside Community Health, then choose **Compare selected**. Patch the Web creates an accessible side-by-side decision table without sending a request.
 8. Clear the comparison, choose **Wheelchair access**, **Urdu**, and **Accepting new patients**, and watch the directory reduce to Harbor Family Clinic with `1 of 12 services match`.
 9. Reload to see the preferences restored locally; press `/` to focus search. The automated test proves filtering and comparison make zero network requests.
-10. Reopen OpenPatch and choose **Remove this installed patch** to verify that the feature, enabled state, and installation metadata are removed together.
+10. Open the Patch the Web extension again and choose **Remove this installed patch** to verify that the feature, enabled state, and installation metadata are removed together.
 
 No account, test credential, API key, or external service is required.
 
@@ -100,22 +100,22 @@ npm run dev -- --port 5173
 ### Test the Codex authoring path
 
 1. Open any normal website tab that does not have a bundled repair.
-2. Open OpenPatch and describe the problem in **Start a repair with Codex**.
+2. Open the Patch the Web extension and describe the problem in **Start a repair with Codex**.
 3. Choose **Copy Codex repair brief**.
-4. Open this repository in Codex and paste the brief. Codex auto-discovers `$openpatch-author` from `.agents/skills/openpatch-author`.
+4. Open this repository in Codex and paste the brief. Codex auto-discovers `$patch-the-web-author` from `.agents/skills/patch-the-web-author`.
 
-The same skill is packaged as a distributable Codex plugin under `plugins/openpatch`. The extension performs no model call; GPT‑5.6 operates through the user's existing Codex session only while a repair is authored.
+The same skill is packaged as a distributable Codex plugin under `plugins/patch-the-web`. The extension performs no model call; GPT‑5.6 operates through the user's existing Codex session only while a repair is authored.
 
-![OpenPatch privacy-safe Repair Brief authoring UI](submission-assets/openpatch-repair-brief.png)
+![Patch the Web privacy-safe Repair Brief authoring UI](submission-assets/patch-the-web-repair-brief.png)
 
 ### Test community installation
 
 1. Open the patch's target page.
-2. Open OpenPatch. It fetches the machine-readable registry, selects only entries whose declared host and path match the active tab, and downloads only from the trusted registry origin.
+2. Open the Patch the Web extension. It fetches the machine-readable registry, selects only entries whose declared host and path match the active tab, and downloads only from the trusted registry origin.
 3. Inspect the verified registry badge, capabilities, live `11/11` selector preflight, and SHA-256 receipt.
 4. Choose **Install verified community feature**, approve Chrome's exact-domain prompt when required, and watch the page reload with the feature active.
 
-For transparent/offline distribution, **Download safe patch** and manual `.openpatch.json` import still run through the same independent policy, scope, hash, and live-selector checks.
+For transparent/offline distribution, **Download safe patch** and manual `.patch-the-web.json` import still run through the same independent policy, scope, hash, and live-selector checks.
 
 Imported patches are stored locally, run through the same constrained runtime, and can replace an older version only when their semantic version is equal or newer. Invalid stored entries are ignored rather than executed. Installed community patches can be disabled per domain or removed with their local metadata and any now-unused optional host access.
 
@@ -155,9 +155,9 @@ Browser tests prove both product claims: MetroCare starts as a realistic directo
 ## Repository map
 
 ```text
-.agents/skills/openpatch-author/ Codex patch-authoring workflow, auto-discovered in this repo
+.agents/skills/patch-the-web-author/ Codex patch-authoring workflow, auto-discovered in this repo
 .github/workflows/              Clean-install CI and the six-hour Compatibility Sentinel
-plugins/openpatch/               Distributable Codex plugin package
+plugins/patch-the-web/               Distributable Codex plugin package
 src/core/                      DSL types, domain matcher, validator, runtime
 src/extension/                 Manifest V3 content script, popup, service worker
 src/registry/patches/          Versioned community patches
@@ -173,9 +173,9 @@ Every patch declares an exact host/path scope, plain-language capabilities, cons
 ```json
 {
   "schemaVersion": 1,
-  "id": "org.openpatch.civicapply-accessible-draft",
+  "id": "org.patchtheweb.civicapply-accessible-draft",
   "match": {
-    "hosts": ["localhost", "127.0.0.1", "openpatch-tau.vercel.app"],
+    "hosts": ["localhost", "127.0.0.1", "patch-the-web.vercel.app"],
     "paths": ["/demo/*"]
   },
   "capabilities": ["local-storage", "validation"],
@@ -195,7 +195,7 @@ Every patch declares an exact host/path scope, plain-language capabilities, cons
 
 The validator rejects unknown operations, event-handler attributes, network-capable CSS, broad document selectors, malformed scopes, undeclared capabilities, duplicate IDs, excessive operation counts, and sensitive persistence patterns. The runtime adds its own exclusions for password, file, authentication-code, payment, hidden, disabled, and submit fields.
 
-See [`src/core/validator.ts`](src/core/validator.ts) for executable policy and [`.agents/skills/openpatch-author/references/dsl.md`](.agents/skills/openpatch-author/references/dsl.md) for the authoring reference.
+See [`src/core/validator.ts`](src/core/validator.ts) for executable policy and [`.agents/skills/patch-the-web-author/references/dsl.md`](.agents/skills/patch-the-web-author/references/dsl.md) for the authoring reference.
 
 ## Codex collaboration
 
@@ -211,7 +211,7 @@ The full [Build Week engineering record](BUILD_WEEK.md) maps human decisions, GP
 
 ## Security model
 
-OpenPatch treats patches, websites, registry metadata, and page content as untrusted.
+Patch the Web treats patches, websites, registry metadata, and page content as untrusted.
 
 - Exact host and narrow path matching happens before execution.
 - Registry metadata is schema-checked, downloads are same-origin pinned, and SHA-256 integrity is verified before installation.

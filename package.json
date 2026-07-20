@@ -1,5 +1,5 @@
 {
-  "name": "openpatch",
+  "name": "patch-the-web",
   "version": "0.8.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,8 @@
     "build": "npm run build:site && npm run build:extension",
     "build:site": "vite build",
     "build:extension": "node scripts/build-extension.mjs",
-    "capture:previews": "node scripts/build-test-runtime.mjs && node scripts/capture-previews.mjs",
+    "capture:previews": "node scripts/build-test-runtime.mjs && node scripts/capture-previews.mjs && node scripts/generate-brand-assets.mjs",
+    "brand:assets": "node scripts/generate-brand-assets.mjs",
     "record:demo": "node scripts/build-test-runtime.mjs && node scripts/record-submission-demo.mjs",
     "monitor:registry": "node scripts/build-test-runtime.mjs && tsx scripts/check-registry-compatibility.ts",
     "monitor:workspace": "node scripts/build-test-runtime.mjs && tsx scripts/check-registry-compatibility.ts --workspace",
@@ -20,7 +21,7 @@
     "test:extension": "npm run build:extension && playwright test --config playwright.extension.config.ts",
     "validate:patch": "tsx scripts/validate-patch.ts",
     "check": "tsc --noEmit && npm test && npm run build",
-    "verify": "npm run check && npm run validate:patch -- src/registry/patches/civic-apply.openpatch.json src/site/demo/index.html && npm run validate:patch -- src/registry/patches/metrocare-service-navigator.openpatch.json src/site/care/index.html && npm run test:browser && npm run test:extension"
+    "verify": "npm run check && npm run validate:patch -- src/registry/patches/civic-apply.patch-the-web.json src/site/demo/index.html && npm run validate:patch -- src/registry/patches/metrocare-service-navigator.patch-the-web.json src/site/care/index.html && npm run test:browser && npm run test:extension"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.12.1",

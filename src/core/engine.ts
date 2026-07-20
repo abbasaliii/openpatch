@@ -2,7 +2,7 @@ import type {
   CollectionCompareOperation,
   CollectionFilterOperation,
   FieldRule,
-  OpenPatch,
+  CommunityPatch,
   OperationHealth,
   PatchHealth,
   PatchOperation,
@@ -21,11 +21,11 @@ const SENSITIVE_AUTOCOMPLETE = /(?:current-password|new-password|one-time-code|c
 const SENSITIVE_FIELD_HINT = /(?:^|[-_.])(?:password|passwd|passcode|pin|otp|one[-_.]?time|verification[-_.]?code|auth[-_.]?code|security[-_.]?code|secret|token|cvv|cvc|card[-_.]?number|credit[-_.]?card|routing[-_.]?number|bank[-_.]?account|account[-_.]?number|social[-_.]?security|ssn|tax[-_.]?id|passport)(?:$|[-_.])/i;
 
 function installTrustedUiStyles(document: Document) {
-  if (document.querySelector("style[data-openpatch-ui]")) return;
+  if (document.querySelector("style[data-patch-the-web-ui]")) return;
   const style = document.createElement("style");
-  style.dataset.openpatchUi = "true";
+  style.dataset.patchTheWebUi = "true";
   style.textContent = `
-    .openpatch-save-status {
+    .patch-the-web-save-status {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -37,8 +37,8 @@ function installTrustedUiStyles(document: Document) {
       background: #effcf6;
       font: 600 13px/1.2 ui-sans-serif, system-ui, sans-serif;
     }
-    .openpatch-save-status::before { content: "✓"; }
-    .openpatch-field-error {
+    .patch-the-web-save-status::before { content: "✓"; }
+    .patch-the-web-field-error {
       margin: 7px 0 0;
       color: #b42318;
       font: 600 14px/1.35 ui-sans-serif, system-ui, sans-serif;
@@ -47,7 +47,7 @@ function installTrustedUiStyles(document: Document) {
       border-color: #d92d20 !important;
       box-shadow: 0 0 0 3px rgba(217, 45, 32, .12) !important;
     }
-    .openpatch-navigator {
+    .patch-the-web-navigator {
       margin: 0 0 24px;
       padding: 22px;
       border: 1px solid #b9e6d1;
@@ -57,31 +57,31 @@ function installTrustedUiStyles(document: Document) {
       box-shadow: 0 14px 36px rgba(22, 94, 67, .09);
       font-family: ui-sans-serif, system-ui, sans-serif;
     }
-    .openpatch-navigator__head { display: flex; align-items: start; gap: 14px; margin-bottom: 18px; }
-    .openpatch-navigator__mark {
+    .patch-the-web-navigator__head { display: flex; align-items: start; gap: 14px; margin-bottom: 18px; }
+    .patch-the-web-navigator__mark {
       display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 auto;
       border-radius: 12px; color: #fff; background: #0b9569; font-weight: 850;
     }
-    .openpatch-navigator h2 { margin: 0 0 4px; color: #143126; font-size: 20px; line-height: 1.2; }
-    .openpatch-navigator p { margin: 0; color: #5f746b; font-size: 13px; line-height: 1.5; }
-    .openpatch-navigator__controls { display: grid; grid-template-columns: minmax(210px, 1.4fr) repeat(3, minmax(130px, 1fr)); gap: 10px; }
-    .openpatch-navigator label { display: grid; gap: 6px; color: #355649; font-size: 11px; font-weight: 800; }
-    .openpatch-navigator input, .openpatch-navigator select {
+    .patch-the-web-navigator h2 { margin: 0 0 4px; color: #143126; font-size: 20px; line-height: 1.2; }
+    .patch-the-web-navigator p { margin: 0; color: #5f746b; font-size: 13px; line-height: 1.5; }
+    .patch-the-web-navigator__controls { display: grid; grid-template-columns: minmax(210px, 1.4fr) repeat(3, minmax(130px, 1fr)); gap: 10px; }
+    .patch-the-web-navigator label { display: grid; gap: 6px; color: #355649; font-size: 11px; font-weight: 800; }
+    .patch-the-web-navigator input, .patch-the-web-navigator select {
       width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #bed4ca; border-radius: 10px;
       color: #19362b; background: #fff; font: 500 13px/1.25 ui-sans-serif, system-ui, sans-serif;
     }
-    .openpatch-navigator input:focus, .openpatch-navigator select:focus {
+    .patch-the-web-navigator input:focus, .patch-the-web-navigator select:focus {
       outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 1px; border-color: #0b9569;
     }
-    .openpatch-navigator__receipt { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding-top: 14px; border-top: 1px solid #dcece4; }
-    .openpatch-navigator__status { color: #136b4d !important; font-weight: 800; }
-    .openpatch-navigator__privacy { margin-left: auto !important; font-size: 10px !important; }
-    .openpatch-navigator__clear {
+    .patch-the-web-navigator__receipt { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding-top: 14px; border-top: 1px solid #dcece4; }
+    .patch-the-web-navigator__status { color: #136b4d !important; font-weight: 800; }
+    .patch-the-web-navigator__privacy { margin-left: auto !important; font-size: 10px !important; }
+    .patch-the-web-navigator__clear {
       min-height: 34px; padding: 7px 10px; border: 1px solid #bad5c8; border-radius: 9px;
       color: #176248; background: #fff; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
     }
-    .openpatch-navigator__clear:focus-visible { outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 2px; }
-    .openpatch-compare {
+    .patch-the-web-navigator__clear:focus-visible { outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 2px; }
+    .patch-the-web-compare {
       margin: -8px 0 26px;
       padding: 18px 20px;
       border: 1px solid #245d4a;
@@ -91,57 +91,57 @@ function installTrustedUiStyles(document: Document) {
       box-shadow: 0 16px 34px rgba(20, 68, 51, .16);
       font-family: ui-sans-serif, system-ui, sans-serif;
     }
-    .openpatch-compare__bar { display: flex; align-items: center; gap: 16px; }
-    .openpatch-compare__mark {
+    .patch-the-web-compare__bar { display: flex; align-items: center; gap: 16px; }
+    .patch-the-web-compare__mark {
       display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 auto;
       border: 1px solid rgba(255,255,255,.2); border-radius: 12px; color: #102f25; background: #70dfb2; font-weight: 900;
     }
-    .openpatch-compare__copy { min-width: 180px; }
-    .openpatch-compare h2, .openpatch-compare h3 { margin: 0 0 3px; color: #fff; line-height: 1.2; }
-    .openpatch-compare h2 { font-size: 17px; }
-    .openpatch-compare h3 { font-size: 20px; }
-    .openpatch-compare p { margin: 0; color: #c8ded5; font-size: 11px; line-height: 1.45; }
-    .openpatch-compare__selection { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; }
-    .openpatch-compare__chip { padding: 6px 9px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #eaf8f2; background: rgba(255,255,255,.08); font-size: 10px; font-weight: 750; }
-    .openpatch-compare__actions { display: flex; gap: 7px; }
-    .openpatch-compare__action, .openpatch-compare__close {
+    .patch-the-web-compare__copy { min-width: 180px; }
+    .patch-the-web-compare h2, .patch-the-web-compare h3 { margin: 0 0 3px; color: #fff; line-height: 1.2; }
+    .patch-the-web-compare h2 { font-size: 17px; }
+    .patch-the-web-compare h3 { font-size: 20px; }
+    .patch-the-web-compare p { margin: 0; color: #c8ded5; font-size: 11px; line-height: 1.45; }
+    .patch-the-web-compare__selection { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; }
+    .patch-the-web-compare__chip { padding: 6px 9px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #eaf8f2; background: rgba(255,255,255,.08); font-size: 10px; font-weight: 750; }
+    .patch-the-web-compare__actions { display: flex; gap: 7px; }
+    .patch-the-web-compare__action, .patch-the-web-compare__close {
       min-height: 36px; padding: 8px 11px; border: 1px solid rgba(255,255,255,.24); border-radius: 9px;
       color: #12382c; background: #72e0b2; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
     }
-    .openpatch-compare__action.secondary, .openpatch-compare__close { color: #e9f7f1; background: transparent; }
-    .openpatch-compare__action:disabled { color: #8bb5a5; background: #2b604d; cursor: not-allowed; }
-    .openpatch-compare__action:focus-visible, .openpatch-compare__close:focus-visible, .openpatch-compare__select:focus-visible {
+    .patch-the-web-compare__action.secondary, .patch-the-web-compare__close { color: #e9f7f1; background: transparent; }
+    .patch-the-web-compare__action:disabled { color: #8bb5a5; background: #2b604d; cursor: not-allowed; }
+    .patch-the-web-compare__action:focus-visible, .patch-the-web-compare__close:focus-visible, .patch-the-web-compare__select:focus-visible {
       outline: 3px solid rgba(112, 223, 178, .3); outline-offset: 2px;
     }
-    .openpatch-compare__select {
+    .patch-the-web-compare__select {
       align-self: flex-start; margin: 14px 0 0; padding: 7px 10px; border: 1px solid #b9d4c8; border-radius: 9px;
       color: #176248; background: #f5fbf8; font: 800 10px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
     }
-    .openpatch-compare__select[aria-pressed="true"] { border-color: #167e59; color: #fff; background: #167e59; }
-    .openpatch-compare__select:disabled { opacity: .48; cursor: not-allowed; }
-    [data-openpatch-compared] { box-shadow: 0 0 0 3px rgba(22, 126, 89, .14), 0 12px 30px rgba(29, 77, 58, .07) !important; }
-    .openpatch-compare__result { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.18); }
-    .openpatch-compare__result-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 13px; }
-    .openpatch-compare__table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; }
-    .openpatch-compare__table-wrap:focus-visible { outline: 3px solid #79e5b7; outline-offset: 3px; }
-    .openpatch-compare table { width: 100%; min-width: 560px; border-collapse: collapse; color: #18372b; background: #fff; font-size: 11px; }
-    .openpatch-compare th, .openpatch-compare td { padding: 11px 13px; border-bottom: 1px solid #e1ebe6; text-align: left; vertical-align: top; }
-    .openpatch-compare thead th { color: #10392b; background: #eef8f3; font-size: 11px; }
-    .openpatch-compare tbody th { width: 18%; color: #5c7168; background: #f8fbfa; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
-    .openpatch-compare tr:last-child th, .openpatch-compare tr:last-child td { border-bottom: 0; }
-    .openpatch-compare__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .patch-the-web-compare__select[aria-pressed="true"] { border-color: #167e59; color: #fff; background: #167e59; }
+    .patch-the-web-compare__select:disabled { opacity: .48; cursor: not-allowed; }
+    [data-patch-the-web-compared] { box-shadow: 0 0 0 3px rgba(22, 126, 89, .14), 0 12px 30px rgba(29, 77, 58, .07) !important; }
+    .patch-the-web-compare__result { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.18); }
+    .patch-the-web-compare__result-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 13px; }
+    .patch-the-web-compare__table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; }
+    .patch-the-web-compare__table-wrap:focus-visible { outline: 3px solid #79e5b7; outline-offset: 3px; }
+    .patch-the-web-compare table { width: 100%; min-width: 560px; border-collapse: collapse; color: #18372b; background: #fff; font-size: 11px; }
+    .patch-the-web-compare th, .patch-the-web-compare td { padding: 11px 13px; border-bottom: 1px solid #e1ebe6; text-align: left; vertical-align: top; }
+    .patch-the-web-compare thead th { color: #10392b; background: #eef8f3; font-size: 11px; }
+    .patch-the-web-compare tbody th { width: 18%; color: #5c7168; background: #f8fbfa; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+    .patch-the-web-compare tr:last-child th, .patch-the-web-compare tr:last-child td { border-bottom: 0; }
+    .patch-the-web-compare__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     @media (max-width: 760px) {
-      .openpatch-navigator { padding: 18px; border-radius: 16px; }
-      .openpatch-navigator__controls { grid-template-columns: 1fr; }
-      .openpatch-navigator__receipt { align-items: flex-start; flex-wrap: wrap; }
-      .openpatch-navigator__privacy { width: 100%; margin-left: 0 !important; }
-      .openpatch-compare { margin-top: -6px; padding: 16px; }
-      .openpatch-compare__bar { align-items: flex-start; flex-wrap: wrap; }
-      .openpatch-compare__copy { flex: 1; }
-      .openpatch-compare__selection { width: 100%; justify-content: flex-start; order: 3; }
-      .openpatch-compare__actions { width: 100%; order: 4; }
-      .openpatch-compare__action { flex: 1; }
-      .openpatch-compare__result-head { flex-direction: column; }
+      .patch-the-web-navigator { padding: 18px; border-radius: 16px; }
+      .patch-the-web-navigator__controls { grid-template-columns: 1fr; }
+      .patch-the-web-navigator__receipt { align-items: flex-start; flex-wrap: wrap; }
+      .patch-the-web-navigator__privacy { width: 100%; margin-left: 0 !important; }
+      .patch-the-web-compare { margin-top: -6px; padding: 16px; }
+      .patch-the-web-compare__bar { align-items: flex-start; flex-wrap: wrap; }
+      .patch-the-web-compare__copy { flex: 1; }
+      .patch-the-web-compare__selection { width: 100%; justify-content: flex-start; order: 3; }
+      .patch-the-web-compare__actions { width: 100%; order: 4; }
+      .patch-the-web-compare__action { flex: 1; }
+      .patch-the-web-compare__result-head { flex-direction: column; }
     }
   `;
   document.head.append(style);
@@ -187,7 +187,7 @@ function viewportMatches(operation: Extract<PatchOperation, { type: "style" }>, 
 }
 
 function setupPersistence(
-  patch: OpenPatch,
+  patch: CommunityPatch,
   operation: PersistFormOperation,
   context: BrowserContext,
   form: HTMLFormElement
@@ -197,10 +197,10 @@ function setupPersistence(
     .filter(isEligibleField);
   const uniqueFields = [...new Set(fields)].slice(0, 40);
   const uniqueFieldKeys = fieldKeys(uniqueFields);
-  const storageKey = `openpatch:${patch.id}:${operation.key}`;
+  const storageKey = `patch-the-web:${patch.id}:${operation.key}`;
   const status = document.createElement("p");
-  status.className = "openpatch-save-status";
-  status.dataset.openpatchOwned = "true";
+  status.className = "patch-the-web-save-status";
+  status.dataset.patchTheWebOwned = "true";
   status.setAttribute("role", "status");
   status.setAttribute("aria-live", "polite");
   status.textContent = operation.statusText;
@@ -272,7 +272,7 @@ function setupValidation(operation: ValidationOperation, context: BrowserContext
   );
 
   const validate = (element: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, rules: FieldRule[]) => {
-    const existingId = `openpatch-error-${operation.id}-${element.id || element.name || "field"}`.replace(/[^a-z0-9_-]/gi, "-");
+    const existingId = `patch-the-web-error-${operation.id}-${element.id || element.name || "field"}`.replace(/[^a-z0-9_-]/gi, "-");
     document.getElementById(existingId)?.remove();
     element.removeAttribute("aria-invalid");
     const originalDescription = (element.getAttribute("aria-describedby") || "").split(/\s+/).filter((id) => id && id !== existingId);
@@ -284,8 +284,8 @@ function setupValidation(operation: ValidationOperation, context: BrowserContext
     }
     const error = document.createElement("p");
     error.id = existingId;
-    error.className = "openpatch-field-error";
-    error.dataset.openpatchOwned = "true";
+    error.className = "patch-the-web-field-error";
+    error.dataset.patchTheWebOwned = "true";
     error.setAttribute("role", "alert");
     error.textContent = failed.message;
     element.setAttribute("aria-invalid", "true");
@@ -318,7 +318,7 @@ function splitAttributeTokens(value: string | null) {
 }
 
 function setupCollectionFilter(
-  patch: OpenPatch,
+  patch: CommunityPatch,
   operation: CollectionFilterOperation,
   context: BrowserContext,
   container: HTMLElement
@@ -328,13 +328,13 @@ function setupCollectionFilter(
   if (items.length === 0) return { matched: 0, detail: "no collection items found" };
 
   const panel = document.createElement("section");
-  panel.className = "openpatch-navigator";
-  panel.dataset.openpatchOwned = "true";
+  panel.className = "patch-the-web-navigator";
+  panel.dataset.patchTheWebOwned = "true";
   panel.setAttribute("aria-label", operation.title);
   const head = document.createElement("div");
-  head.className = "openpatch-navigator__head";
+  head.className = "patch-the-web-navigator__head";
   const mark = document.createElement("span");
-  mark.className = "openpatch-navigator__mark";
+  mark.className = "patch-the-web-navigator__mark";
   mark.setAttribute("aria-hidden", "true");
   mark.textContent = "⌕";
   const copy = document.createElement("div");
@@ -346,8 +346,8 @@ function setupCollectionFilter(
   head.append(mark, copy);
 
   const controls = document.createElement("div");
-  controls.className = "openpatch-navigator__controls";
-  const searchId = `openpatch-search-${operation.id}`;
+  controls.className = "patch-the-web-navigator__controls";
+  const searchId = `patch-the-web-search-${operation.id}`;
   const searchLabel = document.createElement("label");
   searchLabel.htmlFor = searchId;
   searchLabel.append(document.createTextNode(operation.search.label));
@@ -361,7 +361,7 @@ function setupCollectionFilter(
   controls.append(searchLabel);
 
   const selects = operation.filters.map((filter) => {
-    const id = `openpatch-filter-${operation.id}-${filter.id}`;
+    const id = `patch-the-web-filter-${operation.id}-${filter.id}`;
     const label = document.createElement("label");
     label.htmlFor = id;
     label.append(document.createTextNode(filter.label));
@@ -383,17 +383,17 @@ function setupCollectionFilter(
   });
 
   const receipt = document.createElement("div");
-  receipt.className = "openpatch-navigator__receipt";
+  receipt.className = "patch-the-web-navigator__receipt";
   const status = document.createElement("p");
-  status.className = "openpatch-navigator__status";
+  status.className = "patch-the-web-navigator__status";
   status.setAttribute("role", "status");
   status.setAttribute("aria-live", "polite");
   const clear = document.createElement("button");
   clear.type = "button";
-  clear.className = "openpatch-navigator__clear";
+  clear.className = "patch-the-web-navigator__clear";
   clear.textContent = "Clear filters";
   const privacy = document.createElement("p");
-  privacy.className = "openpatch-navigator__privacy";
+  privacy.className = "patch-the-web-navigator__privacy";
   privacy.textContent = operation.persist
     ? `Preferences stay on this device for ${Math.round(operation.persist.ttlMinutes / 60)} hours`
     : "Filtering stays on this page";
@@ -401,7 +401,7 @@ function setupCollectionFilter(
   panel.append(head, controls, receipt);
   container.prepend(panel);
 
-  const storageKey = operation.persist ? `openpatch:${patch.id}:${operation.persist.key}` : null;
+  const storageKey = operation.persist ? `patch-the-web:${patch.id}:${operation.persist.key}` : null;
   const readState = () => ({
     search: search.value,
     filters: Object.fromEntries(selects.map(({ filter, select }) => [filter.id, select.value]))
@@ -422,7 +422,7 @@ function setupCollectionFilter(
       });
       const show = matchesSearch && matchesFilters;
       item.hidden = !show;
-      item.toggleAttribute("data-openpatch-filtered", !show);
+      item.toggleAttribute("data-patch-the-web-filtered", !show);
       if (show) visible += 1;
     });
     status.textContent = `${visible} of ${items.length} services match`;
@@ -493,18 +493,18 @@ function setupCollectionCompare(
   }
 
   const panel = document.createElement("section");
-  panel.className = "openpatch-compare";
-  panel.dataset.openpatchOwned = "true";
+  panel.className = "patch-the-web-compare";
+  panel.dataset.patchTheWebOwned = "true";
   panel.setAttribute("aria-label", operation.title);
 
   const bar = document.createElement("div");
-  bar.className = "openpatch-compare__bar";
+  bar.className = "patch-the-web-compare__bar";
   const mark = document.createElement("span");
-  mark.className = "openpatch-compare__mark";
+  mark.className = "patch-the-web-compare__mark";
   mark.setAttribute("aria-hidden", "true");
   mark.textContent = "⇄";
   const copy = document.createElement("div");
-  copy.className = "openpatch-compare__copy";
+  copy.className = "patch-the-web-compare__copy";
   const title = document.createElement("h2");
   title.textContent = operation.title;
   const description = document.createElement("p");
@@ -512,56 +512,56 @@ function setupCollectionCompare(
   copy.append(title, description);
 
   const selection = document.createElement("div");
-  selection.className = "openpatch-compare__selection";
+  selection.className = "patch-the-web-compare__selection";
   const actions = document.createElement("div");
-  actions.className = "openpatch-compare__actions";
+  actions.className = "patch-the-web-compare__actions";
   const clear = document.createElement("button");
   clear.type = "button";
-  clear.className = "openpatch-compare__action secondary";
+  clear.className = "patch-the-web-compare__action secondary";
   clear.textContent = "Clear";
   const compare = document.createElement("button");
   compare.type = "button";
-  compare.className = "openpatch-compare__action";
+  compare.className = "patch-the-web-compare__action";
   compare.textContent = "Compare selected";
   compare.disabled = true;
   actions.append(clear, compare);
   bar.append(mark, copy, selection, actions);
 
   const liveStatus = document.createElement("p");
-  liveStatus.className = "openpatch-compare__status";
+  liveStatus.className = "patch-the-web-compare__status";
   liveStatus.setAttribute("role", "status");
   liveStatus.setAttribute("aria-live", "polite");
 
   const result = document.createElement("section");
-  result.className = "openpatch-compare__result";
+  result.className = "patch-the-web-compare__result";
   result.hidden = true;
   const resultHead = document.createElement("div");
-  resultHead.className = "openpatch-compare__result-head";
+  resultHead.className = "patch-the-web-compare__result-head";
   const resultCopy = document.createElement("div");
   const resultTitle = document.createElement("h3");
-  resultTitle.id = `openpatch-compare-title-${operation.id}`;
+  resultTitle.id = `patch-the-web-compare-title-${operation.id}`;
   resultTitle.tabIndex = -1;
   resultTitle.textContent = "Service comparison";
   const resultDescription = document.createElement("p");
-  resultDescription.id = `openpatch-compare-description-${operation.id}`;
+  resultDescription.id = `patch-the-web-compare-description-${operation.id}`;
   resultDescription.textContent = "A private side-by-side view built only from the declared directory fields.";
   result.setAttribute("aria-labelledby", resultTitle.id);
   result.setAttribute("aria-describedby", resultDescription.id);
   resultCopy.append(resultTitle, resultDescription);
   const close = document.createElement("button");
   close.type = "button";
-  close.className = "openpatch-compare__close";
+  close.className = "patch-the-web-compare__close";
   close.textContent = "Close comparison";
   resultHead.append(resultCopy, close);
   const tableWrap = document.createElement("div");
-  tableWrap.className = "openpatch-compare__table-wrap";
+  tableWrap.className = "patch-the-web-compare__table-wrap";
   tableWrap.tabIndex = 0;
   tableWrap.setAttribute("role", "region");
   tableWrap.setAttribute("aria-label", "Scrollable service comparison");
   result.append(resultHead, tableWrap);
   panel.append(bar, liveStatus, result);
 
-  const navigator = [...container.children].find((element) => element.classList.contains("openpatch-navigator"));
+  const navigator = [...container.children].find((element) => element.classList.contains("patch-the-web-navigator"));
   if (navigator) navigator.insertAdjacentElement("afterend", panel);
   else container.prepend(panel);
 
@@ -569,8 +569,8 @@ function setupCollectionCompare(
   const buttons = titledItems.map(({ item, title: itemTitle }) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "openpatch-compare__select";
-    button.dataset.openpatchOwned = "true";
+    button.className = "patch-the-web-compare__select";
+    button.dataset.patchTheWebOwned = "true";
     button.setAttribute("aria-pressed", "false");
     button.setAttribute("aria-label", `Add ${itemTitle} to comparison`);
     button.textContent = "Compare";
@@ -593,7 +593,7 @@ function setupCollectionCompare(
       .filter(({ item }) => selectedItems.has(item))
       .map(({ itemTitle }) => {
         const chip = document.createElement("span");
-        chip.className = "openpatch-compare__chip";
+        chip.className = "patch-the-web-compare__chip";
         chip.textContent = itemTitle;
         return chip;
       }));
@@ -606,7 +606,7 @@ function setupCollectionCompare(
       button.setAttribute("aria-label", `${pressed ? "Remove" : "Add"} ${itemTitle} ${pressed ? "from" : "to"} comparison`);
       button.textContent = pressed ? "Selected" : "Compare";
       button.disabled = !pressed && count >= operation.maxItems;
-      item.toggleAttribute("data-openpatch-compared", pressed);
+      item.toggleAttribute("data-patch-the-web-compared", pressed);
     });
     liveStatus.textContent = count === 0
       ? `Choose 2 to ${operation.maxItems} items to compare.`
@@ -675,7 +675,7 @@ function setupCollectionCompare(
   return { matched: items.length, applied: true, detail: `${items.length} items safely comparable` };
 }
 
-function applyOperation(patch: OpenPatch, operation: PatchOperation, context: BrowserContext): OperationHealth {
+function applyOperation(patch: CommunityPatch, operation: PatchOperation, context: BrowserContext): OperationHealth {
   const { document, window } = context;
   try {
     if (operation.type === "style") {
@@ -759,7 +759,7 @@ function applyOperation(patch: OpenPatch, operation: PatchOperation, context: Br
 }
 
 export function applyPatch(
-  patch: OpenPatch,
+  patch: CommunityPatch,
   context: Partial<BrowserContext> = {}
 ): PatchHealth {
   const documentRef = context.document ?? document;
@@ -768,15 +768,15 @@ export function applyPatch(
   const marker = `${patch.id}@${patch.version}`;
   installTrustedUiStyles(documentRef);
   const root = documentRef.documentElement;
-  const appliedMarkers = new Set((root.dataset.openpatchApplied ?? "").split(/\s+/).filter(Boolean));
+  const appliedMarkers = new Set((root.dataset.patchTheWebApplied ?? "").split(/\s+/).filter(Boolean));
   if (appliedMarkers.has(marker)) {
     return { patchId: patch.id, version: patch.version, applied: true, operations: [], healthy: patch.operations.length, total: patch.operations.length, timestamp: Date.now() };
   }
   const operations = patch.operations.map((operation) => applyOperation(patch, operation, { document: documentRef, window: windowRef, storage: storageRef }));
   const healthy = operations.filter((operation) => operation.applied).length;
   appliedMarkers.add(marker);
-  root.dataset.openpatchApplied = [...appliedMarkers].join(" ");
-  root.classList.add("openpatch-active");
+  root.dataset.patchTheWebApplied = [...appliedMarkers].join(" ");
+  root.classList.add("patch-the-web-active");
   return {
     patchId: patch.id,
     version: patch.version,

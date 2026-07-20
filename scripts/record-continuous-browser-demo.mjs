@@ -6,9 +6,9 @@ import { join, resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const extensionPath = resolve(root, "dist/extension");
 const rawDir = resolve(root, `dist/video/continuous-raw-${Date.now()}`);
-const mainVideoPath = resolve(root, "submission-assets/openpatch-continuous-main.webm");
-const popupOnePath = resolve(root, "submission-assets/openpatch-continuous-popup-1.webm");
-const popupTwoPath = resolve(root, "submission-assets/openpatch-continuous-popup-2.webm");
+const mainVideoPath = resolve(root, "submission-assets/patch-the-web-continuous-main.webm");
+const popupOnePath = resolve(root, "submission-assets/patch-the-web-continuous-popup-1.webm");
+const popupTwoPath = resolve(root, "submission-assets/patch-the-web-continuous-popup-2.webm");
 const manifestPath = resolve(root, "dist/video/continuous-recording-manifest.json");
 const timingPath = resolve(root, "dist/video/live-demo-timings.json");
 const timings = JSON.parse((await readFile(timingPath, "utf8")).replace(/^\uFEFF/, ""));
@@ -16,19 +16,19 @@ if (!Array.isArray(timings.sections) || timings.sections.length !== 10) {
   throw new Error("Generate the ten-section live narration before recording.");
 }
 await mkdir(rawDir, { recursive: true });
-const profilePrefix = join(tmpdir(), "openpatch-continuous-recording-");
+const profilePrefix = join(tmpdir(), "patch-the-web-continuous-recording-");
 const profilePath = await mkdtemp(profilePrefix);
 
-const homeUrl = "https://openpatch-tau.vercel.app/";
-const careUrl = "https://openpatch-tau.vercel.app/care/";
+const homeUrl = "https://patch-the-web.vercel.app/";
+const careUrl = "https://patch-the-web.vercel.app/care/";
 const wait = (milliseconds) => new Promise((resolvePromise) => setTimeout(resolvePromise, milliseconds));
 
 async function addRecordingCursor(page) {
   await page.addInitScript(() => {
     const mount = () => {
-      if (document.querySelector("[data-openpatch-recording-cursor]")) return;
+      if (document.querySelector("[data-patch-the-web-recording-cursor]")) return;
       const cursor = document.createElement("div");
-      cursor.setAttribute("data-openpatch-recording-cursor", "");
+      cursor.setAttribute("data-patch-the-web-recording-cursor", "");
       Object.assign(cursor.style, {
         position: "fixed", zIndex: "2147483647", width: "22px", height: "22px",
         margin: "-11px 0 0 -11px", border: "3px solid white", borderRadius: "50%",
@@ -99,6 +99,7 @@ let popupOneCreatedAt;
 let popupTwoCreatedAt;
 const overlays = [];
 try {
+  await Promise.all(context.pages().map((page) => page.close().catch(() => undefined)));
   let worker = context.serviceWorkers()[0];
   if (!worker) worker = await context.waitForEvent("serviceworker");
   const extensionId = new URL(worker.url()).host;
@@ -126,24 +127,25 @@ try {
   });
 
   await runSection(1, async () => {
-    const downloadLink = mainPage.locator('.hero-actions a[href="/downloads/openpatch-extension-v0.8.0.zip"]');
+    const downloadLink = mainPage.locator('.hero-actions a[href="/downloads/patch-the-web-extension-v0.8.0.zip"]');
     if (await downloadLink.count() !== 1) throw new Error("The public v0.8.0 extension link is missing.");
     await pointAt(mainPage, downloadLink);
     const downloadPromise = mainPage.waitForEvent("download");
     await downloadLink.click();
-    await downloadPromise;
+    const download = await downloadPromise;
+    if (!await download.path()) throw new Error("The public extension download did not finish.");
     await wait(1_200);
     await mainPage.goto("chrome://extensions/");
     await mainPage.locator("extensions-manager").waitFor({ state: "attached" });
-    const extensionCard = mainPage.locator("extensions-item").filter({ hasText: "OpenPatch" });
-    if (await extensionCard.count() !== 1) throw new Error("Chrome did not show the OpenPatch extension card.");
+    const extensionCard = mainPage.locator("extensions-item").filter({ hasText: "Patch the Web" });
+    if (await extensionCard.count() !== 1) throw new Error("Chrome did not show the Patch the Web extension card.");
     await extensionCard.scrollIntoViewIfNeeded();
   });
 
   await runSection(2, async () => {
     await mainPage.goto(careUrl, { waitUntil: "networkidle" });
     if (await mainPage.locator(".care-service").count() !== 12) throw new Error("The original directory did not show twelve services.");
-    if (await mainPage.locator(".openpatch-navigator").count() !== 0) throw new Error("The clean browser unexpectedly started repaired.");
+    if (await mainPage.locator(".patch-the-web-navigator").count() !== 0) throw new Error("The clean browser unexpectedly started repaired.");
     await mainPage.locator("#services").scrollIntoViewIfNeeded();
     await wait(800);
     await mainPage.mouse.wheel(0, 320);
@@ -163,9 +165,12 @@ try {
     const installButton = popupOne.locator("#install-button");
     await pointAt(popupOne, installButton);
     await installButton.click();
-    await mainPage.locator(".openpatch-navigator").waitFor({ state: "visible", timeout: 20_000 });
+    await mainPage.locator(".patch-the-web-navigator").waitFor({ state: "visible", timeout: 20_000 });
     overlays[0].endMs = Date.now() - recordingStartedAt;
-    await mainPage.locator(".openpatch-navigator").scrollIntoViewIfNeeded();
+    await popupOne.close();
+    await popupOneVideo.saveAs(popupOnePath);
+    popupOne = undefined;
+    await mainPage.locator(".patch-the-web-navigator").scrollIntoViewIfNeeded();
     await mainPage.getByText("12 of 12 services match", { exact: true }).waitFor({ state: "visible" });
   });
 
@@ -178,12 +183,12 @@ try {
     await visibleClick(mainPage, northside);
     await wait(500);
     await visibleClick(mainPage, mainPage.getByRole("button", { name: "Compare selected" }));
-    await mainPage.locator(".openpatch-compare table").waitFor({ state: "visible" });
+    await mainPage.locator(".patch-the-web-compare table").waitFor({ state: "visible" });
   });
 
   await runSection(6, async () => {
     await visibleClick(mainPage, mainPage.getByRole("button", { name: "Close comparison" }));
-    await mainPage.locator(".openpatch-navigator").scrollIntoViewIfNeeded();
+    await mainPage.locator(".patch-the-web-navigator").scrollIntoViewIfNeeded();
     const filters = [
       [mainPage.locator("select[id$='-access']"), "wheelchair"],
       [mainPage.locator("select[id$='-language']"), "urdu"],
@@ -201,8 +206,8 @@ try {
   await runSection(7, async () => {
     await wait(700);
     await mainPage.reload({ waitUntil: "networkidle" });
-    await mainPage.locator(".openpatch-navigator").waitFor({ state: "visible" });
-    await mainPage.locator(".openpatch-navigator").scrollIntoViewIfNeeded();
+    await mainPage.locator(".patch-the-web-navigator").waitFor({ state: "visible" });
+    await mainPage.locator(".patch-the-web-navigator").scrollIntoViewIfNeeded();
     await mainPage.getByText("1 of 12 services match", { exact: true }).waitFor({ state: "visible" });
     const persisted = await Promise.all([
       mainPage.locator("select[id$='-access']").inputValue(),
@@ -228,16 +233,17 @@ try {
     await popupTwo.locator("footer").scrollIntoViewIfNeeded();
     overlays[1].endMs = Date.now() - recordingStartedAt + Math.max(0, Number(timings.sections[9].durationMs) - 2_000);
   });
+  await popupTwo.close();
+  await popupTwoVideo.saveAs(popupTwoPath);
+  popupTwo = undefined;
+  await mainPage.close();
+  await mainVideo.saveAs(mainVideoPath);
+  mainPage = undefined;
 } finally {
   const recordingEndedAt = Date.now();
   if (overlays[1] && !overlays[1].endMs) overlays[1].endMs = recordingEndedAt - recordingStartedAt;
-  const savePromises = [
-    mainVideo?.saveAs(mainVideoPath),
-    popupOneVideo?.saveAs(popupOnePath),
-    popupTwoVideo?.saveAs(popupTwoPath)
-  ].filter(Boolean);
+  await Promise.all(context.pages().map((page) => page.close().catch(() => undefined)));
   await context.close().catch(() => undefined);
-  await Promise.all(savePromises);
   if (profilePath.startsWith(profilePrefix)) await rm(profilePath, { recursive: true, force: true }).catch(() => undefined);
 }
 const manifest = {

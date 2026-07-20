@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author a Patch the Web repair"
+  short_description: "Turn missing web capabilities into safe, tested features"
+  default_prompt: "Use $patch-the-web-author to inspect this broken website and author a safe, tested community repair."

@@ -3,12 +3,12 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 import { preflightPatchOnDocument } from "../src/core/preflight";
-import civicPatchJson from "../src/registry/patches/civic-apply.openpatch.json";
-import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.openpatch.json";
-import type { OpenPatch } from "../src/core/types";
+import civicPatchJson from "../src/registry/patches/civic-apply.patch-the-web.json";
+import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
+import type { CommunityPatch } from "../src/core/types";
 
 const fixture = readFileSync(resolve(import.meta.dirname, "../src/site/demo/index.html"), "utf8");
-const patch = civicPatchJson as OpenPatch;
+const patch = civicPatchJson as CommunityPatch;
 const careFixture = readFileSync(resolve(import.meta.dirname, "../src/site/care/index.html"), "utf8");
 
 describe("in-extension selector preflight", () => {
@@ -41,7 +41,7 @@ describe("collection navigator selector preflight", () => {
   });
 
   it("verifies the exact container and all service items", () => {
-    const result = preflightPatchOnDocument(metroCarePatchJson as OpenPatch);
+    const result = preflightPatchOnDocument(metroCarePatchJson as CommunityPatch);
     expect(result.total).toBe(11);
     expect(result.healthy).toBe(11);
     expect(result.results.find((entry) => entry.id === "add-private-service-navigator")?.matched).toBe(12);
@@ -50,7 +50,7 @@ describe("collection navigator selector preflight", () => {
 
   it("fails closed when the directory container drifts", () => {
     document.getElementById("care-directory")?.removeAttribute("id");
-    const result = preflightPatchOnDocument(metroCarePatchJson as OpenPatch);
+    const result = preflightPatchOnDocument(metroCarePatchJson as CommunityPatch);
     expect(result.results.find((entry) => entry.id === "add-private-service-navigator")?.healthy).toBe(false);
     expect(result.results.find((entry) => entry.id === "add-private-service-comparison")?.healthy).toBe(false);
   });
