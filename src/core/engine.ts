@@ -1,4 +1,5 @@
 import type {
+  CollectionCompareOperation,
   CollectionFilterOperation,
   FieldRule,
   OpenPatch,
@@ -79,11 +80,66 @@ function installTrustedUiStyles(document: Document) {
       color: #176248; background: #fff; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
     }
     .openpatch-navigator__clear:focus-visible { outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 2px; }
+    .openpatch-compare {
+      margin: -8px 0 26px;
+      padding: 18px 20px;
+      border: 1px solid #245d4a;
+      border-radius: 18px;
+      color: #fff;
+      background: linear-gradient(135deg, #123a2d, #1d5a45);
+      box-shadow: 0 16px 34px rgba(20, 68, 51, .16);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .openpatch-compare__bar { display: flex; align-items: center; gap: 16px; }
+    .openpatch-compare__mark {
+      display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,.2); border-radius: 12px; color: #102f25; background: #70dfb2; font-weight: 900;
+    }
+    .openpatch-compare__copy { min-width: 180px; }
+    .openpatch-compare h2, .openpatch-compare h3 { margin: 0 0 3px; color: #fff; line-height: 1.2; }
+    .openpatch-compare h2 { font-size: 17px; }
+    .openpatch-compare h3 { font-size: 20px; }
+    .openpatch-compare p { margin: 0; color: #c8ded5; font-size: 11px; line-height: 1.45; }
+    .openpatch-compare__selection { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; }
+    .openpatch-compare__chip { padding: 6px 9px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #eaf8f2; background: rgba(255,255,255,.08); font-size: 10px; font-weight: 750; }
+    .openpatch-compare__actions { display: flex; gap: 7px; }
+    .openpatch-compare__action, .openpatch-compare__close {
+      min-height: 36px; padding: 8px 11px; border: 1px solid rgba(255,255,255,.24); border-radius: 9px;
+      color: #12382c; background: #72e0b2; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
+    }
+    .openpatch-compare__action.secondary, .openpatch-compare__close { color: #e9f7f1; background: transparent; }
+    .openpatch-compare__action:disabled { color: #8bb5a5; background: #2b604d; cursor: not-allowed; }
+    .openpatch-compare__action:focus-visible, .openpatch-compare__close:focus-visible, .openpatch-compare__select:focus-visible {
+      outline: 3px solid rgba(112, 223, 178, .3); outline-offset: 2px;
+    }
+    .openpatch-compare__select {
+      align-self: flex-start; margin: 14px 0 0; padding: 7px 10px; border: 1px solid #b9d4c8; border-radius: 9px;
+      color: #176248; background: #f5fbf8; font: 800 10px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
+    }
+    .openpatch-compare__select[aria-pressed="true"] { border-color: #167e59; color: #fff; background: #167e59; }
+    .openpatch-compare__select:disabled { opacity: .48; cursor: not-allowed; }
+    [data-openpatch-compared] { box-shadow: 0 0 0 3px rgba(22, 126, 89, .14), 0 12px 30px rgba(29, 77, 58, .07) !important; }
+    .openpatch-compare__result { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.18); }
+    .openpatch-compare__result-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 13px; }
+    .openpatch-compare__table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; }
+    .openpatch-compare table { width: 100%; min-width: 560px; border-collapse: collapse; color: #18372b; background: #fff; font-size: 11px; }
+    .openpatch-compare th, .openpatch-compare td { padding: 11px 13px; border-bottom: 1px solid #e1ebe6; text-align: left; vertical-align: top; }
+    .openpatch-compare thead th { color: #10392b; background: #eef8f3; font-size: 11px; }
+    .openpatch-compare tbody th { width: 18%; color: #5c7168; background: #f8fbfa; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+    .openpatch-compare tr:last-child th, .openpatch-compare tr:last-child td { border-bottom: 0; }
+    .openpatch-compare__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     @media (max-width: 760px) {
       .openpatch-navigator { padding: 18px; border-radius: 16px; }
       .openpatch-navigator__controls { grid-template-columns: 1fr; }
       .openpatch-navigator__receipt { align-items: flex-start; flex-wrap: wrap; }
       .openpatch-navigator__privacy { width: 100%; margin-left: 0 !important; }
+      .openpatch-compare { margin-top: -6px; padding: 16px; }
+      .openpatch-compare__bar { align-items: flex-start; flex-wrap: wrap; }
+      .openpatch-compare__copy { flex: 1; }
+      .openpatch-compare__selection { width: 100%; justify-content: flex-start; order: 3; }
+      .openpatch-compare__actions { width: 100%; order: 4; }
+      .openpatch-compare__action { flex: 1; }
+      .openpatch-compare__result-head { flex-direction: column; }
     }
   `;
   document.head.append(style);
@@ -243,7 +299,7 @@ function setupValidation(operation: ValidationOperation, context: BrowserContext
 }
 
 function splitAttributeTokens(value: string | null) {
-  return (value ?? "").toLowerCase().split(/[\s,|]+/).filter(Boolean);
+  return (value ?? "").slice(0, 4096).toLowerCase().split(/[\s,|]+/).filter(Boolean).slice(0, 100);
 }
 
 function setupCollectionFilter(
@@ -402,6 +458,202 @@ function setupCollectionFilter(
   return { matched: items.length, detail: `${items.length} items filterable` };
 }
 
+function setupCollectionCompare(
+  operation: CollectionCompareOperation,
+  context: BrowserContext,
+  container: HTMLElement
+) {
+  const { document } = context;
+  const items = [...container.querySelectorAll<HTMLElement>(operation.items)].slice(0, MAX_MATCHES);
+  const titledItems = items.map((item) => ({
+    item,
+    title: item.getAttribute(operation.itemTitleAttribute)?.trim().slice(0, 120) ?? ""
+  }));
+  const titles = titledItems.map(({ title }) => title);
+  if (items.length < 2 || titles.some((title) => !title) || new Set(titles).size !== titles.length) {
+    return { matched: items.length, applied: false, detail: "comparison requires unique declared item titles" };
+  }
+
+  const panel = document.createElement("section");
+  panel.className = "openpatch-compare";
+  panel.dataset.openpatchOwned = "true";
+  panel.setAttribute("aria-label", operation.title);
+
+  const bar = document.createElement("div");
+  bar.className = "openpatch-compare__bar";
+  const mark = document.createElement("span");
+  mark.className = "openpatch-compare__mark";
+  mark.setAttribute("aria-hidden", "true");
+  mark.textContent = "⇄";
+  const copy = document.createElement("div");
+  copy.className = "openpatch-compare__copy";
+  const title = document.createElement("h2");
+  title.textContent = operation.title;
+  const description = document.createElement("p");
+  description.textContent = operation.description;
+  copy.append(title, description);
+
+  const selection = document.createElement("div");
+  selection.className = "openpatch-compare__selection";
+  const actions = document.createElement("div");
+  actions.className = "openpatch-compare__actions";
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "openpatch-compare__action secondary";
+  clear.textContent = "Clear";
+  const compare = document.createElement("button");
+  compare.type = "button";
+  compare.className = "openpatch-compare__action";
+  compare.textContent = "Compare selected";
+  compare.disabled = true;
+  actions.append(clear, compare);
+  bar.append(mark, copy, selection, actions);
+
+  const liveStatus = document.createElement("p");
+  liveStatus.className = "openpatch-compare__status";
+  liveStatus.setAttribute("role", "status");
+  liveStatus.setAttribute("aria-live", "polite");
+
+  const result = document.createElement("section");
+  result.className = "openpatch-compare__result";
+  result.hidden = true;
+  const resultHead = document.createElement("div");
+  resultHead.className = "openpatch-compare__result-head";
+  const resultCopy = document.createElement("div");
+  const resultTitle = document.createElement("h3");
+  resultTitle.id = `openpatch-compare-title-${operation.id}`;
+  resultTitle.tabIndex = -1;
+  resultTitle.textContent = "Service comparison";
+  const resultDescription = document.createElement("p");
+  resultDescription.id = `openpatch-compare-description-${operation.id}`;
+  resultDescription.textContent = "A private side-by-side view built only from the declared directory fields.";
+  result.setAttribute("aria-labelledby", resultTitle.id);
+  result.setAttribute("aria-describedby", resultDescription.id);
+  resultCopy.append(resultTitle, resultDescription);
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "openpatch-compare__close";
+  close.textContent = "Close comparison";
+  resultHead.append(resultCopy, close);
+  const tableWrap = document.createElement("div");
+  tableWrap.className = "openpatch-compare__table-wrap";
+  result.append(resultHead, tableWrap);
+  panel.append(bar, liveStatus, result);
+
+  const navigator = [...container.children].find((element) => element.classList.contains("openpatch-navigator"));
+  if (navigator) navigator.insertAdjacentElement("afterend", panel);
+  else container.prepend(panel);
+
+  const selectedItems = new Set<HTMLElement>();
+  const buttons = titledItems.map(({ item, title: itemTitle }) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "openpatch-compare__select";
+    button.dataset.openpatchOwned = "true";
+    button.setAttribute("aria-pressed", "false");
+    button.setAttribute("aria-label", `Add ${itemTitle} to comparison`);
+    button.textContent = "Compare";
+    const link = item.querySelector("a[href]");
+    if (link) link.insertAdjacentElement("beforebegin", button);
+    else item.append(button);
+    return { item, itemTitle, button };
+  });
+
+  const displayValue = (item: HTMLElement, field: CollectionCompareOperation["fields"][number]) => {
+    const tokens = new Set(splitAttributeTokens(item.getAttribute(field.attribute)));
+    const labels = field.values
+      .filter((option) => tokens.has(option.value.toLowerCase()))
+      .map((option) => option.label);
+    return labels.length > 0 ? labels.join(", ") : "Not listed";
+  };
+
+  const renderSelection = () => {
+    selection.replaceChildren(...buttons
+      .filter(({ item }) => selectedItems.has(item))
+      .map(({ itemTitle }) => {
+        const chip = document.createElement("span");
+        chip.className = "openpatch-compare__chip";
+        chip.textContent = itemTitle;
+        return chip;
+      }));
+    const count = selectedItems.size;
+    compare.disabled = count < 2;
+    clear.disabled = count === 0;
+    buttons.forEach(({ item, itemTitle, button }) => {
+      const pressed = selectedItems.has(item);
+      button.setAttribute("aria-pressed", String(pressed));
+      button.setAttribute("aria-label", `${pressed ? "Remove" : "Add"} ${itemTitle} ${pressed ? "from" : "to"} comparison`);
+      button.textContent = pressed ? "Selected" : "Compare";
+      button.disabled = !pressed && count >= operation.maxItems;
+      item.toggleAttribute("data-openpatch-compared", pressed);
+    });
+    liveStatus.textContent = count === 0
+      ? `Choose 2 to ${operation.maxItems} items to compare.`
+      : count === 1
+        ? "1 item selected. Choose at least one more."
+        : `${count} items selected and ready to compare.`;
+    if (count < 2) result.hidden = true;
+  };
+
+  buttons.forEach(({ item, button }) => button.addEventListener("click", () => {
+    if (selectedItems.has(item)) selectedItems.delete(item);
+    else if (selectedItems.size < operation.maxItems) selectedItems.add(item);
+    renderSelection();
+  }));
+
+  compare.addEventListener("click", () => {
+    const chosen = buttons.filter(({ item }) => selectedItems.has(item));
+    if (chosen.length < 2) return;
+    const table = document.createElement("table");
+    table.setAttribute("aria-labelledby", resultTitle.id);
+    table.setAttribute("aria-describedby", resultDescription.id);
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    const criteriaHead = document.createElement("th");
+    criteriaHead.scope = "col";
+    criteriaHead.textContent = "What matters";
+    headRow.append(criteriaHead, ...chosen.map(({ itemTitle }) => {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = itemTitle;
+      return cell;
+    }));
+    thead.append(headRow);
+    const tbody = document.createElement("tbody");
+    operation.fields.forEach((field) => {
+      const row = document.createElement("tr");
+      const label = document.createElement("th");
+      label.scope = "row";
+      label.textContent = field.label;
+      row.append(label, ...chosen.map(({ item }) => {
+        const cell = document.createElement("td");
+        cell.textContent = displayValue(item, field);
+        return cell;
+      }));
+      tbody.append(row);
+    });
+    table.append(thead, tbody);
+    tableWrap.replaceChildren(table);
+    result.hidden = false;
+    liveStatus.textContent = `Comparison opened for ${chosen.length} items.`;
+    resultTitle.focus();
+    if (typeof result.scrollIntoView === "function") result.scrollIntoView({ block: "nearest" });
+  });
+
+  clear.addEventListener("click", () => {
+    selectedItems.clear();
+    result.hidden = true;
+    renderSelection();
+    (buttons.find(({ item }) => !item.hidden)?.button ?? compare).focus();
+  });
+  close.addEventListener("click", () => {
+    result.hidden = true;
+    compare.focus();
+  });
+  renderSelection();
+  return { matched: items.length, applied: true, detail: `${items.length} items safely comparable` };
+}
+
 function applyOperation(patch: OpenPatch, operation: PatchOperation, context: BrowserContext): OperationHealth {
   const { document, window } = context;
   try {
@@ -454,6 +706,12 @@ function applyOperation(patch: OpenPatch, operation: PatchOperation, context: Br
       if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one collection container" };
       const result = setupCollectionFilter(patch, operation, context, containers[0]);
       return { id: operation.id, type: operation.type, matched: result.matched, applied: result.matched > 0, detail: result.detail };
+    }
+    if (operation.type === "collectionCompare") {
+      const containers = selected(document, operation.selector);
+      if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one collection container" };
+      const result = setupCollectionCompare(operation, context, containers[0]);
+      return { id: operation.id, type: operation.type, matched: result.matched, applied: result.applied, detail: result.detail };
     }
     const containers = selected(document, operation.container);
     if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one navigation container" };

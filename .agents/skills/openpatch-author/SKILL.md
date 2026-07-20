@@ -1,6 +1,6 @@
 ---
 name: openpatch-author
-description: Inspect a website complaint and author, validate, test, and package a domain-scoped OpenPatch repair using the constrained transformation DSL. Use when a user asks Codex to fix, simplify, restyle, reorganize, make accessible, add keyboard navigation or validation to, preserve form progress on, or remove an obstruction from a website they do not control; also use when updating or checking an existing .openpatch.json community patch.
+description: Inspect a website complaint or missing capability and author, validate, test, and package a domain-scoped OpenPatch repair using the constrained transformation DSL. Use when a user asks Codex to fix, simplify, restyle, reorganize, make accessible, add search, filtering, comparison, keyboard navigation, validation, or safe local persistence to a website they do not control; also use when updating or checking an existing .openpatch.json community patch.
 ---
 
 # Author an OpenPatch
@@ -41,6 +41,7 @@ Turn a concrete usability complaint into the smallest safe declarative repair. T
 
 5. Preflight and validate.
    - Run `npm run validate:patch -- <patch-path> <html-fixture-path>`.
+   - Before registry publication, run `npm run monitor:workspace -- src/registry/compatibility.json` to bind live selector evidence to the exact local patch bytes.
    - Treat any policy, selector, operation-health, or assertion failure as blocking.
    - Reinspect the live DOM after a failed selector; do not loosen it into a broad selector.
    - Record the SHA-256 receipt printed by the validator.
@@ -52,6 +53,7 @@ Turn a concrete usability complaint into the smallest safe declarative repair. T
    - For form persistence, enter synthetic data, reload, reapply the patch, and verify restoration.
    - For validation, verify specific visible messages, `aria-invalid`, and `aria-describedby`.
    - For keyboard navigation, verify focus movement with the declared arrow keys.
+   - For collection comparison, verify the selection limit, accessible live status, generated table labels, keyboard focus, and zero interaction requests.
    - Run `npm test` and `npm run test:browser`.
 
 7. Visually verify and prepare publication.
@@ -79,5 +81,6 @@ Return a concise receipt containing:
 - Healthy operations over total operations
 - Unit and browser test status
 - SHA-256 validation receipt
+- Live compatibility fingerprint
 - Before/after artifact paths
 - Any remaining risk or limitation

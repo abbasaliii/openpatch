@@ -59,6 +59,7 @@ const CAPABILITY_LABELS: Record<string, string> = {
   "keyboard-navigation": "Add arrow-key navigation within matched controls",
   validation: "Add local, accessible field validation",
   "content-filter": "Filter existing items using only declared data attributes",
+  "content-compare": "Compare existing items using only declared data attributes",
   "hide-elements": "Hide explicitly matched obstructive elements",
   reorganize: "Move matched elements within the same page"
 };
@@ -70,6 +71,7 @@ const CAPABILITY_CHIPS: Record<string, string> = {
   "keyboard-navigation": "Keyboard controls",
   validation: "Accessible errors",
   "content-filter": "Private filters",
+  "content-compare": "Private comparison",
   "hide-elements": "Remove obstruction",
   reorganize: "Simplified workflow"
 };

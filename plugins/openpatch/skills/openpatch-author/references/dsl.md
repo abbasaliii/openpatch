@@ -173,6 +173,45 @@ Add a trusted, accessible search-and-filter navigator to one existing collection
 
 Capabilities: `content-filter`, `accessibility`, and `keyboard-navigation`; also `local-storage` when `persist` is present. The collection selector must match exactly one element, every searchable field and facet must name a safe `data-*` attribute, filters expire within seven days, and the runtime caps the collection at 100 items. `/` focuses search and Escape clears it.
 
+### `collectionCompare`
+
+Add a trusted, accessible side-by-side comparison to an existing collection. The runtime creates selection controls and the comparison table. The patch can declare only safe `data-*` attributes and bounded value-to-label maps; it cannot provide HTML, scripts, callbacks, templates, or URLs.
+
+```json
+{
+  "id": "compare-services",
+  "type": "collectionCompare",
+  "selector": "#service-directory",
+  "items": ".service-card",
+  "title": "Compare services privately",
+  "description": "Choose up to three services for a side-by-side view.",
+  "itemTitleAttribute": "data-service-name",
+  "maxItems": 3,
+  "fields": [
+    {
+      "id": "access",
+      "label": "Access options",
+      "attribute": "data-access",
+      "values": [
+        { "value": "wheelchair", "label": "Wheelchair access" },
+        { "value": "telehealth", "label": "Telehealth" }
+      ]
+    },
+    {
+      "id": "language",
+      "label": "Languages",
+      "attribute": "data-languages",
+      "values": [
+        { "value": "urdu", "label": "Urdu" },
+        { "value": "spanish", "label": "Spanish" }
+      ]
+    }
+  ]
+}
+```
+
+Capabilities: `content-compare`, `accessibility`, and `keyboard-navigation`. The collection must match exactly one container with at least two items, every item must have a unique non-empty title in the declared title attribute, `maxItems` must be 2–4, and every comparison field must use a safe `data-*` attribute with an explicit bounded display map. The runtime caps the collection at 100 items and sends no interaction data.
+
 ## Assertions
 
 Use `exists` to lock selector counts and `attribute` to verify repaired semantics.

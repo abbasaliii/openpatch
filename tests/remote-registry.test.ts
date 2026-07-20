@@ -17,6 +17,7 @@ const registryFixture: PublicRegistryIndex = {
     scope: metroCarePatch.match,
     capabilities: [
       "content-filter",
+      "content-compare",
       "accessibility",
       "keyboard-navigation",
       "local-storage",
@@ -25,16 +26,16 @@ const registryFixture: PublicRegistryIndex = {
       "reorganize"
     ],
     download: "/registry/patches/metrocare-service-navigator.openpatch.json",
-    sha256: "c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698",
-    verification: { status: "verified", operations: 10, assertions: 8 },
+    sha256: "8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d",
+    verification: { status: "verified", operations: 11, assertions: 10 },
     compatibility: {
       status: "healthy",
       checkedAt: "2026-07-20T00:52:08.768Z",
       pageUrl: "https://openpatch-tau.vercel.app/care/",
-      patchSha256: "c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698",
-      healthy: 10,
-      total: 10,
-      fingerprint: "a718426872e03f687ddb31a6844bea09f1051b19951410fc3103b2df15d110b9",
+      patchSha256: "8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d",
+      healthy: 11,
+      total: 11,
+      fingerprint: "3e0a80a64a09c90f056df16f18b9b7141cc95956d8a5cab4fa6ade9da2d5c9ff",
       driftedOperationIds: []
     }
   }]
@@ -67,7 +68,7 @@ describe("public registry discovery", () => {
   it("quarantines a patch whose live compatibility receipt reports drift", () => {
     const drifted = structuredClone(registryFixture);
     drifted.patches[0].compatibility!.status = "drifted";
-    drifted.patches[0].compatibility!.healthy = 9;
+    drifted.patches[0].compatibility!.healthy = 10;
     drifted.patches[0].compatibility!.driftedOperationIds = ["add-private-service-navigator"];
     const parsed = parsePublicRegistry(drifted);
     expect(parsed).not.toBeNull();

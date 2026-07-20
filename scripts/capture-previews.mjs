@@ -36,6 +36,12 @@ try {
   await careDesktop.screenshot({ path: resolve(previewDir, "metrocare-before-desktop.png"), fullPage: true });
   await careDesktop.addScriptTag({ path: runtimePath });
   await careDesktop.evaluate(() => window.__applyMetroCarePatch());
+  await careDesktop.getByRole("button", { name: "Add Harbor Family Clinic to comparison" }).click();
+  await careDesktop.getByRole("button", { name: "Add Northside Community Health to comparison" }).click();
+  await careDesktop.getByRole("button", { name: "Compare selected" }).click();
+  await careDesktop.screenshot({ path: resolve(previewDir, "metrocare-compare-desktop.png"), fullPage: true });
+  await careDesktop.getByRole("button", { name: "Close comparison" }).click();
+  await careDesktop.getByRole("button", { name: "Clear", exact: true }).click();
   await careDesktop.locator("select[id$='-access']").selectOption("wheelchair");
   await careDesktop.locator("select[id$='-language']").selectOption("urdu");
   await careDesktop.locator("select[id$='-availability']").selectOption("new-patients");

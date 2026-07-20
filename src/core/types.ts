@@ -5,6 +5,7 @@ export type PatchCapability =
   | "keyboard-navigation"
   | "validation"
   | "content-filter"
+  | "content-compare"
   | "hide-elements"
   | "reorganize";
 
@@ -93,6 +94,23 @@ export type CollectionFilterOperation = {
   };
 };
 
+export type CollectionCompareOperation = {
+  id: string;
+  type: "collectionCompare";
+  selector: string;
+  items: string;
+  title: string;
+  description: string;
+  itemTitleAttribute: string;
+  maxItems: number;
+  fields: Array<{
+    id: string;
+    label: string;
+    attribute: string;
+    values: Array<{ value: string; label: string }>;
+  }>;
+};
+
 export type PatchOperation =
   | StyleOperation
   | AttributeOperation
@@ -101,7 +119,8 @@ export type PatchOperation =
   | PersistFormOperation
   | ValidationOperation
   | KeyboardNavigationOperation
-  | CollectionFilterOperation;
+  | CollectionFilterOperation
+  | CollectionCompareOperation;
 
 export type PatchAssertion =
   | { type: "exists"; selector: string; min?: number; max?: number }

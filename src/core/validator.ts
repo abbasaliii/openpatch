@@ -13,6 +13,7 @@ const CAPABILITIES = new Set<PatchCapability>([
   "keyboard-navigation",
   "validation",
   "content-filter",
+  "content-compare",
   "hide-elements",
   "reorganize"
 ]);
@@ -123,13 +124,13 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
     issues.push({ path: `${base}.id`, message: "must use 3-80 lowercase letters, numbers, dots, dashes, or underscores" });
   }
   const type = value.type;
-  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter"];
+  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter", "collectionCompare"];
   if (typeof type !== "string" || !known.includes(type)) {
     issues.push({ path: `${base}.type`, message: "is not an allowed transformation" });
     return;
   }
 
-  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter"].includes(type)) {
+  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter", "collectionCompare"].includes(type)) {
     checkSelector(value.selector, `${base}.selector`, issues);
   }
 
@@ -306,6 +307,54 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
       }
     }
   }
+
+  if (type === "collectionCompare") {
+    checkSelector(value.items, `${base}.items`, issues);
+    if (!text(value.title, 80)) issues.push({ path: `${base}.title`, message: "must be a concise comparison title" });
+    if (!text(value.description, 180)) issues.push({ path: `${base}.description`, message: "must explain the comparison feature" });
+    if (typeof value.itemTitleAttribute !== "string" || !SAFE_DATA_ATTRIBUTE.test(value.itemTitleAttribute)) {
+      issues.push({ path: `${base}.itemTitleAttribute`, message: "must read one safe data-* attribute" });
+    }
+    if (!Number.isInteger(value.maxItems) || Number(value.maxItems) < 2 || Number(value.maxItems) > 4) {
+      issues.push({ path: `${base}.maxItems`, message: "must allow comparison of 2-4 items" });
+    }
+    if (!Array.isArray(value.fields) || value.fields.length < 2 || value.fields.length > 8) {
+      issues.push({ path: `${base}.fields`, message: "must define 2-8 comparison fields" });
+    } else {
+      value.fields.forEach((field, fieldIndex) => {
+        const fieldPath = `${base}.fields[${fieldIndex}]`;
+        if (!isRecord(field)) {
+          issues.push({ path: fieldPath, message: "must be an object" });
+          return;
+        }
+        if (!text(field.id, 40) || !SAFE_TOKEN.test(String(field.id))) issues.push({ path: `${fieldPath}.id`, message: "must be a stable field id" });
+        if (!text(field.label, 80)) issues.push({ path: `${fieldPath}.label`, message: "must label the comparison field" });
+        if (typeof field.attribute !== "string" || !SAFE_DATA_ATTRIBUTE.test(field.attribute)) {
+          issues.push({ path: `${fieldPath}.attribute`, message: "must read one safe data-* attribute" });
+        }
+        if (!Array.isArray(field.values) || field.values.length === 0 || field.values.length > 16) {
+          issues.push({ path: `${fieldPath}.values`, message: "must define 1-16 bounded display values" });
+          return;
+        }
+        field.values.forEach((option, optionIndex) => {
+          const optionPath = `${fieldPath}.values[${optionIndex}]`;
+          if (!isRecord(option) || !text(option.label, 60) || !text(option.value, 40) || !SAFE_TOKEN.test(String(option.value))) {
+            issues.push({ path: optionPath, message: "must contain a safe value and visible label" });
+          }
+        });
+        const optionValues = field.values
+          .filter(isRecord)
+          .map((option) => option.value)
+          .filter((option): option is string => typeof option === "string");
+        if (new Set(optionValues).size !== optionValues.length) issues.push({ path: `${fieldPath}.values`, message: "display values must be unique" });
+      });
+      const fieldIds = value.fields
+        .filter(isRecord)
+        .map((field) => field.id)
+        .filter((field): field is string => typeof field === "string");
+      if (new Set(fieldIds).size !== fieldIds.length) issues.push({ path: `${base}.fields`, message: "comparison field ids must be unique" });
+    }
+  }
 }
 
 export function validatePatch(value: unknown): ValidationResult {
@@ -408,6 +457,11 @@ export function requiredCapabilities(operations: PatchOperation[]): PatchCapabil
       result.add("accessibility");
       result.add("keyboard-navigation");
       if (operation.persist) result.add("local-storage");
+    }
+    if (operation.type === "collectionCompare") {
+      result.add("content-compare");
+      result.add("accessibility");
+      result.add("keyboard-navigation");
     }
   }
   return [...result];

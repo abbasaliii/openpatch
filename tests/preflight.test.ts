@@ -42,14 +42,16 @@ describe("collection navigator selector preflight", () => {
 
   it("verifies the exact container and all service items", () => {
     const result = preflightPatchOnDocument(metroCarePatchJson as OpenPatch);
-    expect(result.total).toBe(10);
-    expect(result.healthy).toBe(10);
+    expect(result.total).toBe(11);
+    expect(result.healthy).toBe(11);
     expect(result.results.find((entry) => entry.id === "add-private-service-navigator")?.matched).toBe(12);
+    expect(result.results.find((entry) => entry.id === "add-private-service-comparison")?.matched).toBe(12);
   });
 
   it("fails closed when the directory container drifts", () => {
     document.getElementById("care-directory")?.removeAttribute("id");
     const result = preflightPatchOnDocument(metroCarePatchJson as OpenPatch);
     expect(result.results.find((entry) => entry.id === "add-private-service-navigator")?.healthy).toBe(false);
+    expect(result.results.find((entry) => entry.id === "add-private-service-comparison")?.healthy).toBe(false);
   });
 });

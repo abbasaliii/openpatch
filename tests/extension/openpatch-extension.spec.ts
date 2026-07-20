@@ -108,8 +108,8 @@ test("the production extension discovers and installs MetroCare from the verifie
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(popup.locator("#registry-match")).toBeVisible();
   await expect(popup.locator("#registry-match-name")).toContainText("MetroCare: personal service navigator");
-  await expect(popup.locator("#registry-match-proof")).toContainText("live compatibility 10/10");
-  await expect(popup.locator("#import-health")).toHaveText("10/10 operation targets healthy");
+  await expect(popup.locator("#registry-match-proof")).toContainText("live compatibility 11/11");
+  await expect(popup.locator("#import-health")).toHaveText("11/11 operation targets healthy");
   await expect(popup.locator("#import-status")).toContainText("Verified and healthy");
   await popup.locator("body").screenshot({
     path: resolve(import.meta.dirname, "../../submission-assets/openpatch-registry-discovery.png")
@@ -131,7 +131,7 @@ test("the production extension discovers and installs MetroCare from the verifie
   await page.locator("select[id$='-language']").selectOption("urdu");
   await page.locator("select[id$='-availability']").selectOption("new-patients");
   await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
-  await expect(page.locator("html")).toHaveAttribute("data-openpatch-applied", /org\.openpatch\.metrocare-service-navigator@1\.0\.0/);
+  await expect(page.locator("html")).toHaveAttribute("data-openpatch-applied", /org\.openpatch\.metrocare-service-navigator@1\.1\.0/);
 });
 
 test("the registry-installed feature also runs on the real public MetroCare domain", async () => {

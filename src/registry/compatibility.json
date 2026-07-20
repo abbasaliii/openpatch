@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-20T00:56:50.657Z",
-  "registryUrl": "https://openpatch-tau.vercel.app/registry/index.json",
+  "generatedAt": "2026-07-20T01:45:06.950Z",
+  "registryUrl": "workspace:src/registry/patches",
   "summary": {
     "healthy": 2,
     "drifted": 0,
@@ -14,7 +14,7 @@
       "version": "1.2.0",
       "pageUrl": "https://openpatch-tau.vercel.app/demo/",
       "status": "healthy",
-      "checkedAt": "2026-07-20T00:56:50.657Z",
+      "checkedAt": "2026-07-20T01:45:06.950Z",
       "patchSha256": "34427b68a8004c90edd33c287db8472cb356854215ba3a8d46c26032674d2721",
       "healthy": 19,
       "total": 19,
@@ -120,18 +120,23 @@
     },
     {
       "id": "org.openpatch.metrocare-service-navigator",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "pageUrl": "https://openpatch-tau.vercel.app/care/",
       "status": "healthy",
-      "checkedAt": "2026-07-20T00:56:50.657Z",
-      "patchSha256": "c29721ef80b69bfda17315b556850f863bfdcb9f99d02c398902ca993b869698",
-      "healthy": 10,
-      "total": 10,
-      "fingerprint": "a718426872e03f687ddb31a6844bea09f1051b19951410fc3103b2df15d110b9",
+      "checkedAt": "2026-07-20T01:45:06.950Z",
+      "patchSha256": "8526e7043293aff8053e8d2814b44d6a29af34bec329ebcd9df4efcf70973f9d",
+      "healthy": 11,
+      "total": 11,
+      "fingerprint": "3e0a80a64a09c90f056df16f18b9b7141cc95956d8a5cab4fa6ade9da2d5c9ff",
       "driftedOperationIds": [],
       "results": [
         {
           "id": "add-private-service-navigator",
+          "matched": 12,
+          "healthy": true
+        },
+        {
+          "id": "add-private-service-comparison",
           "matched": 12,
           "healthy": true
         },

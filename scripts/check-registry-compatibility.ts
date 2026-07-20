@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { chromium } from "playwright";
 import {
@@ -23,6 +23,8 @@ const positionalOutput = process.argv.slice(2).find((argument) => !argument.star
 const registryUrl = option("--registry", "https://openpatch-tau.vercel.app/registry/index.json");
 const outputPath = resolve(option("--out", positionalOutput ?? "compatibility-report.json"));
 const runtimePath = resolve(import.meta.dirname, "../dist/test/preflight-runtime.js");
+const patchSourceDir = resolve(import.meta.dirname, "../src/registry/patches");
+const workspaceMode = process.argv.includes("--workspace");
 const checkedAt = new Date().toISOString();
 
 function publicPageUrl(patch: OpenPatch) {
@@ -32,20 +34,53 @@ function publicPageUrl(patch: OpenPatch) {
   return new URL(path, `https://${host}`).toString();
 }
 
-const indexResponse = await fetch(registryUrl, { cache: "no-store" });
-if (!indexResponse.ok) throw new Error(`Registry returned ${indexResponse.status}.`);
-const index = parsePublicRegistry(await indexResponse.json());
-if (!index) throw new Error("Registry metadata failed its safety policy.");
+type MonitorEntry = {
+  id: string;
+  version: string;
+  sha256: string;
+  scope: OpenPatch["match"];
+  verification: { operations: number };
+  raw?: string;
+  download?: string;
+};
+
+let entries: MonitorEntry[];
+if (workspaceMode) {
+  const files = (await readdir(patchSourceDir)).filter((file) => file.endsWith(".openpatch.json")).sort();
+  entries = await Promise.all(files.map(async (file) => {
+    const raw = await readFile(resolve(patchSourceDir, file), "utf8");
+    const validation = validatePatch(JSON.parse(raw) as unknown);
+    if (!validation.ok) throw new Error(`${file} failed policy at ${validation.issues[0]?.path}.`);
+    return {
+      id: validation.patch.id,
+      version: validation.patch.version,
+      sha256: createHash("sha256").update(raw).digest("hex"),
+      scope: validation.patch.match,
+      verification: { operations: validation.patch.operations.length },
+      raw
+    };
+  }));
+} else {
+  const indexResponse = await fetch(registryUrl, { cache: "no-store" });
+  if (!indexResponse.ok) throw new Error(`Registry returned ${indexResponse.status}.`);
+  const index = parsePublicRegistry(await indexResponse.json());
+  if (!index) throw new Error("Registry metadata failed its safety policy.");
+  entries = index.patches;
+}
 
 const browser = await chromium.launch({ headless: true });
 const reports: PatchCompatibilityReport[] = [];
 try {
-  for (const entry of index.patches) {
+  for (const entry of entries) {
     let pageUrl = `https://${entry.scope.hosts[0]}/`;
     try {
-      const patchResponse = await fetch(new URL(entry.download, new URL(registryUrl).origin), { cache: "no-store" });
-      if (!patchResponse.ok) throw new Error(`Patch download returned ${patchResponse.status}.`);
-      const raw = await patchResponse.text();
+      let raw = entry.raw;
+      if (!raw) {
+        if (!entry.download) throw new Error("Registry entry has no patch download.");
+        const patchResponse = await fetch(new URL(entry.download, new URL(registryUrl).origin), { cache: "no-store" });
+        if (!patchResponse.ok) throw new Error(`Patch download returned ${patchResponse.status}.`);
+        raw = await patchResponse.text();
+      }
       const sha256 = createHash("sha256").update(raw).digest("hex");
       if (sha256 !== entry.sha256) throw new Error("Registry SHA-256 receipt does not match the patch bytes.");
       const validation = validatePatch(JSON.parse(raw) as unknown);
@@ -103,7 +138,7 @@ try {
 const report: RegistryCompatibilityReport = {
   schemaVersion: 1,
   generatedAt: checkedAt,
-  registryUrl,
+  registryUrl: workspaceMode ? "workspace:src/registry/patches" : registryUrl,
   summary: summarizeCompatibility(reports),
   patches: reports
 };
