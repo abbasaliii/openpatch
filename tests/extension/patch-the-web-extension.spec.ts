@@ -70,6 +70,12 @@ test("the production extension loads validated local patches and the bundled rep
     await chrome.storage.local.set({ installedPatches, enabledPatches });
   }, { importedPatch, patchId });
 
+  const control = await context.newPage();
+  const extensionId = new URL(worker.url()).host;
+  await control.goto(`chrome-extension://${extensionId}/welcome.html`);
+  await control.evaluate(async () => chrome.runtime.sendMessage({ type: "PATCH_THE_WEB_REFRESH_RUNTIME" }));
+  await control.close();
+
   await expect.poll(async () => worker.evaluate(async () => (await chrome.scripting.getRegisteredContentScripts()).length)).toBe(1);
 
   const page = await context.newPage();
@@ -88,7 +94,6 @@ test("the packaged extension repairs the real public demo domain", async () => {
     const enabledPatches = (stored.enabledPatches ?? {}) as Record<string, boolean>;
     enabledPatches["org.patchtheweb.civicapply-accessible-draft"] = true;
     await chrome.storage.local.set({ enabledPatches });
-    await chrome.runtime.sendMessage({ type: "PATCH_THE_WEB_REFRESH_RUNTIME" });
   });
 
   const publicMatches = "https://patch-the-web.vercel.app/demo/*";
