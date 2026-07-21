@@ -2,7 +2,7 @@ const boxes = [...document.querySelectorAll<HTMLInputElement>("[data-step]")];
 const progress = document.querySelector<HTMLElement>("#progress");
 const copyButton = document.querySelector<HTMLButtonElement>("#copy-address");
 const download = document.querySelector<HTMLAnchorElement>("#extension-download");
-const storageKey = "patch-the-web-install-checklist-v0.10.0";
+const storageKey = "patch-the-web-install-checklist-v0.11.0";
 
 function selectedSteps() {
   return boxes.filter((box) => box.checked).map((box) => box.dataset.step ?? "");

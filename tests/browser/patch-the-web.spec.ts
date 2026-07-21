@@ -141,7 +141,8 @@ test("the registry lets people browse verified community repairs safely", async 
   await expect(page.locator(".patch-card .scope")).toContainText("nu.edu.pk");
   await page.getByRole("button", { name: "View receipt" }).click();
   await expect(page.locator(".receipt-detail")).toContainText("4 tested transformations · 8 assertions");
-  const download = page.getByRole("link", { name: /Download patch/ });
+  await expect(page.getByRole("link", { name: /Open page to install/ })).toHaveAttribute("href", "https://nu.edu.pk/Degree-Programs");
+  const download = page.getByRole("link", { name: /Download JSON for author testing/ });
   await expect(download).toHaveAttribute("href", "/registry/patches/nu-karachi-degree-programs.patch-the-web.json");
   if (testInfo.project.name === "mobile-chromium") {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-21T18:57:49.927Z",
+  "generatedAt": "2026-07-21T22:14:55.487Z",
   "registryUrl": "workspace:src/registry/patches",
   "summary": {
     "healthy": 4,
@@ -11,14 +11,14 @@
   "patches": [
     {
       "id": "org.patchtheweb.civicapply-accessible-draft",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "pageUrl": "https://patch-the-web.vercel.app/demo/",
       "status": "healthy",
-      "checkedAt": "2026-07-21T18:57:49.927Z",
-      "patchSha256": "cccfb834ba58a8012a4ba40f4f064c64eee139605dd6ecbe5c3780e27d946954",
+      "checkedAt": "2026-07-21T22:14:55.487Z",
+      "patchSha256": "f15a80b24bab0d4692f61dd44c47e2704e954b659ee0b415e185e3e7a7f76155",
       "healthy": 19,
       "total": 19,
-      "fingerprint": "0b8e63ef955be33ae86fb0e23d27d435b0583c6d10026794072dc62ce5ea6762",
+      "fingerprint": "c591f531bc6434bfe48eadc585d459c18274c72eb0d46025d16f33d93ee57153",
       "driftedOperationIds": [],
       "results": [
         {
@@ -123,7 +123,7 @@
       "version": "1.0.0",
       "pageUrl": "https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx",
       "status": "healthy",
-      "checkedAt": "2026-07-21T18:57:49.927Z",
+      "checkedAt": "2026-07-21T22:14:55.487Z",
       "patchSha256": "b0b3d607ced94baf0ec5ec5e4754d3419c6e1cf083a96c244c6b9b020e80c4fe",
       "healthy": 5,
       "total": 5,
@@ -159,14 +159,14 @@
     },
     {
       "id": "org.patchtheweb.metrocare-service-navigator",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "pageUrl": "https://patch-the-web.vercel.app/care/",
       "status": "healthy",
-      "checkedAt": "2026-07-21T18:57:49.927Z",
-      "patchSha256": "943ce97c0115f3e2a8b5c011495e9ef6b78cf1da48ab549c0ffd47f4f3c8800c",
+      "checkedAt": "2026-07-21T22:14:55.487Z",
+      "patchSha256": "e38546124f1e80852b6fbc63fd7c66a0974fb997677f0665fc07c9d01e578d21",
       "healthy": 11,
       "total": 11,
-      "fingerprint": "0f8f33b9f517d80851583716314be0fd0de4fab5c82325cd22e579cdb7a09a43",
+      "fingerprint": "38bcec4112978177ef714834190ef6bded6241a871a3362efc2e8d96fc0e3757",
       "driftedOperationIds": [],
       "results": [
         {
@@ -231,7 +231,7 @@
       "version": "1.0.0",
       "pageUrl": "https://nu.edu.pk/Degree-Programs",
       "status": "healthy",
-      "checkedAt": "2026-07-21T18:57:49.927Z",
+      "checkedAt": "2026-07-21T22:14:55.487Z",
       "patchSha256": "19fab525f610dc7c0abc77a01e48764f558adc8d924429e459f8e70266b3743d",
       "healthy": 4,
       "total": 4,

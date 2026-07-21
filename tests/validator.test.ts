@@ -123,7 +123,7 @@ describe("Patch the Web policy validator", () => {
 
   it("keeps patches on their declared host and path", () => {
     const patch = civicPatch as CommunityPatch;
-    expect(patchMatchesUrl(patch, new URL("http://localhost/demo/"))).toBe(true);
+    expect(patchMatchesUrl(patch, new URL("http://localhost/demo/"))).toBe(false);
     expect(patchMatchesUrl(patch, new URL("https://patch-the-web.vercel.app/demo/"))).toBe(true);
     expect(patchMatchesUrl(patch, new URL("http://localhost/bank/"))).toBe(false);
     expect(patchMatchesUrl(patch, new URL("https://example.com/demo/"))).toBe(false);

@@ -3,10 +3,10 @@
   "id": "org.patchtheweb.civicapply-accessible-draft",
   "name": "CivicApply: accessible & autosaved",
   "summary": "Repairs the mobile application flow, preserves unfinished progress, adds accessible validation, and removes the obstructive survey.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": { "name": "Patch the Web Community", "verified": false },
   "match": {
-    "hosts": ["localhost", "127.0.0.1", "patch-the-web.vercel.app"],
+    "hosts": ["patch-the-web.vercel.app"],
     "paths": ["/demo/*"]
   },
   "capabilities": [
@@ -239,5 +239,5 @@
     { "type": "attribute", "selector": "#household-size", "name": "aria-required", "value": "true" },
     { "type": "attribute", "selector": "#address", "name": "aria-required", "value": "true" }
   ],
-  "changelog": "Added the permanent public demo domain while preserving the hardened mobile navigation, required-field semantics, 24-hour draft expiry, and publication assertions."
+  "changelog": "Removed development-only hosts from the publishable scope while preserving mobile navigation, required-field semantics, 24-hour draft expiry, and publication assertions."
 }

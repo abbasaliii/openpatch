@@ -55,11 +55,42 @@ const restoreRow = byId<HTMLElement>("restore-row");
 const restorePatchButton = byId<HTMLButtonElement>("restore-patch");
 const restoreStatus = byId<HTMLElement>("restore-status");
 const advancedImport = byId<HTMLDetailsElement>("advanced-import");
+const installProgress = byId<HTMLOListElement>("install-progress");
 
 let currentTab: chrome.tabs.Tab | undefined;
 let currentPatch: MatchedPatchState | undefined;
 let pendingImport: PendingImport | undefined;
 let pendingRestore: PatchHistoryEntry | undefined;
+let installationComplete = false;
+
+type InstallStage = "verify" | "access" | "install" | "confirm";
+const INSTALL_STAGES: InstallStage[] = ["verify", "access", "install", "confirm"];
+
+function setInstallStage(stage: InstallStage, state: "active" | "complete" | "error") {
+  installProgress.hidden = false;
+  const targetIndex = INSTALL_STAGES.indexOf(stage);
+  for (const [index, name] of INSTALL_STAGES.entries()) {
+    const row = byId<HTMLElement>(`progress-${name}`);
+    row.classList.remove("active", "complete", "error");
+    if (index < targetIndex || (index === targetIndex && state === "complete")) row.classList.add("complete");
+    else if (index === targetIndex) row.classList.add(state);
+  }
+}
+
+async function waitForAppliedPatch(tabId: number, patchId: string, timeoutMs = 10_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const state = await chrome.tabs.sendMessage(tabId, { type: "PATCH_THE_WEB_GET_STATE" }) as PageState;
+      const match = state.matches?.find((entry) => entry.patch.id === patchId);
+      if (match?.enabled && match.health?.applied) return match;
+    } catch {
+      // The page or content runtime is still reloading.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+  throw new Error("The repair was saved, but the page did not confirm activation. Click Retry activation.");
+}
 
 const CAPABILITY_LABELS: Record<string, string> = {
   layout: "Change allowlisted layout and visual properties",
@@ -379,18 +410,32 @@ patchFile.addEventListener("change", async () => {
 });
 
 installButton.addEventListener("click", async () => {
+  if (installationComplete && currentTab?.id) {
+    await chrome.tabs.update(currentTab.id, { active: true });
+    window.close();
+    return;
+  }
   if (!pendingImport || pendingImport.preflight.healthy !== pendingImport.preflight.total || !currentTab?.id) return;
   const candidate = pendingImport;
+  let failedStage: InstallStage = "access";
   installButton.disabled = true;
-  importStatus.textContent = "Waiting for exact-domain permission…";
+  setInstallStage("verify", "complete");
+  setInstallStage("access", "active");
+  importStatus.textContent = "Chrome will ask once for access to this exact website.";
   try {
     const origins = permissionOrigins(candidate.patch);
-    const granted = await chrome.permissions.request({ origins });
+    const alreadyGranted = await chrome.permissions.contains({ origins });
+    const granted = alreadyGranted || await chrome.permissions.request({ origins });
     if (!granted) {
-      importStatus.textContent = "Installation cancelled — no website access was granted.";
+      setInstallStage("access", "error");
+      importStatus.textContent = "Access was not granted. Nothing changed. Click again when you are ready.";
       installButton.disabled = false;
       return;
     }
+    setInstallStage("access", "complete");
+    setInstallStage("install", "active");
+    failedStage = "install";
+    importStatus.textContent = "Installing the verified repair on this device…";
     const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches", "patchHistory"]);
     const installedPatches = (stored.installedPatches as Record<string, CommunityPatch> | undefined) ?? {};
     const installedPatchMeta = (stored.installedPatchMeta as Record<string, PatchInstallMeta> | undefined) ?? {};
@@ -407,11 +452,21 @@ installButton.addEventListener("click", async () => {
     await chrome.storage.local.set({ installedPatches, installedPatchMeta, enabledPatches, patchHistory });
     const refreshed = await chrome.runtime.sendMessage({ type: "PATCH_THE_WEB_REFRESH_RUNTIME" }) as { ok?: boolean; error?: string } | undefined;
     if (!refreshed?.ok) throw new Error(refreshed?.error ?? "Could not register the repair runtime.");
-    importStatus.textContent = "Installed safely. Reloading this page…";
+    setInstallStage("install", "complete");
+    setInstallStage("confirm", "active");
+    failedStage = "confirm";
+    importStatus.textContent = "Reloading once and confirming the repair…";
     await chrome.tabs.reload(currentTab.id);
-    window.close();
+    await waitForAppliedPatch(currentTab.id, candidate.patch.id);
+    setInstallStage("confirm", "complete");
+    importStatus.textContent = "Done — the repair is active on this page.";
+    installButton.textContent = "View repaired page";
+    installButton.disabled = false;
+    installationComplete = true;
   } catch (error) {
+    setInstallStage(failedStage, "error");
     importStatus.textContent = `Installation failed: ${error instanceof Error ? error.message : "unknown error"}`;
+    installButton.textContent = "Retry activation";
     installButton.disabled = false;
   }
 });

@@ -30,12 +30,13 @@ No account. No API key. No advertising. No sale of user data.
 
 ## Upload checklist
 
-1. Run `npm run build` and `npm run test:extension`.
-2. Run `node scripts/generate-store-assets.mjs`.
-3. Upload `release/patch-the-web-extension-v0.10.0.zip`; it contains the extension files at the archive root.
-4. In Chrome Web Store Developer Dashboard, upload the ZIP, use the listing copy above, and add `https://patch-the-web.vercel.app/privacy/` as the privacy-policy URL.
-5. Set **Remote code: No** and certify no user-data collection/transmission.
-6. Begin as **unlisted** beta; do not claim affiliation with sites that community patches repair.
-7. Supply the 1280×800 promo image from `submission-assets/chrome-web-store/` and 128px icon from `src/extension/icons/`.
+1. Run `npm run check`, `npm run test:browser`, and `npm run test:extension`.
+2. Run `npm run build:extension:store`. This produces a minified package without source maps or development-only localhost permissions.
+3. Run `node scripts/generate-store-assets.mjs`.
+4. Upload `release/patch-the-web-extension-v0.11.0.zip`; it contains the extension files at the archive root. Expected SHA-256: `307E4DA2134F38CB7D6B04E98243A5BAD1EA43AE365874223044BBCF1687C5DE`.
+5. In Chrome Web Store Developer Dashboard, upload the ZIP, use the listing copy above, and add `https://patch-the-web.vercel.app/privacy/` as the privacy-policy URL.
+6. Set **Remote code: No** and certify no user-data collection/transmission.
+7. Begin as **unlisted** beta; do not claim affiliation with sites that community patches repair.
+8. Supply the 1280×800 promo image from `submission-assets/chrome-web-store/` and 128px icon from `src/extension/icons/`.
 
 Human dashboard submission remains required because it is tied to the developer account and policy certifications.

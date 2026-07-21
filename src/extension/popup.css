@@ -141,6 +141,17 @@ textarea:focus { border-color: #15966d; box-shadow: 0 0 0 3px rgba(21, 150, 109,
 .install-button:hover { background: #087552; }
 .install-button:focus-visible { outline: 3px solid rgba(11, 154, 109, .22); outline-offset: 2px; }
 .install-button:disabled { cursor: not-allowed; opacity: .5; }
+.install-progress { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 12px 0 0; padding: 0; list-style: none; }
+.install-progress[hidden] { display: none; }
+.install-progress li { display: flex; align-items: center; gap: 7px; min-width: 0; padding: 8px; border: 1px solid #e2eae6; border-radius: 9px; color: #76827c; background: #fff; font-size: 8px; }
+.install-progress li span { display: grid; place-items: center; width: 19px; height: 19px; flex: 0 0 auto; border-radius: 50%; color: #68756f; background: #edf2ef; font-size: 8px; font-weight: 900; }
+.install-progress li.active { border-color: #f0d28b; color: #765200; background: #fffaf0; }
+.install-progress li.active span { color: #fff; background: #d69a16; }
+.install-progress li.complete { border-color: #b8e9d3; color: #08724f; background: #f2fcf7; }
+.install-progress li.complete span { color: #fff; background: #11966a; font-size: 0; }
+.install-progress li.complete span::before { content: "✓"; font-size: 9px; }
+.install-progress li.error { border-color: #e8b9b1; color: #8b342d; background: #fff7f5; }
+.install-progress li.error span { color: #fff; background: #b94a3d; }
 .install-flow .import-status { min-height: 14px; margin: 8px 0 0; color: #08724f; font-size: 9px; font-weight: 800; }
 
 footer { display: flex; justify-content: space-between; padding: 12px 18px; border-top: 1px solid #e3ebe7; color: #748079; background: white; font-size: 9px; font-weight: 700; }

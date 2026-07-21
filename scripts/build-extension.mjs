@@ -1,9 +1,10 @@
-import { cp, mkdir, rm } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { build } from "esbuild";
 
 const root = resolve(import.meta.dirname, "..");
-const outdir = resolve(root, "dist/extension");
+const storeBuild = process.argv.includes("--store");
+const outdir = resolve(root, storeBuild ? "dist/extension-store" : "dist/extension");
 
 await rm(outdir, { recursive: true, force: true });
 await mkdir(resolve(outdir, "patches"), { recursive: true });
@@ -19,12 +20,11 @@ await build({
   outdir,
   format: "iife",
   target: "chrome120",
-  minify: false,
-  sourcemap: true
+  minify: storeBuild,
+  sourcemap: !storeBuild
 });
 
 await Promise.all([
-  cp(resolve(root, "src/extension/manifest.json"), resolve(outdir, "manifest.json")),
   cp(resolve(root, "src/extension/popup.html"), resolve(outdir, "popup.html")),
   cp(resolve(root, "src/extension/popup.css"), resolve(outdir, "popup.css")),
   cp(resolve(root, "src/extension/welcome.html"), resolve(outdir, "welcome.html")),
@@ -33,4 +33,10 @@ await Promise.all([
   cp(resolve(root, "src/registry/patches"), resolve(outdir, "patches"), { recursive: true })
 ]);
 
-console.log(`Built unpacked extension at ${outdir}`);
+const manifest = JSON.parse(await readFile(resolve(root, "src/extension/manifest.json"), "utf8"));
+if (storeBuild) {
+  manifest.host_permissions = manifest.host_permissions.filter((origin) => !origin.includes("localhost") && !origin.includes("127.0.0.1"));
+}
+await writeFile(resolve(outdir, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
+
+console.log(`Built ${storeBuild ? "Chrome Web Store" : "unpacked"} extension at ${outdir}`);

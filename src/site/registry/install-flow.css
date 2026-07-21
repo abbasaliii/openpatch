@@ -1,0 +1,24 @@
+.install-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 54px;
+  padding: 17px 20px;
+  border: 1px solid #cde6d9;
+  border-radius: 14px;
+  background: #edf9f3;
+}
+.install-strip > strong { font-size: 12px; }
+.install-strip ol { display: flex; align-items: center; gap: 18px; margin: 0; padding: 0; list-style: none; color: #3e5b4f; font-size: 10px; font-weight: 750; }
+.install-strip li { display: flex; align-items: center; gap: 7px; }
+.install-strip li span { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; color: #fff; background: #087a55; font-size: 8px; font-weight: 900; }
+.install-strip a { color: #087a55; text-decoration: underline; text-underline-offset: 2px; }
+.install-target { flex: 1; padding: 10px; border: 1px solid #087a55; border-radius: 8px; color: #fff; background: #087a55; font-size: 10px; font-weight: 850; text-align: center; }
+.install-target:hover { background: #076b4b; }
+.receipt-detail .download { display: inline-block; padding: 0; border: 0; color: #087a55; background: transparent; text-align: left; }
+.receipt-detail .download:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .install-strip { align-items: flex-start; flex-direction: column; }
+  .install-strip ol { align-items: flex-start; flex-direction: column; }
+}

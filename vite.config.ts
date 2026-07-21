@@ -10,7 +10,7 @@ const root = __dirname;
 const siteOut = resolve(root, "dist/site");
 const patchSourceDir = resolve(root, "src/registry/patches");
 const compatibilitySourcePath = resolve(root, "src/registry/compatibility.json");
-const releaseFiles = ["patch-the-web-extension-v0.10.0.zip", "patch-the-web-codex-plugin-v0.4.1.zip"];
+const releaseFiles = ["patch-the-web-extension-v0.11.0.zip", "patch-the-web-codex-plugin-v0.4.1.zip"];
 
 async function loadRegistryArtifacts() {
   const compatibilityReport = JSON.parse(await readFile(compatibilitySourcePath, "utf8")) as RegistryCompatibilityReport;

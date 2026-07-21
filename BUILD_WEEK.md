@@ -49,6 +49,7 @@ The public Git history preserves the Build Week sequence:
 | Jul 21 | `v0.9.0` real public table search | Added a bounded `publicTableSearch` DSL primitive, authored the HEC recognized-campus finder against the live page, handled repeated table headers safely, added mobile layout repair, published 5/5 live compatibility evidence, and expanded the registry to four verified repairs |
 | Jul 22 | `v0.9.1` guided repair requests | Replaced expert-authored acceptance criteria with plain outcome choices, added public-URL privacy cleaning, tab-local draft recovery, a clear Codex handoff, extension guidance, and mobile + WCAG browser evidence |
 | Jul 22 | `v0.10.0` safe update recovery | Added a bounded validated patch history, SHA-256 recheck, live selector preflight, exact-domain permission recheck, one-click rollback/redo, and complete removal of repair history |
+| Jul 22 | `v0.11.0` confirmed installation | Replaced opaque installs with verified/access/installed/confirmed stages, automatic page verification and retry, simplified registry actions, a production-only store build, and removal of development hosts from publishable patches |
 
 ## Iteration examples
 

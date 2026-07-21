@@ -75,9 +75,9 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [Patch the Web extension v0.10.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.10.0.zip) — load-unpacked Chrome extension with automatic repair discovery, bounded update history, one-click rollback, and guided repair requests
+- [Patch the Web extension v0.11.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.11.0.zip) — Chrome extension with automatic repair discovery, confirmed one-click activation, bounded update history, rollback, and guided repair requests
 - [Patch the Web Codex plugin v0.4.1](https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.1.zip) — validated authoring plugin with structured repair-request support
-- Extension SHA-256: `A952870B7606760BC3FFCA68EA695BC4BB26EA6BF0CA9CA879DF422DAFB55CBF`
+- Extension SHA-256: `307E4DA2134F38CB7D6B04E98243A5BAD1EA43AE365874223044BBCF1687C5DE`
 - Plugin SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 
 Then:
@@ -187,7 +187,7 @@ Every patch declares an exact host/path scope, plain-language capabilities, cons
   "schemaVersion": 1,
   "id": "org.patchtheweb.civicapply-accessible-draft",
   "match": {
-    "hosts": ["localhost", "127.0.0.1", "patch-the-web.vercel.app"],
+    "hosts": ["patch-the-web.vercel.app"],
     "paths": ["/demo/*"]
   },
   "capabilities": ["local-storage", "validation"],

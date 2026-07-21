@@ -3,10 +3,10 @@
   "id": "org.patchtheweb.metrocare-service-navigator",
   "name": "MetroCare: personal service navigator",
   "summary": "Adds private search, access filters, and side-by-side service comparison to a dense healthcare directory while preserving the user's preferences.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": { "name": "Patch the Web Community", "verified": false },
   "match": {
-    "hosts": ["localhost", "127.0.0.1", "patch-the-web.vercel.app"],
+    "hosts": ["patch-the-web.vercel.app"],
     "paths": ["/care/*"]
   },
   "capabilities": [
@@ -221,5 +221,5 @@
     { "type": "attribute", "selector": ".care-service-grid", "name": "role", "value": "list" },
     { "type": "attribute", "selector": ".care-community-promo", "name": "aria-hidden", "value": "true" }
   ],
-  "changelog": "Adds a trusted private comparison workflow for up to three services, with an accessible side-by-side table generated only from declared data attributes. Retains private multi-facet search, locally saved preferences, result announcements, keyboard support, structural semantics, and mobile refinements."
+  "changelog": "Removes development-only hosts from the publishable scope while retaining private comparison, local filters, result announcements, keyboard support, structural semantics, and mobile refinements."
 }

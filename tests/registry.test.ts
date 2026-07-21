@@ -31,18 +31,18 @@ describe("community patch catalog", () => {
 
   it("allows a user-installed newer version to replace the bundled version", () => {
     const update = structuredClone(civicPatch);
-    update.version = "1.2.0";
+    update.version = "1.3.0";
     const catalog = buildPatchCatalog([civicPatch], { [update.id]: update });
     expect(catalog.patches).toHaveLength(1);
-    expect(catalog.patches[0]).toMatchObject({ source: "local", patch: { version: "1.2.0" } });
+    expect(catalog.patches[0]).toMatchObject({ source: "local", patch: { version: "1.3.0" } });
     expect(comparePatchVersions("1.2.0", "1.1.9")).toBeGreaterThan(0);
   });
 
   it("keeps discovery and Chrome permissions within declared domains and paths", () => {
-    expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("http://localhost/demo/start"))).toHaveLength(1);
-    expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("http://localhost/account"))).toHaveLength(0);
-    expect(contentScriptMatches([civicPatch])).toEqual(["http://127.0.0.1/demo/*", "http://localhost/demo/*", "https://patch-the-web.vercel.app/demo/*"]);
-    expect(permissionOrigins(civicPatch)).toEqual(["http://127.0.0.1/*", "http://localhost/*", "https://patch-the-web.vercel.app/*"]);
+    expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("https://patch-the-web.vercel.app/demo/start"))).toHaveLength(1);
+    expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("https://patch-the-web.vercel.app/account"))).toHaveLength(0);
+    expect(contentScriptMatches([civicPatch])).toEqual(["https://patch-the-web.vercel.app/demo/*"]);
+    expect(permissionOrigins(civicPatch)).toEqual(["https://patch-the-web.vercel.app/*"]);
   });
 
   it("discovers the feature repair only on the MetroCare route", () => {
