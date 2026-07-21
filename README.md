@@ -28,6 +28,12 @@ Patch the Web’s community patch adds a complete find-and-compare workspace usi
 
 The original CivicApply proof remains in the registry as a second repair. Its 19 constrained operations repair mobile layout, save non-sensitive form progress, restore drafts after a simulated reset, add accessible validation and keyboard navigation, move human help into the workflow, and remove an obstructive survey.
 
+The registry now also contains a repair authored from a real privacy-safe extension brief on FAST-NUCES's public degree-program page. The complaint was simple: **"I only want to see programs for Karachi."** Codex inspected the live table and authored a domain-scoped `tableColumnFilter` patch. On the current page it keeps 22 Karachi offerings, removes 15 irrelevant rows, collapses six campus columns to Programs + Karachi, and fits the real 390px page without horizontal overflow. The live workspace monitor reports 4/4 healthy operations and a stable structural fingerprint.
+
+| Real university page before | Same live page after the community repair |
+| --- | --- |
+| ![FAST-NUCES degree matrix before](submission-assets/repairs/nu-karachi-mobile-live-before.png) | ![FAST-NUCES Karachi-only degree programs after](submission-assets/repairs/nu-karachi-mobile-live-after.png) |
+
 On any page without a community patch, the extension can also create a **privacy-safe Repair Brief** for Codex. It includes the exact origin and path, viewport geometry, structural counts, accessibility signals, and bounded selector candidates—but never field values, cookies, storage, URL queries, or page text.
 
 Patch the Web v0.7 makes that missing-feature story substantially deeper. Its trusted `collectionCompare` primitive creates the selection controls, live status, bounded tray, and accessible comparison table itself. A patch may name only one exact collection, safe `data-*` attributes, explicit display maps, and a two-to-four item limit. It still cannot provide HTML, JavaScript, callbacks, templates, or URLs.
@@ -59,7 +65,7 @@ flowchart LR
   G --> H[Anyone gets the repair\nNo AI or account]
 ```
 
-The patch language supports nine capabilities: bounded collection filtering, bounded collection comparison, allowlisted styles, safe attributes, explicit hiding, same-page reorganization, non-sensitive form persistence, local validation, and keyboard navigation. It has no operation for scripts, patch-authored HTML, network requests, cookies, or cross-origin data. Trusted collection features can read only explicitly declared `data-*` attributes, never page text or field values.
+The patch language supports ten constrained operation types, including bounded collection filtering/comparison and a fail-closed public-table column filter, alongside allowlisted styles and attributes, explicit hiding, same-page reorganization, non-sensitive form persistence, local validation, and keyboard navigation. It has no operation for scripts, patch-authored HTML, network requests, cookies, or cross-origin data. Trusted collection features can read only explicitly declared `data-*` attributes, while table filtering may compare one exact normalized public header and one bounded cell marker; neither can read form values.
 
 ## Judge quick start
 
@@ -67,8 +73,8 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [Patch the Web extension v0.8.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.8.0.zip) — load-unpacked Chrome extension
-- [Patch the Web Codex plugin v0.4.0](https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.0.zip) — validated authoring plugin
+- [Patch the Web extension v0.9.1](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.9.1.zip) — load-unpacked Chrome extension with automatic repair discovery and guided repair requests
+- [Patch the Web Codex plugin v0.4.1](https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.1.zip) — validated authoring plugin with structured repair-request support
 - Extension SHA-256: `30C472E6B23E5A75BD709EA3040EEFCD62FBC35A669773D8400FDFE1E1CD4F50`
 - Plugin SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 
@@ -106,6 +112,8 @@ npm run dev -- --port 5173
 
 The same skill is packaged as a distributable Codex plugin under `plugins/patch-the-web`. The extension performs no model call; GPT‑5.6 operates through the user's existing Codex session only while a repair is authored.
 
+People who do not use Codex can start at the guided [repair request page](https://patch-the-web.vercel.app/authors/). It converts plain outcome choices into a privacy-safe `.patch-the-web-request.json` artifact or, after an explicit public-share preview and confirmation, a structured GitHub issue. The issue is only an intake request: automated structure checks and a human maintainer gate must pass before authoring, testing, and registry publication. See [`REVIEWING_REPAIRS.md`](REVIEWING_REPAIRS.md).
+
 ![Patch the Web privacy-safe Repair Brief authoring UI](submission-assets/patch-the-web-repair-brief.png)
 
 ### Test community installation
@@ -141,8 +149,8 @@ npm run verify
 
 Current results:
 
-- 44/44 unit, policy, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests pass
-- 20/20 desktop and 390px browser journeys pass, including six strict automated WCAG A/AA scans across both patched products, the landing page, and Compatibility Sentinel
+- 53/53 unit, policy, registry-discovery, compatibility-quarantine, preflight, runtime, and privacy tests pass
+- 22/22 desktop and 390px browser journeys pass, including six strict automated WCAG A/AA scans across both patched products, the landing page, and Compatibility Sentinel
 - 6/6 Manifest V3 extension integration tests pass with dynamic installation, both real public demo domains, uninstall cleanup, and the domain-scoped enable switch
 - 11/11 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
 - 10/10 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy

@@ -34,12 +34,20 @@ test("the patched MetroCare navigator and comparison have no automated WCAG A/AA
   await expectNoWcagViolations(page);
 });
 
-test("the judge landing page and Compatibility Sentinel have no automated WCAG A/AA violations", async ({ page }) => {
+test("the judge landing page, public registry, and Compatibility Sentinel have no automated WCAG A/AA violations", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("#registry-receipt")).toContainText("SHA-256");
   await expectNoWcagViolations(page);
 
+  await page.goto("/registry/");
+  await expect(page.locator(".patch-card")).toHaveCount(4);
+  await expectNoWcagViolations(page);
+
   await page.goto("/sentinel/");
-  await expect(page.locator("#hero-status")).toHaveText("All 2 patches compatible");
+  await expect(page.locator("#hero-status")).toHaveText("All 4 patches compatible");
+  await expectNoWcagViolations(page);
+
+  await page.goto("/authors/");
+  await expect(page.getByRole("heading", { name: /Tell us the problem/ })).toBeVisible();
   await expectNoWcagViolations(page);
 });

@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Patch the Web",
-  "version": "0.8.0",
+  "version": "0.9.1",
   "description": "Validate and install safe, domain-scoped community repairs for the web.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["http://localhost/*", "http://127.0.0.1/*", "*://patch-the-web.vercel.app/*"],
   "optional_host_permissions": ["https://*/*", "http://*/*"],
@@ -11,6 +16,11 @@
   },
   "action": {
     "default_title": "Patch the Web",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
   }
 }

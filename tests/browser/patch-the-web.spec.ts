@@ -100,7 +100,7 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
       compatibility: { status: string; healthy: number; total: number; fingerprint: string };
     }>;
   };
-  expect(registry.patches).toHaveLength(2);
+  expect(registry.patches).toHaveLength(4);
   expect(registry.patches[0].id).toBe("org.patchtheweb.civicapply-accessible-draft");
   expect(registry.patches[0].sha256).toMatch(/^[a-f0-9]{64}$/);
   expect(registry.patches[0].verification).toEqual({ status: "verified", operations: 19, assertions: 10 });
@@ -114,21 +114,47 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   expect(navigator?.verification).toEqual({ status: "verified", operations: 11, assertions: 10 });
   expect(navigator?.compatibility).toMatchObject({ status: "healthy", healthy: 11, total: 11 });
   expect(navigator?.compatibility.fingerprint).toMatch(/^[a-f0-9]{64}$/);
+  const karachi = registry.patches.find((patch) => patch.id === "org.patchtheweb.nu-karachi-degree-programs");
+  expect(karachi?.verification).toEqual({ status: "verified", operations: 4, assertions: 8 });
+  expect(karachi?.compatibility).toMatchObject({ status: "healthy", healthy: 4, total: 4 });
+  expect(karachi?.compatibility.fingerprint).toMatch(/^[a-f0-9]{64}$/);
+  const hec = registry.patches.find((patch) => patch.id === "org.patchtheweb.hec-campus-finder");
+  expect(hec?.verification).toEqual({ status: "verified", operations: 5, assertions: 4 });
+  expect(hec?.compatibility).toMatchObject({ status: "healthy", healthy: 5, total: 5 });
   await expect(page.locator("#compatibility-receipt")).toContainText("Compatibility Sentinel: healthy");
   const compatibilityResponse = await page.request.get("/registry/compatibility.json");
   expect(compatibilityResponse.ok()).toBe(true);
-  expect((await compatibilityResponse.json()).summary).toEqual({ healthy: 2, drifted: 0, unreachable: 0, total: 2 });
+  expect((await compatibilityResponse.json()).summary).toEqual({ healthy: 4, drifted: 0, unreachable: 0, total: 4 });
   const navigatorResponse = await page.request.get("/registry/patches/metrocare-service-navigator.patch-the-web.json");
   expect(navigatorResponse.ok()).toBe(true);
 });
 
+test("the registry lets people browse verified community repairs safely", async ({ page }, testInfo) => {
+  await page.goto("/registry/");
+  await expect(page.locator("#registry-summary")).toContainText("4 verified repairs");
+  await expect(page.locator(".patch-card")).toHaveCount(4);
+  await expect(page.getByRole("heading", { name: "FAST-NUCES: Karachi degree programs only" })).toBeVisible();
+  await page.getByRole("button", { name: "Filters & search" }).click();
+  await expect(page.locator(".patch-card")).toHaveCount(3);
+  await page.getByRole("searchbox", { name: "Search verified repairs" }).fill("Karachi");
+  await expect(page.locator(".patch-card")).toHaveCount(1);
+  await expect(page.locator(".patch-card .scope")).toContainText("nu.edu.pk");
+  await page.getByRole("button", { name: "View receipt" }).click();
+  await expect(page.locator(".receipt-detail")).toContainText("4 tested transformations · 8 assertions");
+  const download = page.getByRole("link", { name: /Download patch/ });
+  await expect(download).toHaveAttribute("href", "/registry/patches/nu-karachi-degree-programs.patch-the-web.json");
+  if (testInfo.project.name === "mobile-chromium") {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
+  }
+});
+
 test("the Compatibility Console explains live evidence and quarantines simulated drift", async ({ page }) => {
   await page.goto("/sentinel/");
-  await expect(page.locator("#hero-status")).toHaveText("All 2 patches compatible");
-  await expect(page.locator("#metric-healthy")).toHaveText("2/2");
-  await expect(page.locator("#metric-operations")).toHaveText("30");
-  await expect(page.locator(".patch-row")).toHaveCount(2);
-  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "11/11 live"]);
+  await expect(page.locator("#hero-status")).toHaveText("All 4 patches compatible");
+  await expect(page.locator("#metric-healthy")).toHaveText("4/4");
+  await expect(page.locator("#metric-operations")).toHaveText("39");
+  await expect(page.locator(".patch-row")).toHaveCount(4);
+  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "5/5 live", "11/11 live", "4/4 live"]);
   await page.locator("#simulate-drift").click();
   await expect(page.locator("#simulation-state")).toHaveClass(/quarantined/);
   await expect(page.locator("#simulation-state strong")).toHaveText("Quarantined from discovery");

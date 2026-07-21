@@ -23,6 +23,7 @@ That separation is deliberate: AI handles ambiguous intent and iterative enginee
 | Public feature layer, not a personal theme editor | Make one repair reusable by everyone affected by the same site | Turned the concept into a browser-extension, registry, and patch-authoring architecture | `src/extension/`, `src/registry/`, `.agents/skills/patch-the-web-author/` |
 | Constrained DSL, never arbitrary community JavaScript | Accept less expressiveness in exchange for inspectable permissions and deterministic execution | Implemented and adversarially tested operation, selector, capability, CSS, attribute, persistence, and scope policies | `src/core/types.ts`, `src/core/validator.ts`, `tests/validator.test.ts` |
 | Repair genuinely missing capabilities | Replace the early form-only proof with a credible directory that works as designed but fails a real access need | Designed MetroCare, then authored `collectionFilter` and `collectionCompare` as trusted runtime primitives | `src/site/care/`, `src/core/engine.ts`, `src/registry/patches/metrocare-service-navigator.patch-the-web.json` |
+| Prove the workflow on a real third-party site | A student asked to see only Karachi programs on FAST-NUCES without changing the university site | Inspected the exact live DOM and screenshots, added a fail-closed `tableColumnFilter` primitive, authored the domain patch, caught a site CSS override in live visual QA, and produced responsive evidence | `src/core/table-filter.ts`, `src/registry/patches/nu-karachi-degree-programs.patch-the-web.json`, `submission-assets/repairs/` |
 | Keep authoring context private | Never send field values, page text, cookies, storage, or URL queries to Codex | Built a bounded Repair Brief and tests that prove those exclusions | `src/extension/repair-brief.ts`, `tests/repair-brief.test.ts` |
 | Treat website drift as a product state | A community feature must stop being recommended when the original site changes underneath it | Built SHA-bound Chromium compatibility checks, per-operation fingerprints, quarantine behavior, and the public Sentinel | `scripts/check-registry-compatibility.ts`, `src/core/compatibility.ts`, `src/site/sentinel/` |
 | Prove privacy and accessibility behavior | Visual polish alone is not evidence | Added assertions for focus movement, ARIA relationships, selection limits, mobile width, persistence, zero interaction requests, and strict axe WCAG A/AA scans | `tests/browser/accessibility.spec.ts`, `tests/browser/patch-the-web.spec.ts`, `tests/engine.test.ts`, `tests/extension/patch-the-web-extension.spec.ts` |
@@ -45,6 +46,8 @@ The public Git history preserves the Build Week sequence:
 | Jul 20 | `v0.7.2` hardening | Clean-install Linux CI plus six-hour live monitoring, retained receipts, retries, and automatic material quarantine/recovery promotion |
 | Jul 20 | `v0.7.3` accessibility | Automated WCAG A/AA audits across patched workflows and public surfaces, hardened contrast tokens, and a keyboard-focusable comparison region |
 | Jul 20 | `v0.8.0` control & privacy | Community-patch removal, optional-permission cleanup, absolute preference expiry, sensitive-field hardening, live error repair, and deeper keyboard/browser/extension evidence |
+| Jul 21 | `v0.9.0` real public table search | Added a bounded `publicTableSearch` DSL primitive, authored the HEC recognized-campus finder against the live page, handled repeated table headers safely, added mobile layout repair, published 5/5 live compatibility evidence, and expanded the registry to four verified repairs |
+| Jul 22 | `v0.9.1` guided repair requests | Replaced expert-authored acceptance criteria with plain outcome choices, added public-URL privacy cleaning, tab-local draft recovery, a clear Codex handoff, extension guidance, and mobile + WCAG browser evidence |
 
 ## Iteration examples
 
@@ -57,6 +60,7 @@ Codex did not merely scaffold files. The primary thread repeatedly used browser 
 - The comparison feature received adversarial limits: one exact container, safe `data-*` attributes only, explicit display maps, 2–4 selected items, bounded fields and values, trusted native UI, focus transfer, live announcements, and no page-text or network access.
 - A strict axe scan exposed contrast regressions hidden by entrance-animation opacity and a scrollable comparison region missing keyboard focus. We corrected the source color system and focus semantics, then gated all patched and public surfaces at desktop and mobile widths.
 - A new TTL regression test proved that initialization recreated an empty preference record immediately after deleting expired state. The runtime now avoids writes on load, preserves an absolute expiry window, and removes storage when the user clears preferences.
+- The real FAST-NUCES page overrode the native `hidden` attribute on table cells. The representative fixture passed, but the exact live screenshot still showed unrelated campuses. Codex used that evidence to harden the trusted runtime with an inline `display:none !important` only on already-validated rows and cells, then reran live desktop/mobile capture until both the table and page fit.
 
 ## Reproduce the evidence
 
@@ -65,7 +69,7 @@ npm install
 npm run verify
 ```
 
-The release gate performs type checking, 44 unit/policy/privacy tests, both patch validators, 20 desktop/mobile browser journeys (including six strict axe WCAG A/AA scans), and 6 packaged Manifest V3 extension tests—including public registry discovery, both real production domains, uninstall cleanup, and the domain-scoped enable switch.
+The release gate performs type checking, 53 unit/policy/privacy tests, all three patch validators, 22 desktop/mobile browser journeys (including six strict axe WCAG A/AA scans), and 6 packaged Manifest V3 extension tests—including public registry discovery, both real production domains, uninstall cleanup, and the domain-scoped enable switch. A separate live FAST-NUCES capture verifies the third-party target at desktop and 390px without changing the site.
 
 Additional publication evidence:
 
@@ -75,7 +79,8 @@ npm run monitor:workspace -- src/registry/compatibility.json
 
 - MetroCare: 11/11 constrained operations and 10/10 publishing assertions
 - CivicApply: 19/19 constrained operations and 10/10 publishing assertions
-- Public compatibility ledger: 30 operation targets, checked every six hours
+- FAST-NUCES: 4/4 constrained operations, 8/8 publishing assertions, 22 relevant rows retained, and 15 excluded
+- Public compatibility ledger: 34 operation targets across 3 patches, checked every six hours
 - Extension archive SHA-256: `30C472E6B23E5A75BD709EA3040EEFCD62FBC35A669773D8400FDFE1E1CD4F50`
 - Codex plugin archive SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 

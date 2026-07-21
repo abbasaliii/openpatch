@@ -38,7 +38,7 @@ function queueRuntimeRefresh() {
   return refreshQueue;
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   const stored = await chrome.storage.local.get(["enabledPatches", "installedPatches", "installedPatchMeta", "registryMeta"]);
   await chrome.storage.local.set({
     enabledPatches: stored.enabledPatches ?? { [PATCH_ID]: false },
@@ -52,6 +52,9 @@ chrome.runtime.onInstalled.addListener(async () => {
     }
   });
   await queueRuntimeRefresh();
+  if (details.reason === "install") {
+    await chrome.tabs.create({ url: chrome.runtime.getURL("welcome.html") });
+  }
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {

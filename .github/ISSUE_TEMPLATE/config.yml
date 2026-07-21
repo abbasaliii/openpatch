@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Create a privacy-safe repair request
+    url: https://patch-the-web.vercel.app/authors/
+    about: Use the guided flow before opening a public issue.
+  - name: Browse verified repairs
+    url: https://patch-the-web.vercel.app/registry/
+    about: Check whether a repair already exists for the page.

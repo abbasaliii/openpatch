@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import civicPatchJson from "../src/registry/patches/civic-apply.patch-the-web.json";
 import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
+import nuKarachiPatchJson from "../src/registry/patches/nu-karachi-degree-programs.patch-the-web.json";
+import hecCampusPatchJson from "../src/registry/patches/hec-campus-finder.patch-the-web.json";
 import {
   buildPatchCatalog,
   comparePatchVersions,
@@ -12,6 +14,8 @@ import type { CommunityPatch } from "../src/core/types";
 
 const civicPatch = civicPatchJson as CommunityPatch;
 const metroCarePatch = metroCarePatchJson as CommunityPatch;
+const nuKarachiPatch = nuKarachiPatchJson as CommunityPatch;
+const hecCampusPatch = hecCampusPatchJson as CommunityPatch;
 
 describe("community patch catalog", () => {
   it("loads validated local patches and rejects malformed storage entries", () => {
@@ -37,8 +41,8 @@ describe("community patch catalog", () => {
   it("keeps discovery and Chrome permissions within declared domains and paths", () => {
     expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("http://localhost/demo/start"))).toHaveLength(1);
     expect(matchingCatalogPatches([{ patch: civicPatch, source: "bundled" }], new URL("http://localhost/account"))).toHaveLength(0);
-    expect(contentScriptMatches([civicPatch])).toEqual(["*://patch-the-web.vercel.app/demo/*", "http://127.0.0.1/demo/*", "http://localhost/demo/*"]);
-    expect(permissionOrigins(civicPatch)).toEqual(["*://patch-the-web.vercel.app/*", "http://127.0.0.1/*", "http://localhost/*"]);
+    expect(contentScriptMatches([civicPatch])).toEqual(["http://127.0.0.1/demo/*", "http://localhost/demo/*", "https://patch-the-web.vercel.app/demo/*"]);
+    expect(permissionOrigins(civicPatch)).toEqual(["http://127.0.0.1/*", "http://localhost/*", "https://patch-the-web.vercel.app/*"]);
   });
 
   it("discovers the feature repair only on the MetroCare route", () => {
@@ -48,6 +52,22 @@ describe("community patch catalog", () => {
     ];
     expect(matchingCatalogPatches(catalog, new URL("https://patch-the-web.vercel.app/care/"))).toHaveLength(1);
     expect(matchingCatalogPatches(catalog, new URL("https://patch-the-web.vercel.app/demo/"))).toHaveLength(1);
-    expect(contentScriptMatches([civicPatch, metroCarePatch])).toContain("*://patch-the-web.vercel.app/care/*");
+    expect(contentScriptMatches([civicPatch, metroCarePatch])).toContain("https://patch-the-web.vercel.app/care/*");
+  });
+
+  it("keeps the Karachi program view on the exact university host and path", () => {
+    const catalog = [{ patch: nuKarachiPatch, source: "bundled" as const }];
+    expect(matchingCatalogPatches(catalog, new URL("https://nu.edu.pk/Degree-Programs"))).toHaveLength(1);
+    expect(matchingCatalogPatches(catalog, new URL("https://nu.edu.pk/Admissions"))).toHaveLength(0);
+    expect(matchingCatalogPatches(catalog, new URL("https://www.nu.edu.pk/Degree-Programs"))).toHaveLength(0);
+    expect(permissionOrigins(nuKarachiPatch)).toEqual(["https://nu.edu.pk/*"]);
+    expect(contentScriptMatches([nuKarachiPatch])).toEqual(["https://nu.edu.pk/Degree-Programs*"]);
+  });
+
+  it("keeps the HEC campus finder on the exact official page", () => {
+    const catalog = [{ patch: hecCampusPatch, source: "bundled" as const }];
+    expect(matchingCatalogPatches(catalog, new URL("https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx"))).toHaveLength(1);
+    expect(matchingCatalogPatches(catalog, new URL("https://www.hec.gov.pk/english/universities/Pages/DAIs/Universities.aspx"))).toHaveLength(0);
+    expect(permissionOrigins(hecCampusPatch)).toEqual(["https://www.hec.gov.pk/*"]);
   });
 });

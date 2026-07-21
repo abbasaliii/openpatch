@@ -212,6 +212,51 @@ Add a trusted, accessible side-by-side comparison to an existing collection. The
 
 Capabilities: `content-compare`, `accessibility`, and `keyboard-navigation`. The collection must match exactly one container with at least two items, every item must have a unique non-empty title in the declared title attribute, `maxItems` must be 2–4, and every comparison field must use a safe `data-*` attribute with an explicit bounded display map. The runtime caps the collection at 100 items and sends no interaction data.
 
+### `tableColumnFilter`
+
+Focus one bounded public data table on the rows marked in a named column. The runtime resolves the column from one exact normalized header, keeps only rows whose target cell contains one declared marker, collapses unrelated columns, and supplies accessible table, column, and marker labels. Patches cannot supply scripts, HTML, callbacks, URLs, or arbitrary attributes.
+
+```json
+{
+  "id": "show-karachi-programs-only",
+  "type": "tableColumnFilter",
+  "selector": "table.degree-programs",
+  "headerSelector": "tr.table-heading > th",
+  "rowSelector": "tr",
+  "headerText": "Karachi",
+  "markerSelector": ".available",
+  "tableLabel": "Degree programs offered at the Karachi campus",
+  "columnLabel": "Karachi campus availability",
+  "markerLabel": "Offered at Karachi campus",
+  "collapseOtherColumns": true
+}
+```
+
+Capabilities: `content-filter`, `hide-elements`, and `accessibility`. The outer selector must resolve to exactly one table, the header list must contain 2-20 cells, the public header must match exactly once, the table must contain 1-100 rows, and every target cell may contain at most one marker. The operation fails closed before mutation if any bound or relationship is violated. It reads no form values, cookies, storage, query strings, or network data.
+
+### `publicTableSearch`
+
+Add one trusted, local-only search control across a bounded set of public data tables. The runtime builds the accessible interface, searches only existing public row text in memory, preserves section rows, supports repeated identical headers, announces match counts, and never sends queries or page content to a network service.
+
+```json
+{
+  "id": "search-recognized-campuses",
+  "type": "publicTableSearch",
+  "selector": "table.recognized-campuses",
+  "rowSelector": "tr",
+  "headerText": "S. No",
+  "title": "Find a recognized campus",
+  "description": "Search university names, cities, and campus locations.",
+  "searchLabel": "Search recognized campuses",
+  "placeholder": "Try Karachi or a university name",
+  "tableLabel": "Recognized university campuses table",
+  "maxTables": 2,
+  "maxRows": 120
+}
+```
+
+Capabilities: `content-filter`, `accessibility`, and `keyboard-navigation`. The selector must resolve only to 1-5 tables. Each table must contain 1-12 exact normalized header rows with the same 2-12-column shape and at least one matching data row. The combined searchable set is capped at the declared `maxRows` and an absolute maximum of 300. `/` focuses search and Escape clears it. Any ambiguous structure or exceeded bound fails closed before mutation.
+
 ## Assertions
 
 Use `exists` to lock selector counts and `attribute` to verify repaired semantics.

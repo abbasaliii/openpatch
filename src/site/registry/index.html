@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Browse verified, domain-scoped community repairs for Patch the Web." />
+    <title>Community Registry — Patch the Web</title>
+    <link rel="stylesheet" href="/registry/registry.css" />
+    <link rel="stylesheet" href="/registry/a11y.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Patch the Web home"><span class="brand-symbol" aria-hidden="true"><i></i><i></i></span><span>Patch the Web</span></a>
+      <nav aria-label="Main navigation"><a href="/registry/" aria-current="page">Registry</a><a href="/authors/">Authors</a><a href="/#safety">Safety</a></nav>
+      <a class="header-action" href="/downloads/patch-the-web-extension-v0.9.1.zip" download>Get extension <span aria-hidden="true">↓</span></a>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span></span> Public community registry</div>
+        <h1>Useful features,<br /><em>verified before install.</em></h1>
+        <p>Every repair is a small declarative patch: exact domain scope, human-readable permissions, tested selectors, and an active compatibility receipt.</p>
+        <div class="hero-statline" id="registry-summary" aria-live="polite">Loading verified repairs…</div>
+      </section>
+      <section class="registry-shell" aria-labelledby="repairs-heading">
+        <div class="registry-toolbar"><div><span class="kicker">Verified repairs</span><h2 id="repairs-heading">Find a feature your site is missing.</h2></div><label class="search"><span class="sr-only">Search verified repairs</span><span aria-hidden="true">⌕</span><input id="patch-search" type="search" placeholder="Search websites, needs, or features" autocomplete="off" /></label></div>
+        <div class="filters" aria-label="Filter repairs by capability"><button class="filter-chip is-active" type="button" data-filter="all" aria-pressed="true">All repairs</button><button class="filter-chip" type="button" data-filter="accessibility" aria-pressed="false">Accessibility</button><button class="filter-chip" type="button" data-filter="content-filter" aria-pressed="false">Filters & search</button><button class="filter-chip" type="button" data-filter="layout" aria-pressed="false">Mobile layout</button><button class="filter-chip" type="button" data-filter="local-storage" aria-pressed="false">Keep progress</button></div>
+        <div class="patch-grid" id="patch-grid" aria-live="polite" aria-busy="true"></div><p class="empty-state" id="empty-state" hidden>No verified repair matches that search yet.</p>
+      </section>
+      <section class="trust-section"><div><span class="kicker">Built for agency, not surveillance</span><h2>A repair is never a blank cheque.</h2><p>Patch the Web refuses arbitrary JavaScript and validates a patch again on your device before it can run.</p></div><ol><li><span>01</span><div><strong>Scoped</strong><p>It can run only on the exact domain and path declared in the receipt.</p></div></li><li><span>02</span><div><strong>Constrained</strong><p>Only allowlisted transformations: filters, layout, accessibility, keyboard support, and local progress.</p></div></li><li><span>03</span><div><strong>Monitored</strong><p>Selector drift is detected by Compatibility Sentinel and affected patches are quarantined.</p></div></li></ol></section>
+      <section class="author-cta"><div><span class="kicker">Have a repair idea?</span><h2>Turn one complaint into a feature everyone can use.</h2><p>Start a privacy-safe authoring brief, then let Codex inspect, test, and prepare the repair for review.</p></div><a href="/authors/">Start authoring <span aria-hidden="true">→</span></a></section>
+    </main>
+    <footer><a class="brand" href="/"><span class="brand-symbol" aria-hidden="true"><i></i><i></i></span><span>Patch the Web</span></a><span>Community repair layer for the web.</span><a href="/sentinel/">Compatibility Sentinel</a></footer>
+    <template id="patch-card-template"><article class="patch-card"><div class="card-top"><span class="status"><i></i> Verified</span><span class="version"></span></div><h3></h3><p class="summary"></p><div class="capabilities"></div><dl class="receipt"><div><dt>Scope</dt><dd class="scope"></dd></div><div><dt>Checked</dt><dd class="checked"></dd></div><div><dt>Health</dt><dd class="health"></dd></div></dl><div class="card-actions"><a class="download" download>Download patch <span aria-hidden="true">↓</span></a><button class="details" type="button" aria-expanded="false">View receipt</button></div><div class="receipt-detail" hidden><p class="hash"></p><p class="operations"></p><a class="page-link" target="_blank" rel="noreferrer">Open repaired page ↗</a></div></article></template>
+    <script type="module" src="/registry/registry.ts"></script>
+  </body>
+</html>

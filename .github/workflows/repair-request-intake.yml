@@ -1,0 +1,60 @@
+name: Repair request intake
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate-request:
+    if: contains(github.event.issue.labels.*.name, 'repair-request')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate privacy-safe request structure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body ?? "";
+            const problems = [];
+            if (!body.includes("<!-- patch-the-web-request:v1 -->")) problems.push("Generate the request with the guided author page so the v1 intake marker is present.");
+            const pageMatch = body.match(/## Public page\s*\n(https?:\/\/[^\s]+)/i);
+            if (!pageMatch) {
+              problems.push("Add one public http or https URL under Public page.");
+            } else {
+              try {
+                const url = new URL(pageMatch[1]);
+                const host = url.hostname.toLowerCase();
+                const privateHost = host === "localhost" || host === "::1" || host.endsWith(".local") || /^(?:10\.|127\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(host);
+                if (url.search || url.hash || url.username || url.password || privateHost) problems.push("Use only a clean public origin and path without credentials, query strings, fragments, or private hosts.");
+              } catch {
+                problems.push("The Public page URL is invalid.");
+              }
+            }
+            const problemText = body.match(/## Problem\s*\n([\s\S]*?)\n## Desired outcomes/i)?.[1]?.trim() ?? "";
+            if (problemText.length < 12 || problemText.length > 1200) problems.push("Keep the problem description between 12 and 1200 characters.");
+            const outcomesText = body.match(/## Desired outcomes\s*\n([\s\S]*?)\n## Privacy confirmation/i)?.[1] ?? "";
+            const outcomes = outcomesText.split("\n").filter((line) => /^-\s+\S/.test(line));
+            if (outcomes.length < 1 || outcomes.length > 12) problems.push("Provide between 1 and 12 desired outcomes.");
+            const confirmations = (body.match(/- \[x\]/gi) ?? []).length;
+            if (confirmations < 2) problems.push("Confirm both privacy and publication-review statements.");
+            if (body.length > 8000) problems.push("Keep the request under 8,000 characters.");
+
+            const issue_number = context.issue.number;
+            const add = problems.length ? "needs-info" : "intake-valid";
+            const remove = problems.length ? "intake-valid" : "needs-info";
+            await github.rest.issues.addLabels({ ...context.repo, issue_number, labels: [add] });
+            await github.rest.issues.removeLabel({ ...context.repo, issue_number, name: remove }).catch((error) => {
+              if (error.status !== 404) throw error;
+            });
+
+            if (problems.length) {
+              const marker = "<!-- patch-the-web-intake-check -->";
+              const comments = await github.paginate(github.rest.issues.listComments, { ...context.repo, issue_number, per_page: 100 });
+              const previous = comments.find((comment) => comment.user?.type === "Bot" && comment.body?.includes(marker));
+              const message = `${marker}\nThe automated intake check needs these changes:\n\n${problems.map((problem) => `- ${problem}`).join("\n")}\n\nEdit this issue and the check will run again. No patch is published from an issue alone.`;
+              if (previous) await github.rest.issues.updateComment({ ...context.repo, comment_id: previous.id, body: message });
+              else await github.rest.issues.createComment({ ...context.repo, issue_number, body: message });
+            }

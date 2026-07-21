@@ -10,7 +10,7 @@ const root = __dirname;
 const siteOut = resolve(root, "dist/site");
 const patchSourceDir = resolve(root, "src/registry/patches");
 const compatibilitySourcePath = resolve(root, "src/registry/compatibility.json");
-const releaseFiles = ["patch-the-web-extension-v0.8.0.zip", "patch-the-web-codex-plugin-v0.4.0.zip"];
+const releaseFiles = ["patch-the-web-extension-v0.9.1.zip", "patch-the-web-codex-plugin-v0.4.1.zip"];
 
 async function loadRegistryArtifacts() {
   const compatibilityReport = JSON.parse(await readFile(compatibilitySourcePath, "utf8")) as RegistryCompatibilityReport;
@@ -120,6 +120,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: resolve(root, "src/site/index.html"),
+        registry: resolve(root, "src/site/registry/index.html"),
+        authors: resolve(root, "src/site/authors/index.html"),
+        privacy: resolve(root, "src/site/privacy/index.html"),
         demo: resolve(root, "src/site/demo/index.html"),
         care: resolve(root, "src/site/care/index.html"),
         sentinel: resolve(root, "src/site/sentinel/index.html")

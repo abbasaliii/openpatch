@@ -111,6 +111,35 @@ export type CollectionCompareOperation = {
   }>;
 };
 
+export type TableColumnFilterOperation = {
+  id: string;
+  type: "tableColumnFilter";
+  selector: string;
+  headerSelector: string;
+  rowSelector: string;
+  headerText: string;
+  markerSelector: string;
+  tableLabel: string;
+  columnLabel: string;
+  markerLabel: string;
+  collapseOtherColumns: true;
+};
+
+export type PublicTableSearchOperation = {
+  id: string;
+  type: "publicTableSearch";
+  selector: string;
+  rowSelector: string;
+  headerText: string;
+  title: string;
+  description: string;
+  searchLabel: string;
+  placeholder?: string;
+  tableLabel: string;
+  maxTables: number;
+  maxRows: number;
+};
+
 export type PatchOperation =
   | StyleOperation
   | AttributeOperation
@@ -120,7 +149,9 @@ export type PatchOperation =
   | ValidationOperation
   | KeyboardNavigationOperation
   | CollectionFilterOperation
-  | CollectionCompareOperation;
+  | CollectionCompareOperation
+  | TableColumnFilterOperation
+  | PublicTableSearchOperation;
 
 export type PatchAssertion =
   | { type: "exists"; selector: string; min?: number; max?: number }

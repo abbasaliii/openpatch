@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "org.patchtheweb.nu-karachi-degree-programs",
+  "name": "FAST-NUCES: Karachi degree programs only",
+  "summary": "Shows only programs offered at the Karachi campus and collapses the campus matrix into a focused two-column view.",
+  "version": "1.0.0",
+  "author": { "name": "Patch the Web Community", "verified": false },
+  "match": {
+    "hosts": ["nu.edu.pk"],
+    "paths": ["/Degree-Programs"]
+  },
+  "capabilities": ["content-filter", "hide-elements", "accessibility", "layout"],
+  "operations": [
+    {
+      "id": "show-karachi-programs-only",
+      "type": "tableColumnFilter",
+      "selector": "table.edu-table-responsive",
+      "headerSelector": "tr.heading-table > th",
+      "rowSelector": "tr",
+      "headerText": "Karachi",
+      "markerSelector": ".fa-check",
+      "tableLabel": "Degree programs offered at the Karachi campus",
+      "columnLabel": "Karachi campus availability",
+      "markerLabel": "Offered at Karachi campus",
+      "collapseOtherColumns": true
+    },
+    {
+      "id": "fit-focused-table",
+      "type": "style",
+      "selector": "table.edu-table-responsive",
+      "styles": { "width": "100%", "max-width": "100%", "min-width": "0" }
+    },
+    {
+      "id": "widen-program-column",
+      "type": "style",
+      "selector": "table.edu-table-responsive tr > :first-child",
+      "styles": { "width": "75%", "min-width": "0" }
+    },
+    {
+      "id": "size-karachi-column",
+      "type": "style",
+      "selector": "table.edu-table-responsive tr > :nth-child(4)",
+      "styles": { "width": "25%", "min-width": "88px" }
+    }
+  ],
+  "verify": [
+    { "type": "exists", "selector": "table.edu-table-responsive", "min": 1, "max": 1 },
+    { "type": "exists", "selector": "table.edu-table-responsive tr.heading-table > th", "min": 7, "max": 7 },
+    { "type": "exists", "selector": "table.edu-table-responsive tr > td:nth-child(4) > .fa-check", "min": 1, "max": 100 },
+    { "type": "attribute", "selector": "table.edu-table-responsive", "name": "aria-label", "value": "Degree programs offered at the Karachi campus" },
+    { "type": "attribute", "selector": "table.edu-table-responsive tr.heading-table > th:nth-child(4)", "name": "aria-label", "value": "Karachi campus availability" },
+    { "type": "exists", "selector": "table.edu-table-responsive tr[data-patch-the-web-table-row-match='true']", "min": 1, "max": 100 },
+    { "type": "exists", "selector": "table.edu-table-responsive tr[data-patch-the-web-table-row-hidden='true']", "min": 1, "max": 100 },
+    { "type": "exists", "selector": "table.edu-table-responsive [data-patch-the-web-table-column-hidden='true']", "min": 1 }
+  ],
+  "changelog": "Initial domain-scoped Karachi view: identifies the Karachi column by its exact public header, keeps only marked offerings, collapses other campus columns, fits the table on mobile, and adds accessible availability labels."
+}

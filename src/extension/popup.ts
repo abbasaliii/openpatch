@@ -49,6 +49,7 @@ const installFlow = byId<HTMLElement>("install-flow");
 const registryMatch = byId<HTMLElement>("registry-match");
 const removePatchButton = byId<HTMLButtonElement>("remove-patch");
 const removeStatus = byId<HTMLElement>("remove-status");
+const advancedImport = byId<HTMLDetailsElement>("advanced-import");
 
 let currentTab: chrome.tabs.Tab | undefined;
 let currentPatch: MatchedPatchState | undefined;
@@ -177,6 +178,7 @@ function showRegistryOffer(entry: RegistryPatchEntry) {
   empty.hidden = true;
   matchDot.classList.add("active");
   registryMatch.hidden = false;
+  advancedImport.hidden = true;
   installFlow.classList.add("registry-ready");
   byId("install-eyebrow").textContent = "Public registry discovery";
   byId("install-title").textContent = "A verified feature is ready";
@@ -186,7 +188,6 @@ function showRegistryOffer(entry: RegistryPatchEntry) {
     ? ` · live compatibility ${entry.compatibility.healthy}/${entry.compatibility.total}`
     : "";
   byId("registry-match-proof").textContent = `${entry.verification.operations} constrained operations · ${entry.verification.assertions} assertions${sentinelProof}`;
-  byId("import-file-label").textContent = "Or choose a .patch-the-web.json instead";
   installButton.textContent = "Install verified community feature";
 }
 

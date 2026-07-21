@@ -1,0 +1,2 @@
+/* Keep metadata legible at the tiny receipt-label size. */
+.receipt dt { color: #4c6258; }

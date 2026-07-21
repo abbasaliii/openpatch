@@ -63,8 +63,13 @@ export function contentScriptMatches(patches: CommunityPatch[]) {
   const matches = new Set<string>();
   for (const patch of patches) {
     for (const host of patch.match.hosts) {
-      const scheme = host === "localhost" || host === "127.0.0.1" ? "http" : "*";
-      for (const path of patch.match.paths) matches.add(`${scheme}://${host}${path}`);
+      const scheme = host === "localhost" || host === "127.0.0.1" ? "http" : "https";
+      for (const path of patch.match.paths) {
+        // Chrome dynamic-content-script paths must include a wildcard. The runtime
+        // matcher still enforces the patch's exact pathname before applying anything.
+        const chromePath = path.endsWith("*") ? path : `${path}*`;
+        matches.add(`${scheme}://${host}${chromePath}`);
+      }
     }
   }
   return [...matches].sort();
@@ -72,7 +77,7 @@ export function contentScriptMatches(patches: CommunityPatch[]) {
 
 export function permissionOrigins(patch: Pick<CommunityPatch, "match">) {
   return [...new Set(patch.match.hosts.map((host) => {
-    const scheme = host === "localhost" || host === "127.0.0.1" ? "http" : "*";
+    const scheme = host === "localhost" || host === "127.0.0.1" ? "http" : "https";
     return `${scheme}://${host}/*`;
   }))].sort();
 }

@@ -2,6 +2,8 @@
 import { describe, expect, it } from "vitest";
 import civicPatch from "../src/registry/patches/civic-apply.patch-the-web.json";
 import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
+import nuKarachiPatch from "../src/registry/patches/nu-karachi-degree-programs.patch-the-web.json";
+import hecCampusPatch from "../src/registry/patches/hec-campus-finder.patch-the-web.json";
 import { patchMatchesUrl } from "../src/core/matcher";
 import type { CommunityPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
@@ -14,6 +16,27 @@ describe("Patch the Web policy validator", () => {
 
   it("accepts the bounded MetroCare feature repair", () => {
     expect(validatePatch(metroCarePatch).ok).toBe(true);
+  });
+
+  it("accepts the domain-scoped Karachi degree-program repair", () => {
+    expect(validatePatch(nuKarachiPatch).ok).toBe(true);
+  });
+
+  it("accepts the bounded HEC public-table search repair", () => {
+    expect(validatePatch(hecCampusPatch).ok).toBe(true);
+  });
+
+  it("rejects executable or unbounded public-table searches", () => {
+    const unsafe = structuredClone(hecCampusPatch) as unknown as { operations: Array<Record<string, unknown>> };
+    const operation = unsafe.operations.find((entry) => entry.type === "publicTableSearch")!;
+    operation.maxRows = 1000;
+    operation.script = "fetch('https://evil.test')";
+    const result = validatePatch(unsafe);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues.some((issue) => issue.path.endsWith("maxRows"))).toBe(true);
+      expect(result.issues.some((issue) => issue.path.endsWith("script"))).toBe(true);
+    }
   });
 
   it("blocks collection filters from reading page text or arbitrary attributes", () => {
@@ -62,6 +85,21 @@ describe("Patch the Web policy validator", () => {
     const result = validatePatch(unsafe);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.issues.some((issue) => issue.path === "operations[0].type")).toBe(true);
+  });
+
+  it("keeps table-column filters bounded and rejects executable fields", () => {
+    const unsafe = structuredClone(nuKarachiPatch) as unknown as { operations: Array<Record<string, unknown>> };
+    const operation = unsafe.operations.find((entry) => entry.type === "tableColumnFilter")!;
+    operation.headerText = " Karachi ";
+    operation.collapseOtherColumns = false;
+    operation.script = "fetch('https://evil.test')";
+    const result = validatePatch(unsafe);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues.some((issue) => issue.path.endsWith("headerText"))).toBe(true);
+      expect(result.issues.some((issue) => issue.path.endsWith("collapseOtherColumns"))).toBe(true);
+      expect(result.issues.some((issue) => issue.path.endsWith("script"))).toBe(true);
+    }
   });
 
   it("rejects network-capable CSS and event-handler attributes", () => {

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "org.patchtheweb.hec-campus-finder",
+  "name": "HEC: recognized campus finder",
+  "summary": "Adds a private local search across HEC's public and private recognized-campus tables and repairs the mobile table layout.",
+  "version": "1.0.0",
+  "author": { "name": "Patch the Web Community", "verified": true },
+  "match": {
+    "hosts": ["www.hec.gov.pk"],
+    "paths": ["/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx"]
+  },
+  "capabilities": ["content-filter", "accessibility", "keyboard-navigation", "layout"],
+  "operations": [
+    {
+      "id": "search-recognized-campuses",
+      "type": "publicTableSearch",
+      "selector": "table.ms-rteTable-default",
+      "rowSelector": "tr",
+      "headerText": "S. No",
+      "title": "Find a recognized university campus",
+      "description": "Search university names, cities, and campus locations across the public and private sector lists.",
+      "searchLabel": "Search recognized campuses",
+      "placeholder": "Try Karachi, Lahore, or a university name",
+      "tableLabel": "HEC recognized university campuses table",
+      "maxTables": 2,
+      "maxRows": 120
+    },
+    {
+      "id": "fit-campus-tables-on-mobile",
+      "type": "style",
+      "selector": "table.ms-rteTable-default",
+      "when": { "maxWidth": 760 },
+      "styles": { "width": "100%", "max-width": "100%", "min-width": "0", "table-layout": "fixed" }
+    },
+    {
+      "id": "size-campus-serial-column",
+      "type": "style",
+      "selector": "table.ms-rteTable-default tr > td:nth-child(1)",
+      "when": { "maxWidth": 760 },
+      "styles": { "width": "11%", "padding": "8px 5px", "font-size": "13px" }
+    },
+    {
+      "id": "wrap-university-column",
+      "type": "style",
+      "selector": "table.ms-rteTable-default tr > td:nth-child(2)",
+      "when": { "maxWidth": 760 },
+      "styles": { "width": "42%", "padding": "8px 6px", "overflow-wrap": "anywhere", "word-break": "normal", "font-size": "13px" }
+    },
+    {
+      "id": "wrap-campus-location-column",
+      "type": "style",
+      "selector": "table.ms-rteTable-default tr > td:nth-child(3)",
+      "when": { "maxWidth": 760 },
+      "styles": { "width": "47%", "padding": "8px 6px", "overflow-wrap": "anywhere", "word-break": "normal", "font-size": "13px" }
+    }
+  ],
+  "verify": [
+    { "type": "exists", "selector": "table.ms-rteTable-default", "min": 2, "max": 2 },
+    { "type": "exists", "selector": "table.ms-rteTable-default tr", "min": 10, "max": 100 },
+    { "type": "exists", "selector": "table.ms-rteTable-default tr > td:nth-child(2)", "min": 8, "max": 100 },
+    { "type": "exists", "selector": "table.ms-rteTable-default tr > td:nth-child(3)", "min": 8, "max": 100 }
+  ],
+  "changelog": "Initial release: private public-table search, accessible result counts, keyboard shortcuts, and a bounded mobile table layout."
+}

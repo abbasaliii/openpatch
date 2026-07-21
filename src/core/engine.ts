@@ -7,8 +7,11 @@ import type {
   PatchHealth,
   PatchOperation,
   PersistFormOperation,
+  PublicTableSearchOperation,
   ValidationOperation
 } from "./types";
+import { inspectTableColumnFilter } from "./table-filter";
+import { inspectPublicTableSearch } from "./public-table-search";
 
 type BrowserContext = {
   document: Document;
@@ -81,6 +84,19 @@ function installTrustedUiStyles(document: Document) {
       color: #176248; background: #fff; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
     }
     .patch-the-web-navigator__clear:focus-visible { outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 2px; }
+    .patch-the-web-table-search {
+      margin: 0 0 22px; padding: 20px; border: 1px solid #b9e6d1; border-radius: 16px;
+      color: #17352a; background: linear-gradient(145deg, #f2fcf7, #fff);
+      box-shadow: 0 12px 30px rgba(22,94,67,.08); font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .patch-the-web-table-search h2 { margin: 0 0 4px; color: #143126; font-size: 20px; line-height: 1.2; }
+    .patch-the-web-table-search p { margin: 0; color: #5f746b; font-size: 13px; line-height: 1.5; }
+    .patch-the-web-table-search label { display: grid; gap: 7px; margin-top: 15px; color: #355649; font-size: 11px; font-weight: 800; }
+    .patch-the-web-table-search input { width: 100%; min-height: 43px; padding: 9px 11px; border: 1px solid #bed4ca; border-radius: 10px; color: #19362b; background: #fff; font: 500 14px/1.25 ui-sans-serif, system-ui, sans-serif; }
+    .patch-the-web-table-search input:focus { outline: 3px solid rgba(11,149,105,.18); outline-offset: 1px; border-color: #0b9569; }
+    .patch-the-web-table-search__receipt { display: flex; gap: 12px; align-items: center; margin-top: 13px; padding-top: 12px; border-top: 1px solid #dcece4; }
+    .patch-the-web-table-search__status { color: #136b4d !important; font-weight: 800; }
+    .patch-the-web-table-search__privacy { margin-left: auto !important; font-size: 10px !important; }
     .patch-the-web-compare {
       margin: -8px 0 26px;
       padding: 18px 20px;
@@ -675,6 +691,66 @@ function setupCollectionCompare(
   return { matched: items.length, applied: true, detail: `${items.length} items safely comparable` };
 }
 
+function setupPublicTableSearch(operation: PublicTableSearchOperation, context: BrowserContext) {
+  const inspection = inspectPublicTableSearch(operation, context.document);
+  if (!inspection.healthy || !inspection.tables || !inspection.headers || !inspection.dataRows) return inspection;
+  const { document } = context;
+  const panel = document.createElement("section");
+  panel.className = "patch-the-web-table-search";
+  panel.dataset.patchTheWebOwned = "true";
+  const title = document.createElement("h2");
+  title.textContent = operation.title;
+  const description = document.createElement("p");
+  description.textContent = operation.description;
+  const label = document.createElement("label");
+  label.textContent = operation.searchLabel;
+  const input = document.createElement("input");
+  input.type = "search";
+  input.placeholder = operation.placeholder ?? "";
+  input.autocomplete = "off";
+  const receipt = document.createElement("div");
+  receipt.className = "patch-the-web-table-search__receipt";
+  const status = document.createElement("p");
+  status.className = "patch-the-web-table-search__status";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  const privacy = document.createElement("p");
+  privacy.className = "patch-the-web-table-search__privacy";
+  privacy.textContent = "Search stays on this page";
+  label.append(input);
+  receipt.append(status, privacy);
+  panel.append(title, description, label, receipt);
+  inspection.tables[0].before(panel);
+  inspection.tables.forEach((table, index) => table.setAttribute("aria-label", `${operation.tableLabel} ${index + 1} of ${inspection.tables!.length}`));
+  inspection.headers.forEach((row) => [...row.cells].forEach((cell) => {
+    cell.setAttribute("role", "columnheader");
+    cell.setAttribute("scope", "col");
+  }));
+  const searchable = inspection.dataRows.map((row) => ({ row, text: (row.textContent ?? "").replace(/\s+/g, " ").trim().toLocaleLowerCase() }));
+  const update = () => {
+    const query = input.value.replace(/\s+/g, " ").trim().toLocaleLowerCase();
+    let visible = 0;
+    searchable.forEach(({ row, text }) => {
+      const match = query.length === 0 || text.includes(query);
+      row.hidden = !match;
+      row.style.setProperty("display", match ? "" : "none", match ? "" : "important");
+      row.toggleAttribute("aria-hidden", !match);
+      row.dataset.patchTheWebTableSearchMatch = String(match);
+      if (match) visible += 1;
+    });
+    status.textContent = query ? `${visible} of ${searchable.length} rows match` : `${searchable.length} public rows available`;
+  };
+  input.addEventListener("input", update);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && input.value) { input.value = ""; update(); }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "/" && document.activeElement !== input) { event.preventDefault(); input.focus(); }
+  });
+  update();
+  return inspection;
+}
+
 function applyOperation(patch: CommunityPatch, operation: PatchOperation, context: BrowserContext): OperationHealth {
   const { document, window } = context;
   try {
@@ -733,6 +809,48 @@ function applyOperation(patch: CommunityPatch, operation: PatchOperation, contex
       if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one collection container" };
       const result = setupCollectionCompare(operation, context, containers[0]);
       return { id: operation.id, type: operation.type, matched: result.matched, applied: result.applied, detail: result.detail };
+    }
+    if (operation.type === "tableColumnFilter") {
+      const inspection = inspectTableColumnFilter(operation, document);
+      if (!inspection.healthy || !inspection.table || !inspection.header || !inspection.matchingRows || !inspection.hiddenRows || !inspection.matrixRows || inspection.columnIndex === undefined) {
+        return { id: operation.id, type: operation.type, matched: inspection.matched, applied: false, detail: inspection.detail };
+      }
+      inspection.table.setAttribute("aria-label", operation.tableLabel);
+      inspection.table.dataset.patchTheWebTableFilter = "active";
+      inspection.header.setAttribute("aria-label", operation.columnLabel);
+      const columnIndex = inspection.columnIndex;
+      inspection.hiddenRows.forEach((row) => {
+        row.hidden = true;
+        row.style.setProperty("display", "none", "important");
+        row.setAttribute("aria-hidden", "true");
+        row.dataset.patchTheWebTableRowHidden = "true";
+      });
+      inspection.matchingRows.forEach((row) => {
+        row.dataset.patchTheWebTableRowMatch = "true";
+        const cells = [...row.children].filter((cell) => cell.tagName === "TH" || cell.tagName === "TD") as HTMLElement[];
+        const marker = cells[columnIndex].querySelector<HTMLElement>(operation.markerSelector);
+        marker?.setAttribute("role", "img");
+        marker?.setAttribute("aria-hidden", "false");
+        marker?.setAttribute("aria-label", operation.markerLabel);
+        marker?.setAttribute("title", operation.markerLabel);
+      });
+      if (operation.collapseOtherColumns) {
+        inspection.matrixRows.forEach((row) => {
+          const cells = [...row.children].filter((cell) => cell.tagName === "TH" || cell.tagName === "TD") as HTMLElement[];
+          cells.forEach((cell, index) => {
+            if (index === 0 || index === columnIndex) return;
+            cell.hidden = true;
+            cell.style.setProperty("display", "none", "important");
+            cell.setAttribute("aria-hidden", "true");
+            cell.dataset.patchTheWebTableColumnHidden = "true";
+          });
+        });
+      }
+      return { id: operation.id, type: operation.type, matched: inspection.matched, applied: true, detail: inspection.detail };
+    }
+    if (operation.type === "publicTableSearch") {
+      const inspection = setupPublicTableSearch(operation, context);
+      return { id: operation.id, type: operation.type, matched: inspection.matched, applied: inspection.healthy, detail: inspection.detail };
     }
     const containers = selected(document, operation.container);
     if (containers.length !== 1) return { id: operation.id, type: operation.type, matched: containers.length, applied: false, detail: "expected exactly one navigation container" };

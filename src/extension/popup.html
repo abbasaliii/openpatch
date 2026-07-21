@@ -78,6 +78,7 @@
         <label class="complaint-label" for="repair-complaint">What should work better?</label>
         <textarea id="repair-complaint" maxlength="1000" rows="4" placeholder="This form loses my progress, overflows on mobile, and its errors are inaccessible."></textarea>
         <button class="author-button" id="author-button" type="button"><span aria-hidden="true">✦</span> Copy Codex repair brief</button>
+        <a class="guided-author-link" href="https://patch-the-web.vercel.app/authors/" target="_blank" rel="noreferrer">Need help describing it? Use the guided request →</a>
         <p class="privacy-note">Structural signals only — never field values, cookies, storage, or URL queries.</p>
         <p class="brief-status" id="brief-status" role="status" aria-live="polite"></p>
       </section>
@@ -95,8 +96,12 @@
             <small id="registry-match-proof"></small>
           </div>
         </div>
-        <input id="patch-file" class="file-input" type="file" accept="application/json,.json,.patch-the-web.json" />
-        <label class="import-button" id="import-file-label" for="patch-file">Choose .patch-the-web.json</label>
+        <details class="advanced-import" id="advanced-import">
+          <summary>Advanced author tools</summary>
+          <p>Testing a patch before publication? Import its validated JSON file here.</p>
+          <input id="patch-file" class="file-input" type="file" accept="application/json,.json,.patch-the-web.json" />
+          <label class="import-button" id="import-file-label" for="patch-file">Choose .patch-the-web.json</label>
+        </details>
         <div class="import-preview" id="import-preview" hidden>
           <div class="import-head"><span class="import-check">✓</span><div><strong id="import-name"></strong><small id="import-version"></small></div></div>
           <dl>
@@ -113,7 +118,7 @@
 
     <footer>
       <span><i></i> Domain scoped</span>
-      <span>No account or API key</span>
+      <a href="welcome.html" target="_blank">How it works</a>
     </footer>
     <script src="popup.js"></script>
   </body>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Describe a website problem and create a privacy-safe Patch the Web repair request." />
+    <title>Request a repair — Patch the Web</title>
+    <link rel="stylesheet" href="/authors/authors.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">Patch the Web</a>
+      <nav aria-label="Main navigation"><a href="/registry/">Registry</a><a href="/authors/" aria-current="page">Request a repair</a></nav>
+      <a class="button quiet desktop-action" href="/downloads/patch-the-web-codex-plugin-v0.4.1.zip" download>Get Codex skill ↓</a>
+    </header>
+    <main>
+      <section class="hero">
+        <span>REQUEST A COMMUNITY REPAIR</span>
+        <h1>Tell us the problem.<br /><em>We’ll structure the fix.</em></h1>
+        <p>No selectors, code, or technical acceptance criteria required. Choose the outcome you need and Patch the Web creates a private, testable handoff for Codex.</p>
+        <div class="trust-row"><span>✓ Local in this tab</span><span>✓ Query strings removed</span><span>✓ Human review before publish</span></div>
+      </section>
+
+      <section class="flow">
+        <form id="brief-form" novalidate>
+          <div class="step">
+            <b aria-hidden="true">01</b>
+            <div>
+              <label for="target">Which public page needs repair?</label>
+              <input id="target" type="url" required inputmode="url" autocomplete="url" placeholder="https://example.edu/programs" />
+              <small>We keep only the public origin and path. Sign-in details, query strings, and fragments are removed.</small>
+            </div>
+          </div>
+
+          <div class="step">
+            <b aria-hidden="true">02</b>
+            <div>
+              <label for="complaint">What is making the page difficult?</label>
+              <textarea id="complaint" required minlength="12" maxlength="900" placeholder="Example: I only want to see programs offered in Karachi, but the table makes me scan every campus."></textarea>
+              <small>Describe the outcome—not code. Don’t include names, account numbers, application answers, or other personal information.</small>
+            </div>
+          </div>
+
+          <fieldset class="step outcome-step">
+            <legend><b aria-hidden="true">03</b><span>What should the repair improve?</span></legend>
+            <p>Choose everything that matters. We turn these choices into observable tests.</p>
+            <div class="need-grid">
+              <label><input type="checkbox" name="needs" value="filter" /><span><strong>Find or filter content</strong><small>Search tables, lists, programs, services, or products.</small></span></label>
+              <label><input type="checkbox" name="needs" value="mobile" /><span><strong>Work properly on mobile</strong><small>Remove overflow and keep controls reachable.</small></span></label>
+              <label><input type="checkbox" name="needs" value="accessibility" /><span><strong>Improve accessibility</strong><small>Labels, announcements, errors, and assistive technology.</small></span></label>
+              <label><input type="checkbox" name="needs" value="progress" /><span><strong>Remember unfinished progress</strong><small>Save eligible non-sensitive fields locally for a short time.</small></span></label>
+              <label><input type="checkbox" name="needs" value="keyboard" /><span><strong>Make keyboard navigation work</strong><small>Logical focus, shortcuts, and visible focus states.</small></span></label>
+              <label><input type="checkbox" name="needs" value="obstruction" /><span><strong>Remove an obstruction</strong><small>Dismiss overlays or clutter without hiding required notices.</small></span></label>
+              <label><input type="checkbox" name="needs" value="simplify" /><span><strong>Simplify the workflow</strong><small>Reorder existing content around the main task.</small></span></label>
+            </div>
+          </fieldset>
+
+          <details class="optional">
+            <summary>Add another specific result <span>Optional</span></summary>
+            <label for="criteria">What else must be true after the repair?</label>
+            <textarea id="criteria" maxlength="900" placeholder="Example: Keep the program name visible.&#10;Show an accessible match count."></textarea>
+            <small>One outcome per line. You can leave this empty.</small>
+          </details>
+
+          <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          <button class="button submit" type="submit">Create my repair request <span aria-hidden="true">→</span></button>
+          <p class="local-note">Your unfinished request is stored only in this browser tab and disappears when the tab closes.</p>
+        </form>
+
+        <aside>
+          <span class="eyebrow">WHAT HAPPENS NEXT</span>
+          <h2>One request.<br />A verified community fix.</h2>
+          <ol>
+            <li><b>1</b><span><strong>You describe the problem</strong> in ordinary language and choose the outcomes.</span></li>
+            <li><b>2</b><span><strong>Codex inspects the live page</strong> and authors only constrained operations—never arbitrary site scripts.</span></li>
+            <li><b>3</b><span><strong>Automated gates test it</strong> on mobile and desktop, validate every selector, and check accessibility.</span></li>
+            <li><b>4</b><span><strong>A human reviews publication</strong> before the repair becomes discoverable to everyone on that domain.</span></li>
+          </ol>
+          <p class="rule"><strong>Installers never need AI or an account.</strong> Codex is used only when somebody authors or updates a repair.</p>
+        </aside>
+      </section>
+
+      <section class="result" id="result" hidden aria-labelledby="result-title">
+        <div class="result-head"><span class="eyebrow">REPAIR REQUEST READY</span><button id="start-over" type="button">Start over</button></div>
+        <h2 id="result-title" tabindex="-1">Paste this into Codex.</h2>
+        <p id="scope"></p>
+        <div class="handoff"><span><b>1</b> Open the target page in Chrome</span><span><b>2</b> Open this project in Codex</span><span><b>3</b> Paste the copied brief</span></div>
+        <pre id="preview"></pre>
+        <div class="result-actions"><button class="button" id="copy" type="button">Copy for Codex</button><button class="button quiet" id="download" type="button">Download .md</button><button class="button quiet" id="download-request" type="button">Download request JSON</button></div>
+        <div class="community-submit"><div><span class="eyebrow">DON'T USE CODEX?</span><h3>Ask the community to review it.</h3><p>This opens a public GitHub issue only after you inspect and approve exactly what will be shared.</p></div><button class="button review-button" id="review-submit" type="button">Review public submission →</button></div>
+      </section>
+      <dialog id="review-dialog" aria-labelledby="review-title">
+        <div class="dialog-head"><div><span class="eyebrow">EXPLICIT PUBLIC SHARE</span><h2 id="review-title" tabindex="-1">Review before anything leaves this browser.</h2></div><button id="close-review" type="button" aria-label="Close public submission review">×</button></div>
+        <p>The following text will be placed into a public GitHub issue. It contains only the cleaned public URL, your problem description, and desired outcomes. Patch the Web does not submit it automatically.</p>
+        <pre id="share-preview"></pre>
+        <label class="share-consent"><input id="share-consent" type="checkbox" /><span><strong>I reviewed this public text.</strong> It contains no personal, account, application, payment, authentication, or other private information.</span></label>
+        <div class="dialog-actions"><a class="button" id="github-submit" role="link" target="_blank" rel="noreferrer" aria-disabled="true">Open public GitHub request ↗</a><button class="button quiet" id="close-review-secondary" type="button">Keep editing</button></div>
+        <small>GitHub sign-in is required to create the issue. Installing published repairs still requires no account.</small>
+      </dialog>
+    </main>
+    <footer><span>Patch the Web author path</span><span>Public pages only</span><span>Human review before publish</span></footer>
+    <script type="module" src="/authors/authors.ts"></script>
+  </body>
+</html>

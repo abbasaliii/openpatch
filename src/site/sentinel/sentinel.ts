@@ -21,6 +21,7 @@ const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) 
 function displayName(id: string) {
   if (id.includes("metrocare")) return "MetroCare: personal service navigator";
   if (id.includes("civicapply")) return "CivicApply: accessible & autosaved";
+  if (id.includes("nu-karachi")) return "FAST-NUCES: Karachi degree programs only";
   return id;
 }
 

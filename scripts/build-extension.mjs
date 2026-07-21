@@ -7,6 +7,7 @@ const outdir = resolve(root, "dist/extension");
 
 await rm(outdir, { recursive: true, force: true });
 await mkdir(resolve(outdir, "patches"), { recursive: true });
+await mkdir(resolve(outdir, "icons"), { recursive: true });
 
 await build({
   entryPoints: {
@@ -26,6 +27,9 @@ await Promise.all([
   cp(resolve(root, "src/extension/manifest.json"), resolve(outdir, "manifest.json")),
   cp(resolve(root, "src/extension/popup.html"), resolve(outdir, "popup.html")),
   cp(resolve(root, "src/extension/popup.css"), resolve(outdir, "popup.css")),
+  cp(resolve(root, "src/extension/welcome.html"), resolve(outdir, "welcome.html")),
+  cp(resolve(root, "src/extension/welcome.css"), resolve(outdir, "welcome.css")),
+  cp(resolve(root, "src/extension/icons"), resolve(outdir, "icons"), { recursive: true }),
   cp(resolve(root, "src/registry/patches"), resolve(outdir, "patches"), { recursive: true })
 ]);
 

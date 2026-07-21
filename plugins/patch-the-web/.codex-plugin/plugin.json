@@ -1,6 +1,6 @@
 {
   "name": "patch-the-web",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Author safe, domain-scoped community repairs and missing features for websites with Codex.",
   "author": {
     "name": "Patch the Web"
@@ -11,12 +11,13 @@
   "interface": {
     "displayName": "Patch the Web",
     "shortDescription": "Author safe, tested community web features",
-    "longDescription": "Turn a concrete website complaint or missing capability into a constrained Patch the Web repair, validate every selector and permission, and prove the behavior with browser tests before publication.",
+    "longDescription": "Turn a guided repair request or concrete website complaint into a constrained Patch the Web repair, validate every selector and permission, and prove the behavior with browser tests before publication.",
     "developerName": "Patch the Web",
     "category": "Developer Tools",
     "capabilities": ["Website inspection", "Safe patch authoring", "Private feature filters", "Accessible comparison", "Browser testing"],
     "defaultPrompt": [
       "Use Patch the Web to repair this inaccessible form.",
+      "Author the repair described in this .patch-the-web-request.json artifact.",
       "Create a safe mobile-layout patch for this page.",
       "Add private filters to this service directory.",
       "Add a safe comparison workflow to this directory.",

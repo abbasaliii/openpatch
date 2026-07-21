@@ -76,7 +76,10 @@ export const SAFE_STYLE_PROPERTIES = new Set([
   "visibility",
   "cursor",
   "outline",
-  "outline-offset"
+  "outline-offset",
+  "table-layout",
+  "overflow-wrap",
+  "word-break"
 ]);
 
 const SAFE_ATTRIBUTE = /^(aria-[a-z-]+|role|tabindex|autocomplete|inputmode|title)$/;
@@ -124,13 +127,13 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
     issues.push({ path: `${base}.id`, message: "must use 3-80 lowercase letters, numbers, dots, dashes, or underscores" });
   }
   const type = value.type;
-  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter", "collectionCompare"];
+  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter", "collectionCompare", "tableColumnFilter", "publicTableSearch"];
   if (typeof type !== "string" || !known.includes(type)) {
     issues.push({ path: `${base}.type`, message: "is not an allowed transformation" });
     return;
   }
 
-  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter", "collectionCompare"].includes(type)) {
+  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter", "collectionCompare", "tableColumnFilter", "publicTableSearch"].includes(type)) {
     checkSelector(value.selector, `${base}.selector`, issues);
   }
 
@@ -355,6 +358,52 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
       if (new Set(fieldIds).size !== fieldIds.length) issues.push({ path: `${base}.fields`, message: "comparison field ids must be unique" });
     }
   }
+
+  if (type === "tableColumnFilter") {
+    const allowed = new Set(["id", "type", "selector", "headerSelector", "rowSelector", "headerText", "markerSelector", "tableLabel", "columnLabel", "markerLabel", "collapseOtherColumns"]);
+    Object.keys(value).forEach((key) => {
+      if (!allowed.has(key)) issues.push({ path: `${base}.${key}`, message: "is not allowed for a bounded table filter" });
+    });
+    checkSelector(value.headerSelector, `${base}.headerSelector`, issues);
+    checkSelector(value.rowSelector, `${base}.rowSelector`, issues);
+    checkSelector(value.markerSelector, `${base}.markerSelector`, issues);
+    if (!text(value.headerText, 80) || String(value.headerText) !== String(value.headerText).replace(/\s+/g, " ").trim()) {
+      issues.push({ path: `${base}.headerText`, message: "must be an exact normalized public header under 80 characters" });
+    }
+    for (const key of ["tableLabel", "columnLabel", "markerLabel"] as const) {
+      if (!text(value[key], 160) || UNSAFE_VALUE.test(String(value[key]))) {
+        issues.push({ path: `${base}.${key}`, message: "must be a safe accessible label under 160 characters" });
+      }
+    }
+    if (value.collapseOtherColumns !== true) {
+      issues.push({ path: `${base}.collapseOtherColumns`, message: "must be true for a focused bounded table view" });
+    }
+  }
+
+  if (type === "publicTableSearch") {
+    const allowed = new Set(["id", "type", "selector", "rowSelector", "headerText", "title", "description", "searchLabel", "placeholder", "tableLabel", "maxTables", "maxRows"]);
+    Object.keys(value).forEach((key) => {
+      if (!allowed.has(key)) issues.push({ path: `${base}.${key}`, message: "is not allowed for bounded public-table search" });
+    });
+    checkSelector(value.rowSelector, `${base}.rowSelector`, issues);
+    if (!text(value.headerText, 80) || String(value.headerText) !== String(value.headerText).replace(/\s+/g, " ").trim()) {
+      issues.push({ path: `${base}.headerText`, message: "must be an exact normalized public header under 80 characters" });
+    }
+    for (const key of ["title", "description", "searchLabel", "tableLabel"] as const) {
+      if (!text(value[key], key === "description" ? 180 : 120) || UNSAFE_VALUE.test(String(value[key]))) {
+        issues.push({ path: `${base}.${key}`, message: "must be concise safe visible text" });
+      }
+    }
+    if (value.placeholder !== undefined && (!text(value.placeholder, 100) || UNSAFE_VALUE.test(String(value.placeholder)))) {
+      issues.push({ path: `${base}.placeholder`, message: "must be concise safe placeholder text" });
+    }
+    if (!Number.isInteger(value.maxTables) || Number(value.maxTables) < 1 || Number(value.maxTables) > 5) {
+      issues.push({ path: `${base}.maxTables`, message: "must bound the feature to 1-5 tables" });
+    }
+    if (!Number.isInteger(value.maxRows) || Number(value.maxRows) < 1 || Number(value.maxRows) > 300) {
+      issues.push({ path: `${base}.maxRows`, message: "must bound the feature to 1-300 public rows" });
+    }
+  }
 }
 
 export function validatePatch(value: unknown): ValidationResult {
@@ -460,6 +509,16 @@ export function requiredCapabilities(operations: PatchOperation[]): PatchCapabil
     }
     if (operation.type === "collectionCompare") {
       result.add("content-compare");
+      result.add("accessibility");
+      result.add("keyboard-navigation");
+    }
+    if (operation.type === "tableColumnFilter") {
+      result.add("content-filter");
+      result.add("hide-elements");
+      result.add("accessibility");
+    }
+    if (operation.type === "publicTableSearch") {
+      result.add("content-filter");
       result.add("accessibility");
       result.add("keyboard-navigation");
     }

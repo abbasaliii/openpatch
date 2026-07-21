@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { applyPatch } from "../src/core/engine";
 import civicPatchJson from "../src/registry/patches/civic-apply.patch-the-web.json";
 import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
+import nuKarachiPatchJson from "../src/registry/patches/nu-karachi-degree-programs.patch-the-web.json";
+import hecCampusPatchJson from "../src/registry/patches/hec-campus-finder.patch-the-web.json";
 import type { CommunityPatch } from "../src/core/types";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -277,5 +279,81 @@ describe("safe collection navigator runtime", () => {
     expect(tableWrap?.tabIndex).toBe(0);
     expect(tableWrap?.getAttribute("role")).toBe("region");
     expect(tableWrap?.getAttribute("aria-label")).toBe("Scrollable service comparison");
+  });
+});
+
+const nuFixture = readFileSync(resolve(import.meta.dirname, "fixtures/nu-degree-programs.html"), "utf8");
+
+describe("Karachi-only degree program repair", () => {
+  beforeEach(() => {
+    const parsed = new DOMParser().parseFromString(nuFixture, "text/html");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
+    document.documentElement.className = "";
+    document.head.innerHTML = parsed.head.innerHTML;
+    document.body.innerHTML = parsed.body.innerHTML;
+  });
+
+  it("keeps only Karachi offerings and collapses the campus matrix", () => {
+    const health = applyPatch(nuKarachiPatchJson as CommunityPatch);
+    expect(health).toMatchObject({ applied: true, healthy: 4, total: 4 });
+    const dataRows = [...document.querySelectorAll<HTMLElement>("table.edu-table-responsive tr[data-patch-the-web-table-row-match], table.edu-table-responsive tr[data-patch-the-web-table-row-hidden]")];
+    expect(dataRows.filter((row) => !row.hidden)).toHaveLength(4);
+    expect(dataRows.filter((row) => row.hidden)).toHaveLength(2);
+    expect(document.querySelectorAll("table.edu-table-responsive [data-patch-the-web-table-column-hidden='true']")).toHaveLength(35);
+    expect(document.querySelector("table.edu-table-responsive")?.getAttribute("aria-label")).toBe("Degree programs offered at the Karachi campus");
+    expect(document.querySelector("tr.heading-table > th:nth-child(4)")?.getAttribute("aria-label")).toBe("Karachi campus availability");
+    const checks = [...document.querySelectorAll("tr > td:nth-child(4) > .fa-check")];
+    expect(checks).toHaveLength(4);
+    expect(checks.every((check) => check.getAttribute("role") === "img" && check.getAttribute("aria-hidden") === "false")).toBe(true);
+  });
+
+  it("fails closed when the Karachi header changes", () => {
+    document.querySelector("tr.heading-table > th:nth-child(4)")!.textContent = "Karachi City";
+    const health = applyPatch(nuKarachiPatchJson as CommunityPatch);
+    expect(health).toMatchObject({ applied: false, healthy: 3, total: 4 });
+    expect(document.querySelectorAll("[data-patch-the-web-table-row-hidden]")).toHaveLength(0);
+  });
+});
+
+const hecFixture = readFileSync(resolve(import.meta.dirname, "fixtures/hec-recognized-campuses.html"), "utf8");
+
+describe("HEC recognized-campus finder", () => {
+  beforeEach(() => {
+    const parsed = new DOMParser().parseFromString(hecFixture, "text/html");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
+    document.documentElement.className = "";
+    document.head.innerHTML = parsed.head.innerHTML;
+    document.body.innerHTML = parsed.body.innerHTML;
+  });
+
+  it("adds one private search across both bounded public tables", () => {
+    const health = applyPatch(hecCampusPatchJson as CommunityPatch);
+    expect(health).toMatchObject({ applied: true, healthy: 5, total: 5 });
+    const input = document.querySelector<HTMLInputElement>(".patch-the-web-table-search input[type='search']")!;
+    const status = document.querySelector(".patch-the-web-table-search__status");
+    expect(input).not.toBeNull();
+    expect(status?.getAttribute("aria-live")).toBe("polite");
+    expect(status?.textContent).toBe("8 public rows available");
+    expect(document.querySelectorAll("table.ms-rteTable-default[aria-label]")).toHaveLength(2);
+    expect(document.querySelectorAll("[role='columnheader'][scope='col']")).toHaveLength(6);
+
+    input.value = "Karachi";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    const rows = [...document.querySelectorAll<HTMLElement>("[data-patch-the-web-table-search-match]")];
+    expect(rows.filter((row) => !row.hidden)).toHaveLength(5);
+    expect(rows.filter((row) => row.hidden)).toHaveLength(3);
+    expect(status?.textContent).toBe("5 of 8 rows match");
+    expect(rows.filter((row) => !row.hidden).every((row) => row.textContent?.toLocaleLowerCase().includes("karachi"))).toBe(true);
+
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(input.value).toBe("");
+    expect(rows.every((row) => !row.hidden)).toBe(true);
+  });
+
+  it("fails closed if either exact table header drifts", () => {
+    document.querySelectorAll("table.ms-rteTable-default tr")[2].firstElementChild!.textContent = "Number";
+    const health = applyPatch(hecCampusPatchJson as CommunityPatch);
+    expect(health).toMatchObject({ applied: false, healthy: 4, total: 5 });
+    expect(document.querySelector(".patch-the-web-table-search")).toBeNull();
   });
 });

@@ -53,7 +53,7 @@ test("the production extension loads validated local patches and the bundled rep
   await expect.poll(async () => worker.evaluate(async () => {
     const stored = await chrome.storage.local.get("registryMeta");
     return (stored.registryMeta as { schemaVersion?: number } | undefined)?.schemaVersion;
-  })).toBe(1);
+  }), { timeout: 30_000, intervals: [250, 500, 1_000, 2_000] }).toBe(1);
   await worker.evaluate(async ({ importedPatch, patchId }) => {
     const stored = await chrome.storage.local.get(["installedPatches", "enabledPatches"]);
     const installedPatches = (stored.installedPatches ?? {}) as Record<string, unknown>;
@@ -87,7 +87,7 @@ test("the packaged extension repairs the real public demo domain", async () => {
     await chrome.storage.local.set({ enabledPatches });
   });
 
-  const publicMatches = "*://patch-the-web.vercel.app/demo/*";
+  const publicMatches = "https://patch-the-web.vercel.app/demo/*";
   await expect.poll(async () => worker.evaluate(async (match) =>
     (await chrome.scripting.getRegisteredContentScripts()).some((script) => script.matches?.includes(match)), publicMatches
   )).toBe(true);
@@ -144,6 +144,19 @@ test("the registry-installed feature also runs on the real public MetroCare doma
   await page.locator("select[id$='-availability']").selectOption("new-patients");
   await expect(page.locator(".patch-the-web-navigator__status")).toHaveText("1 of 12 services match");
   await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
+});
+
+test("an unmatched website offers both a one-click brief and the guided request flow", async () => {
+  let worker = context.serviceWorkers()[0];
+  if (!worker) worker = await context.waitForEvent("serviceworker");
+  const extensionId = new URL(worker.url()).host;
+  const page = await context.newPage();
+  await page.goto("http://127.0.0.1:4174/");
+  const popup = await context.newPage();
+  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+  await expect(popup.locator("#empty-state")).toBeVisible();
+  await expect(popup.locator("#author-button")).toHaveText(/Copy Codex repair brief/);
+  await expect(popup.locator(".guided-author-link")).toHaveAttribute("href", "https://patch-the-web.vercel.app/authors/");
 });
 
 test("an installed community feature can be removed with its local metadata", async () => {

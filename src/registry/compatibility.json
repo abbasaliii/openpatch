@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-21T19:51:18.074Z",
-  "registryUrl": "https://patch-the-web.vercel.app/registry/index.json",
+  "generatedAt": "2026-07-21T18:57:49.927Z",
+  "registryUrl": "workspace:src/registry/patches",
   "summary": {
-    "healthy": 2,
+    "healthy": 4,
     "drifted": 0,
-    "unreachable": 2,
+    "unreachable": 0,
     "total": 4
   },
   "patches": [
@@ -14,7 +14,7 @@
       "version": "1.2.0",
       "pageUrl": "https://patch-the-web.vercel.app/demo/",
       "status": "healthy",
-      "checkedAt": "2026-07-21T19:51:18.074Z",
+      "checkedAt": "2026-07-21T18:57:49.927Z",
       "patchSha256": "cccfb834ba58a8012a4ba40f4f064c64eee139605dd6ecbe5c3780e27d946954",
       "healthy": 19,
       "total": 19,
@@ -121,23 +121,48 @@
     {
       "id": "org.patchtheweb.hec-campus-finder",
       "version": "1.0.0",
-      "pageUrl": "https://www.hec.gov.pk/",
-      "status": "unreachable",
-      "checkedAt": "2026-07-21T19:51:18.074Z",
+      "pageUrl": "https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx",
+      "status": "healthy",
+      "checkedAt": "2026-07-21T18:57:49.927Z",
       "patchSha256": "b0b3d607ced94baf0ec5ec5e4754d3419c6e1cf083a96c244c6b9b020e80c4fe",
-      "healthy": 0,
+      "healthy": 5,
       "total": 5,
-      "fingerprint": "d908d8bb8caf0aee3f1903e2a1689fd7201487630a5f017a9b0a6474360e5f04",
+      "fingerprint": "867b45c53c73073c67c8cc27f9b44ef40cffd87a0e35956c528d537e99e73d61",
       "driftedOperationIds": [],
-      "results": [],
-      "error": "Patch policy failed at operations[0].type."
+      "results": [
+        {
+          "id": "search-recognized-campuses",
+          "matched": 76,
+          "healthy": true
+        },
+        {
+          "id": "fit-campus-tables-on-mobile",
+          "matched": 2,
+          "healthy": true
+        },
+        {
+          "id": "size-campus-serial-column",
+          "matched": 89,
+          "healthy": true
+        },
+        {
+          "id": "wrap-university-column",
+          "matched": 81,
+          "healthy": true
+        },
+        {
+          "id": "wrap-campus-location-column",
+          "matched": 81,
+          "healthy": true
+        }
+      ]
     },
     {
       "id": "org.patchtheweb.metrocare-service-navigator",
       "version": "1.1.0",
       "pageUrl": "https://patch-the-web.vercel.app/care/",
       "status": "healthy",
-      "checkedAt": "2026-07-21T19:51:18.074Z",
+      "checkedAt": "2026-07-21T18:57:49.927Z",
       "patchSha256": "943ce97c0115f3e2a8b5c011495e9ef6b78cf1da48ab549c0ffd47f4f3c8800c",
       "healthy": 11,
       "total": 11,
@@ -204,16 +229,36 @@
     {
       "id": "org.patchtheweb.nu-karachi-degree-programs",
       "version": "1.0.0",
-      "pageUrl": "https://nu.edu.pk/",
-      "status": "unreachable",
-      "checkedAt": "2026-07-21T19:51:18.074Z",
+      "pageUrl": "https://nu.edu.pk/Degree-Programs",
+      "status": "healthy",
+      "checkedAt": "2026-07-21T18:57:49.927Z",
       "patchSha256": "19fab525f610dc7c0abc77a01e48764f558adc8d924429e459f8e70266b3743d",
-      "healthy": 0,
+      "healthy": 4,
       "total": 4,
-      "fingerprint": "bc4845325701a0c7834f79e16140e790f4048a3d0c13e3702fe1dfb40085b0ac",
+      "fingerprint": "36800091503b69a32a03ad420a0af108cbb79a828449e26bf61ce6b9680bb128",
       "driftedOperationIds": [],
-      "results": [],
-      "error": "Patch policy failed at operations[0].type."
+      "results": [
+        {
+          "id": "show-karachi-programs-only",
+          "matched": 22,
+          "healthy": true
+        },
+        {
+          "id": "fit-focused-table",
+          "matched": 1,
+          "healthy": true
+        },
+        {
+          "id": "widen-program-column",
+          "matched": 41,
+          "healthy": true
+        },
+        {
+          "id": "size-karachi-column",
+          "matched": 38,
+          "healthy": true
+        }
+      ]
     }
   ]
 }

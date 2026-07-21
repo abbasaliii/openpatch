@@ -11,6 +11,69 @@ export function preflightPatchOnDocument(candidate: CommunityPatch): SelectorPre
     try { return root.querySelectorAll(selector).length; } catch { return 0; }
   };
   const results = candidate.operations.map((operation) => {
+    if (operation.type === "publicTableSearch") {
+      try {
+        const matches = [...document.querySelectorAll(operation.selector)];
+        const tables = matches.filter((element) => element.tagName === "TABLE");
+        if (matches.length !== tables.length || tables.length < 1 || tables.length > operation.maxTables) {
+          return { id: operation.id, matched: matches.length, healthy: false };
+        }
+        const normalize = (value: string | null) => (value ?? "").replace(/\s+/g, " ").trim();
+        let dataRows = 0;
+        for (const table of tables) {
+          const rows = [...table.querySelectorAll(operation.rowSelector)];
+          const headers = rows.filter((row) => normalize((row as HTMLTableRowElement).cells[0]?.textContent ?? null) === operation.headerText);
+          if (headers.length < 1 || headers.length > 12) return { id: operation.id, matched: headers.length, healthy: false };
+          const columnCount = (headers[0] as HTMLTableRowElement).cells.length;
+          if (columnCount < 2 || columnCount > 12) return { id: operation.id, matched: columnCount, healthy: false };
+          if (headers.some((header) => (header as HTMLTableRowElement).cells.length !== columnCount)) {
+            return { id: operation.id, matched: headers.length, healthy: false };
+          }
+          const headerSet = new Set(headers);
+          dataRows += rows.filter((row) => !headerSet.has(row) && (row as HTMLTableRowElement).cells.length === columnCount).length;
+        }
+        return { id: operation.id, matched: dataRows, healthy: dataRows > 0 && dataRows <= operation.maxRows };
+      } catch {
+        return { id: operation.id, matched: 0, healthy: false };
+      }
+    }
+    if (operation.type === "tableColumnFilter") {
+      try {
+        const tables = [...document.querySelectorAll(operation.selector)];
+        if (tables.length !== 1 || tables[0].tagName !== "TABLE") {
+          return { id: operation.id, matched: tables.length, healthy: false };
+        }
+        const table = tables[0];
+        const headers = [...table.querySelectorAll(operation.headerSelector)];
+        if (headers.length < 2 || headers.length > 20) {
+          return { id: operation.id, matched: headers.length, healthy: false };
+        }
+        const normalize = (value: string | null) => (value ?? "").replace(/\s+/g, " ").trim();
+        const matchingHeaders = headers.filter((header) => normalize(header.textContent) === operation.headerText);
+        if (matchingHeaders.length !== 1) {
+          return { id: operation.id, matched: matchingHeaders.length, healthy: false };
+        }
+        const columnIndex = headers.indexOf(matchingHeaders[0]);
+        const rows = [...table.querySelectorAll(operation.rowSelector)];
+        if (rows.length === 0 || rows.length > 100) {
+          return { id: operation.id, matched: rows.length, healthy: false };
+        }
+        const dataRows = rows.filter((row) => {
+          const cells = [...row.children].filter((cell) => cell.tagName === "TH" || cell.tagName === "TD");
+          return cells.length === headers.length && cells.some((cell) => cell.tagName === "TD");
+        });
+        let matchingRows = 0;
+        for (const row of dataRows) {
+          const cells = [...row.children].filter((cell) => cell.tagName === "TH" || cell.tagName === "TD");
+          const markerCount = cells[columnIndex].querySelectorAll(operation.markerSelector).length;
+          if (markerCount > 1) return { id: operation.id, matched: markerCount, healthy: false };
+          if (markerCount === 1) matchingRows += 1;
+        }
+        return { id: operation.id, matched: matchingRows, healthy: dataRows.length > 0 && matchingRows > 0 };
+      } catch {
+        return { id: operation.id, matched: 0, healthy: false };
+      }
+    }
     if (operation.type === "keyboardNavigation") {
       const containers = document.querySelectorAll(operation.container);
       const matched = containers.length === 1 ? count(operation.items, containers[0]) : containers.length;
