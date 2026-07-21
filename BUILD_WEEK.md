@@ -50,6 +50,7 @@ The public Git history preserves the Build Week sequence:
 | Jul 22 | `v0.9.1` guided repair requests | Replaced expert-authored acceptance criteria with plain outcome choices, added public-URL privacy cleaning, tab-local draft recovery, a clear Codex handoff, extension guidance, and mobile + WCAG browser evidence |
 | Jul 22 | `v0.10.0` safe update recovery | Added a bounded validated patch history, SHA-256 recheck, live selector preflight, exact-domain permission recheck, one-click rollback/redo, and complete removal of repair history |
 | Jul 22 | `v0.11.0` confirmed installation | Replaced opaque installs with verified/access/installed/confirmed stages, automatic page verification and retry, simplified registry actions, a production-only store build, and removal of development hosts from publishable patches |
+| Jul 22 | `v0.12.0` private request handoff | Let nontechnical users move from an unmatched page to a prefilled community request without copy/paste; the bounded payload stays in a URL fragment, is cleared after local restore, and is proven absent from network requests |
 
 ## Iteration examples
 

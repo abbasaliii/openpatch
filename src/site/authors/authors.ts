@@ -1,4 +1,5 @@
-import { buildAuthorBrief, buildReviewIssue, type RepairNeed, type RepairRequestArtifact } from "./brief";
+import { buildAuthorBrief, buildReviewIssue, cleanPublicUrl, type RepairNeed, type RepairRequestArtifact } from "./brief";
+import { decodeRepairRequestHandoff, REQUEST_HANDOFF_KEY } from "../../core/request-handoff";
 
 const form = document.querySelector<HTMLFormElement>("#brief-form")!;
 const result = document.querySelector<HTMLElement>("#result")!;
@@ -47,6 +48,31 @@ function restoreDraft() {
     if (targetInput.value || complaintInput.value) formStatus.textContent = "Your unfinished request was restored in this browser tab.";
   } catch {
     sessionStorage.removeItem(draftKey);
+  }
+}
+
+function restoreExtensionHandoff() {
+  if (!new URLSearchParams(location.hash.replace(/^#/, "")).has(REQUEST_HANDOFF_KEY)) return false;
+  const handoff = decodeRepairRequestHandoff(location.hash);
+  history.replaceState(null, "", `${location.pathname}${location.search}`);
+  if (!handoff) {
+    formStatus.textContent = "The private extension handoff was invalid or expired. Start a new request below.";
+    return false;
+  }
+  try {
+    targetInput.value = cleanPublicUrl(handoff.target);
+    complaintInput.value = handoff.complaint;
+    const needs = new Set(handoff.needs);
+    needInputs.forEach((input) => { input.checked = needs.has(input.value as RepairNeed); });
+    saveDraft();
+    formStatus.textContent = handoff.needs.length > 0
+      ? "Prefilled privately from the extension. Review the suggested outcomes, then create your request."
+      : "Prefilled privately from the extension. Choose the outcomes you want, then create your request.";
+    complaintInput.focus();
+    return true;
+  } catch {
+    formStatus.textContent = "The extension handoff did not contain a valid public page. Start a new request below.";
+    return false;
   }
 }
 
@@ -139,4 +165,4 @@ document.querySelector<HTMLButtonElement>("#start-over")!.addEventListener("clic
   targetInput.focus();
 });
 
-restoreDraft();
+if (!restoreExtensionHandoff()) restoreDraft();

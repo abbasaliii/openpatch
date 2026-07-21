@@ -33,7 +33,7 @@ No account. No API key. No advertising. No sale of user data.
 1. Run `npm run check`, `npm run test:browser`, and `npm run test:extension`.
 2. Run `npm run build:extension:store`. This produces a minified package without source maps or development-only localhost permissions.
 3. Run `node scripts/generate-store-assets.mjs`.
-4. Upload `release/patch-the-web-extension-v0.11.0.zip`; it contains the extension files at the archive root. Expected SHA-256: `307E4DA2134F38CB7D6B04E98243A5BAD1EA43AE365874223044BBCF1687C5DE`.
+4. Upload `release/patch-the-web-extension-v0.12.0.zip`; it contains the extension files at the archive root. Expected SHA-256: `15CD4FA42204835E54B6A15455E9CDE990D57C55BE0951D210854F73F67B62F5`.
 5. In Chrome Web Store Developer Dashboard, upload the ZIP, use the listing copy above, and add `https://patch-the-web.vercel.app/privacy/` as the privacy-policy URL.
 6. Set **Remote code: No** and certify no user-data collection/transmission.
 7. Begin as **unlisted** beta; do not claim affiliation with sites that community patches repair.

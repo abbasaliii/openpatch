@@ -4,11 +4,11 @@ test("a nontechnical user gets a complete installation and first-repair path", a
   await page.goto("/install/");
   await expect(page.getByRole("heading", { name: "Install the beta extension" })).toBeVisible();
   await expect(page.locator("#progress")).toHaveText("0 of 4 steps marked complete");
-  await expect(page.getByRole("link", { name: /Download v0.11.0/ })).toHaveAttribute("href", "/downloads/patch-the-web-extension-v0.11.0.zip");
+  await expect(page.getByRole("link", { name: /Download v0.12.0/ })).toHaveAttribute("href", "/downloads/patch-the-web-extension-v0.12.0.zip");
 
   const downloadPromise = page.waitForEvent("download");
-  await page.getByRole("link", { name: /Download v0.11.0/ }).click();
-  expect((await downloadPromise).suggestedFilename()).toBe("patch-the-web-extension-v0.11.0.zip");
+  await page.getByRole("link", { name: /Download v0.12.0/ }).click();
+  expect((await downloadPromise).suggestedFilename()).toBe("patch-the-web-extension-v0.12.0.zip");
   await expect(page.locator("#progress")).toHaveText("1 of 4 steps marked complete");
 
   await page.getByLabel(/Open Chrome’s Extensions page/).check();

@@ -8,6 +8,7 @@ import {
   type RegistryPatchEntry
 } from "../core/remote-registry";
 import { comparePatchVersions, permissionOrigins } from "../core/registry";
+import { buildCommunityRequestUrl, inferRepairNeeds } from "../core/request-handoff";
 import { archivePatch, removeHistoryEntry, restoreCandidate, type PatchHistory, type PatchHistoryEntry, type PatchInstallMeta } from "../core/patch-history";
 import type { CommunityPatch, PatchHealth } from "../core/types";
 import { validatePatch } from "../core/validator";
@@ -41,6 +42,7 @@ const card = byId<HTMLElement>("patch-card");
 const empty = byId<HTMLElement>("empty-state");
 const toggle = byId<HTMLInputElement>("patch-toggle");
 const authorButton = byId<HTMLButtonElement>("author-button");
+const copyBriefButton = byId<HTMLButtonElement>("copy-brief");
 const complaint = byId<HTMLTextAreaElement>("repair-complaint");
 const briefStatus = byId<HTMLElement>("brief-status");
 const patchFile = byId<HTMLInputElement>("patch-file");
@@ -362,29 +364,68 @@ restorePatchButton.addEventListener("click", async () => {
   }
 });
 
-authorButton.addEventListener("click", async () => {
+async function inspectCurrentPage() {
   const request = complaint.value.trim();
   if (request.length < 12) {
     briefStatus.textContent = "Add a little more detail about what is broken.";
     complaint.focus();
-    return;
+    throw new Error("invalid-complaint");
   }
   if (!currentTab?.id || !currentTab.url?.startsWith("http")) {
     briefStatus.textContent = "Open a normal website tab, then try again.";
-    return;
+    throw new Error("invalid-tab");
   }
-  authorButton.disabled = true;
   briefStatus.textContent = "Inspecting page structure…";
+  const results = await chrome.scripting.executeScript({ target: { tabId: currentTab.id }, func: collectPageInventory });
+  const inventory = results[0]?.result;
+  if (!inventory) throw new Error("No page inventory returned");
+  return { request, inventory };
+}
+
+authorButton.addEventListener("click", async () => {
+  authorButton.disabled = true;
+  copyBriefButton.disabled = true;
   try {
-    const results = await chrome.scripting.executeScript({ target: { tabId: currentTab.id }, func: collectPageInventory });
-    const inventory = results[0]?.result;
-    if (!inventory) throw new Error("No page inventory returned");
-    await navigator.clipboard.writeText(buildRepairBrief(request, inventory));
+    const inspected = await inspectCurrentPage();
+    const needs = inferRepairNeeds(inspected.request, {
+      overflowsHorizontally: inspected.inventory.viewport.overflowsHorizontally,
+      fields: inspected.inventory.structure.fields,
+      unlabeledFields: inspected.inventory.accessibilitySignals.unlabeledFields,
+      unnamedButtons: inspected.inventory.accessibilitySignals.unnamedButtons,
+      imagesMissingAlt: inspected.inventory.accessibilitySignals.imagesMissingAlt,
+      possibleObstructions: inspected.inventory.possibleObstructions.length
+    });
+    const requestUrl = buildCommunityRequestUrl({
+      target: inspected.inventory.scope,
+      complaint: inspected.request,
+      needs
+    });
+    briefStatus.textContent = "Opening your private prefilled request…";
+    await chrome.tabs.create({ url: requestUrl });
+    window.close();
+  } catch (error) {
+    if (error instanceof Error && ["invalid-complaint", "invalid-tab"].includes(error.message)) return;
+    briefStatus.textContent = "This page blocks inspection. Open the blank request instead.";
+  } finally {
+    authorButton.disabled = false;
+    copyBriefButton.disabled = false;
+  }
+});
+
+copyBriefButton.addEventListener("click", async () => {
+  authorButton.disabled = true;
+  copyBriefButton.disabled = true;
+  try {
+    const inspected = await inspectCurrentPage();
+    const inventory = inspected.inventory;
+    await navigator.clipboard.writeText(buildRepairBrief(inspected.request, inventory));
     briefStatus.textContent = "Repair brief copied — paste it into Codex.";
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && ["invalid-complaint", "invalid-tab"].includes(error.message)) return;
     briefStatus.textContent = "This page blocks inspection. Try another website tab.";
   } finally {
     authorButton.disabled = false;
+    copyBriefButton.disabled = false;
   }
 });
 

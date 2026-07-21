@@ -9,7 +9,7 @@ import type { CommunityPatch } from "../../src/core/types";
 const storeBuild = Boolean(process.env.PATCH_THE_WEB_STORE_BUILD);
 const extensionPath = resolve(import.meta.dirname, storeBuild ? "../../dist/extension-store" : "../../dist/extension");
 const careUrl = "https://patch-the-web.vercel.app/care/";
-const homeUrl = storeBuild ? "https://patch-the-web.vercel.app/" : "http://127.0.0.1:4174/";
+const homeUrl = "https://patch-the-web.vercel.app/";
 const metrocarePatchJson = JSON.parse(await readFile(resolve(import.meta.dirname, "../../src/registry/patches/metrocare-service-navigator.patch-the-web.json"), "utf8")) as CommunityPatch;
 const tempPrefix = join(tmpdir(), "patch-the-web-extension-test-");
 const patchId = "org.patchtheweb.extension-installed-test";
@@ -208,7 +208,8 @@ test("an unmatched website offers both a one-click brief and the guided request 
   const popup = await context.newPage();
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(popup.locator("#empty-state")).toBeVisible();
-  await expect(popup.locator("#author-button")).toHaveText(/Copy Codex repair brief/);
+  await expect(popup.locator("#author-button")).toHaveText(/Continue to private request/);
+  await expect(popup.locator("#copy-brief")).toHaveText("Author it now with Codex");
   await expect(popup.locator(".guided-author-link")).toHaveAttribute("href", "https://patch-the-web.vercel.app/authors/");
 });
 

@@ -6,6 +6,7 @@
     <meta name="description" content="Describe a website problem and create a privacy-safe Patch the Web repair request." />
     <title>Request a repair — Patch the Web</title>
     <link rel="stylesheet" href="/authors/authors.css" />
+    <link rel="stylesheet" href="/authors/handoff.css" />
   </head>
   <body>
     <header>
@@ -17,7 +18,7 @@
       <section class="hero">
         <span>REQUEST A COMMUNITY REPAIR</span>
         <h1>Tell us the problem.<br /><em>We’ll structure the fix.</em></h1>
-        <p>No selectors, code, or technical acceptance criteria required. Choose the outcome you need and Patch the Web creates a private, testable handoff for Codex.</p>
+        <p>No selectors, code, or technical acceptance criteria required. Choose the outcome you need, review the cleaned request, and send it for community repair—or build it immediately with Codex.</p>
         <div class="trust-row"><span>✓ Local in this tab</span><span>✓ Query strings removed</span><span>✓ Human review before publish</span></div>
       </section>
 
@@ -82,12 +83,11 @@
 
       <section class="result" id="result" hidden aria-labelledby="result-title">
         <div class="result-head"><span class="eyebrow">REPAIR REQUEST READY</span><button id="start-over" type="button">Start over</button></div>
-        <h2 id="result-title" tabindex="-1">Paste this into Codex.</h2>
+        <h2 id="result-title" tabindex="-1">Your repair request is ready.</h2>
         <p id="scope"></p>
-        <div class="handoff"><span><b>1</b> Open the target page in Chrome</span><span><b>2</b> Open this project in Codex</span><span><b>3</b> Paste the copied brief</span></div>
-        <pre id="preview"></pre>
-        <div class="result-actions"><button class="button" id="copy" type="button">Copy for Codex</button><button class="button quiet" id="download" type="button">Download .md</button><button class="button quiet" id="download-request" type="button">Download request JSON</button></div>
-        <div class="community-submit"><div><span class="eyebrow">DON'T USE CODEX?</span><h3>Ask the community to review it.</h3><p>This opens a public GitHub issue only after you inspect and approve exactly what will be shared.</p></div><button class="button review-button" id="review-submit" type="button">Review public submission →</button></div>
+        <div class="handoff"><span><b>1</b> Review the cleaned request</span><span><b>2</b> Confirm it contains no private data</span><span><b>3</b> Send it for community review</span></div>
+        <div class="community-submit"><div><span class="eyebrow">RECOMMENDED NEXT STEP</span><h3>Ask the community to build it.</h3><p>Nothing is submitted automatically. You will inspect and approve the exact public text first.</p></div><button class="button review-button" id="review-submit" type="button">Review public submission →</button></div>
+        <details class="codex-handoff"><summary>Build it yourself with Codex <span>Advanced</span></summary><p>Use this author brief when you want Codex to inspect, test, and package the repair now.</p><pre id="preview"></pre><div class="result-actions"><button class="button" id="copy" type="button">Copy for Codex</button><button class="button quiet" id="download" type="button">Download .md</button><button class="button quiet" id="download-request" type="button">Download request JSON</button></div></details>
       </section>
       <dialog id="review-dialog" aria-labelledby="review-title">
         <div class="dialog-head"><div><span class="eyebrow">EXPLICIT PUBLIC SHARE</span><h2 id="review-title" tabindex="-1">Review before anything leaves this browser.</h2></div><button id="close-review" type="button" aria-label="Close public submission review">×</button></div>

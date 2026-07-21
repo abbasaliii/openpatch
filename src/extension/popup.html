@@ -78,13 +78,14 @@
       <section class="empty-state" id="empty-state">
         <span class="empty-mark">⌁</span>
         <span class="eyebrow">No community repair yet</span>
-        <h1>Start a repair with Codex</h1>
-        <p>Describe what is broken. Patch the Web will copy a privacy-safe brief for the <strong>$patch-the-web-author</strong> skill.</p>
+        <h1>Request a community repair</h1>
+        <p>Describe what is difficult. We’ll open a private, prefilled request—no selectors, code, or copy-and-paste.</p>
         <label class="complaint-label" for="repair-complaint">What should work better?</label>
-        <textarea id="repair-complaint" maxlength="1000" rows="4" placeholder="This form loses my progress, overflows on mobile, and its errors are inaccessible."></textarea>
-        <button class="author-button" id="author-button" type="button"><span aria-hidden="true">✦</span> Copy Codex repair brief</button>
-        <a class="guided-author-link" href="https://patch-the-web.vercel.app/authors/" target="_blank" rel="noreferrer">Need help describing it? Use the guided request →</a>
-        <p class="privacy-note">Structural signals only — never field values, cookies, storage, or URL queries.</p>
+        <textarea id="repair-complaint" maxlength="900" rows="4" placeholder="This form loses my progress, overflows on mobile, and its errors are inaccessible."></textarea>
+        <button class="author-button" id="author-button" type="button"><span aria-hidden="true">→</span> Continue to private request</button>
+        <button class="copy-brief-button" id="copy-brief" type="button">Author it now with Codex</button>
+        <a class="guided-author-link" href="https://patch-the-web.vercel.app/authors/" target="_blank" rel="noreferrer">Open a blank request instead</a>
+        <p class="privacy-note">The handoff stays in the URL fragment, which is not sent to the website. Field values, cookies, storage, and query strings are never included.</p>
         <p class="brief-status" id="brief-status" role="status" aria-live="polite"></p>
       </section>
 

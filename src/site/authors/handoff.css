@@ -1,0 +1,6 @@
+.codex-handoff { margin-top: 20px; padding: 16px; border: 1px solid #d7e5de; border-radius: 12px; background: #fbfdfc; }
+.codex-handoff summary { color: #315b4a; cursor: pointer; font-size: 12px; font-weight: 850; }
+.codex-handoff summary span { float: right; color: #6d8177; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.codex-handoff > p { margin: 12px 0; color: #5a7065; font-size: 11px; line-height: 1.5; }
+.codex-handoff pre { margin-bottom: 0; }
+@media (max-width: 780px) { .codex-handoff { padding: 13px; } }

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { encodeRepairRequestHandoff } from "../../src/core/request-handoff";
 
 test("ordinary users can create a testable privacy-safe repair request", async ({ page }, testInfo) => {
   await page.goto("/authors/");
@@ -9,7 +10,7 @@ test("ordinary users can create a testable privacy-safe repair request", async (
   await page.getByText("Improve accessibility", { exact: true }).click();
   await page.getByRole("button", { name: "Create my repair request" }).click();
 
-  await expect(page.getByRole("heading", { name: "Paste this into Codex." })).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Your repair request is ready." })).toBeFocused();
   await expect(page.locator("#scope")).toHaveText("Scope locked to https://example.edu/programs · 3 testable outcomes");
   await expect(page.locator("#preview")).toContainText("Use $patch-the-web-author");
   await expect(page.locator("#preview")).toContainText("390px viewport");
@@ -32,12 +33,37 @@ test("ordinary users can create a testable privacy-safe repair request", async (
   await page.getByRole("button", { name: "Keep editing" }).click();
   await expect(page.getByRole("dialog")).toBeHidden();
 
+  await page.getByText("Build it yourself with Codex", { exact: false }).click();
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download .md" }).click();
   expect((await downloadPromise).suggestedFilename()).toBe("patch-the-web-repair-brief.md");
   if (testInfo.project.name === "mobile-chromium") {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
   }
+});
+
+test("the extension privately prefills a request without sending the handoff to the server", async ({ page }) => {
+  const handoff = encodeRepairRequestHandoff({
+    target: "https://example.edu/programs?private=value#results",
+    complaint: "I only want to see Karachi programs and the table overflows on mobile.",
+    needs: ["filter", "mobile", "accessibility"]
+  });
+  const requests: string[] = [];
+  page.on("request", (request) => requests.push(request.url()));
+  await page.goto(`/authors/#${handoff}`);
+
+  await expect(page.getByLabel("Which public page needs repair?")).toHaveValue("https://example.edu/programs");
+  await expect(page.getByLabel("What is making the page difficult?")).toHaveValue("I only want to see Karachi programs and the table overflows on mobile.");
+  await expect(page.locator("input[name='needs'][value='filter']")).toBeChecked();
+  await expect(page.locator("input[name='needs'][value='mobile']")).toBeChecked();
+  await expect(page.locator("input[name='needs'][value='accessibility']")).toBeChecked();
+  await expect(page.locator("#form-status")).toContainText("Prefilled privately from the extension");
+  expect(new URL(page.url()).hash).toBe("");
+  expect(requests.every((url) => !url.includes("Karachi") && !url.includes("private=value") && !url.includes("repair="))).toBe(true);
+
+  await page.getByRole("button", { name: "Create my repair request" }).click();
+  await expect(page.getByRole("heading", { name: "Your repair request is ready." })).toBeFocused();
+  await expect(page.locator("#scope")).toHaveText("Scope locked to https://example.edu/programs · 3 testable outcomes");
 });
 
 test("the guided request restores an unfinished tab-local draft and explains missing choices", async ({ page }) => {

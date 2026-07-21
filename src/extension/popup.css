@@ -100,6 +100,10 @@ textarea:focus { border-color: #15966d; box-shadow: 0 0 0 3px rgba(21, 150, 109,
 .author-button:hover { background: #1d3a2f; }
 .author-button:focus-visible { outline: 3px solid rgba(11, 154, 109, .25); outline-offset: 2px; }
 .author-button:disabled { cursor: wait; opacity: .65; }
+.copy-brief-button { width: 100%; margin-top: 8px; padding: 10px 12px; border: 1px solid #cddbd4; border-radius: 10px; color: #355047; background: #fff; font: 800 10px/1 inherit; cursor: pointer; }
+.copy-brief-button:hover { border-color: #8db8a5; background: #f5faf7; }
+.copy-brief-button:focus-visible { outline: 3px solid rgba(11, 154, 109, .2); outline-offset: 2px; }
+.copy-brief-button:disabled { cursor: wait; opacity: .65; }
 .guided-author-link { display: block; margin-top: 10px; color: #087b55; font-size: 10px; font-weight: 800; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
 .guided-author-link:focus-visible { outline: 3px solid rgba(11, 154, 109, .25); outline-offset: 3px; }
 .empty-state .privacy-note { max-width: 310px; color: #849089; font-size: 9px; }
