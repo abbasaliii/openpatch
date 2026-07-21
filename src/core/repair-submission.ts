@@ -1,4 +1,4 @@
-import { buildReviewIssue, cleanPublicUrl, REPAIR_NEEDS, type RepairNeed, type RepairRequestArtifact } from "../site/authors/brief";
+import { buildReviewIssue, cleanPublicUrl, REPAIR_NEEDS, type RepairNeed, type RepairRequestArtifact } from "../site/authors/brief.js";
 
 export type RepairSubmissionEnvelope = {
   request: RepairRequestArtifact;

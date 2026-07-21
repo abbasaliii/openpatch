@@ -1,4 +1,4 @@
-import { RepairSubmissionError, validateRepairSubmission } from "../src/core/repair-submission";
+import { RepairSubmissionError, validateRepairSubmission } from "../src/core/repair-submission.js";
 
 const githubIssuesUrl = "https://api.github.com/repos/abbasaliii/patch-the-web/issues";
 const publicQueueUrl = "https://patch-the-web.vercel.app/requests/";
