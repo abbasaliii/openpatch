@@ -6,7 +6,7 @@ This file is the single copy/paste source for the final OpenAI Build Week submis
 
 ## Finalization values
 
-1. Public YouTube URL — https://youtu.be/AVjukDA786E
+1. Public YouTube URL — https://youtu.be/UB6w8ME06G0
 2. Codex `/feedback` Session ID — obtained from the primary build thread, stored only in the private release packet, and saved in the Devpost draft.
 
 Do not publish the private Session ID in the repository or public project story.
@@ -150,7 +150,7 @@ Add in this order:
 ### Video demo link
 
 ```text
-https://youtu.be/AVjukDA786E
+https://youtu.be/UB6w8ME06G0
 ```
 
 The link must be a public YouTube URL with embedding allowed. Verify it while signed out before adding it to Devpost.

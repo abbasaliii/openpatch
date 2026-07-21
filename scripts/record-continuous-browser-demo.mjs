@@ -1,5 +1,5 @@
 import { chromium } from "@playwright/test";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -94,6 +94,9 @@ let popupTwo;
 let mainVideo;
 let popupOneVideo;
 let popupTwoVideo;
+let mainRawVideoPath;
+let popupOneRawVideoPath;
+let popupTwoRawVideoPath;
 let mainCreatedAt;
 let popupOneCreatedAt;
 let popupTwoCreatedAt;
@@ -107,16 +110,19 @@ try {
   popupOneCreatedAt = Date.now();
   popupOne = await context.newPage();
   popupOneVideo = popupOne.video();
+  popupOneRawVideoPath = await popupOneVideo.path();
   await addRecordingCursor(popupOne);
 
   popupTwoCreatedAt = Date.now();
   popupTwo = await context.newPage();
   popupTwoVideo = popupTwo.video();
+  popupTwoRawVideoPath = await popupTwoVideo.path();
   await addRecordingCursor(popupTwo);
 
   mainCreatedAt = Date.now();
   mainPage = await context.newPage();
   mainVideo = mainPage.video();
+  mainRawVideoPath = await mainVideo.path();
   await addRecordingCursor(mainPage);
   await mainPage.goto(homeUrl, { waitUntil: "networkidle" });
   recordingStartedAt = Date.now();
@@ -168,7 +174,6 @@ try {
     await mainPage.locator(".patch-the-web-navigator").waitFor({ state: "visible", timeout: 20_000 });
     overlays[0].endMs = Date.now() - recordingStartedAt;
     await popupOne.close();
-    await popupOneVideo.saveAs(popupOnePath);
     popupOne = undefined;
     await mainPage.locator(".patch-the-web-navigator").scrollIntoViewIfNeeded();
     await mainPage.getByText("12 of 12 services match", { exact: true }).waitFor({ state: "visible" });
@@ -234,10 +239,8 @@ try {
     overlays[1].endMs = Date.now() - recordingStartedAt + Math.max(0, Number(timings.sections[9].durationMs) - 2_000);
   });
   await popupTwo.close();
-  await popupTwoVideo.saveAs(popupTwoPath);
   popupTwo = undefined;
   await mainPage.close();
-  await mainVideo.saveAs(mainVideoPath);
   mainPage = undefined;
 } finally {
   const recordingEndedAt = Date.now();
@@ -246,6 +249,14 @@ try {
   await context.close().catch(() => undefined);
   if (profilePath.startsWith(profilePrefix)) await rm(profilePath, { recursive: true, force: true }).catch(() => undefined);
 }
+// Playwright guarantees video files are complete after the context closes.
+// Copying them only now keeps all encoder/file-system waits outside the demo
+// and avoids waiting on a video while its browser context is still alive.
+await Promise.all([
+  copyFile(mainRawVideoPath, mainVideoPath),
+  copyFile(popupOneRawVideoPath, popupOnePath),
+  copyFile(popupTwoRawVideoPath, popupTwoPath)
+]);
 const manifest = {
   trimMs: {
     main: recordingStartedAt - mainCreatedAt,
@@ -256,6 +267,14 @@ const manifest = {
   sections: sectionEvents,
   overlays
 };
+const overruns = sectionEvents.map((section, index) => ({
+  title: section.title,
+  overrunMs: Math.max(0, (section.endMs - section.startMs) - Number(timings.sections[index].durationMs))
+}));
+const worstOverrun = overruns.reduce((worst, item) => item.overrunMs > worst.overrunMs ? item : worst, { title: "none", overrunMs: 0 });
+if (worstOverrun.overrunMs > 2_000) {
+  throw new Error(`Recording action overran narration by ${worstOverrun.overrunMs} ms in \"${worstOverrun.title}\".`);
+}
 await writeFile(manifestPath, JSON.stringify(manifest, null, 2), "utf8");
 console.log(`Main continuous capture: ${mainVideoPath}`);
 console.log(`Popup captures: ${popupOnePath}, ${popupTwoPath}`);

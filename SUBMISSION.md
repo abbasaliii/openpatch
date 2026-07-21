@@ -18,7 +18,7 @@
 - Secondary CivicApply demo: https://patch-the-web.vercel.app/demo/
 - Chrome extension: https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.8.0.zip
 - Codex authoring plugin: https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.0.zip
-- Public demo video: https://youtu.be/AVjukDA786E (`submission-assets/patch-the-web-demo.mp4`, 2:56, continuous live browser recording, narrated and scene-synchronized captions)
+- Public demo video: https://youtu.be/UB6w8ME06G0 (`submission-assets/patch-the-web-demo.mp4`, 2:08, continuous live browser recording, ElevenLabs Roger narration, and scene-synchronized captions)
 - Devpost 3:2 cover: `submission-assets/patch-the-web-devpost-thumbnail.png`
 - Extension SHA-256: `30C472E6B23E5A75BD709EA3040EEFCD62FBC35A669773D8400FDFE1E1CD4F50`
 - Plugin SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`

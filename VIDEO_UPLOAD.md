@@ -3,21 +3,22 @@
 ## Final assets
 
 - Video: `submission-assets/patch-the-web-demo.mp4`
-- Runtime: 2:56.00
+- Runtime: 2:07.93
 - Format: 1536×864 (16:9) H.264 High, 30 fps, AAC-LC
 - Audio target: normalized to −16 LUFS with −1.5 dBTP ceiling
-- Size: 9,989,164 bytes
-- SHA-256: `14E66B641E41E4161780B2B5E1D354ED8CB41D87F3592333D4487BFAE9881316`
+- Size: 8,622,341 bytes
+- SHA-256: `F65A7154B9C17267C5B869FD97D765D0FD1EB5A0952BF332AA35C883DC96775A`
 - Thumbnail: `submission-assets/patch-the-web-youtube-thumbnail.png` (1280×720)
 - Captions: `submission-assets/patch-the-web-demo.srt`
 - Narration source: `submission-assets/live-demo-narration.txt`
+- Narration voice: ElevenLabs Roger, Multilingual v2
 - Recording style: one uninterrupted live browser session; the real extension popup is synchronized over the same continuous page timeline
 
 ## YouTube title
 
 Patch the Web — Fix Websites You Don’t Own | OpenAI Build Week 2026
 
-**Published video:** https://youtu.be/AVjukDA786E
+**Published video:** https://youtu.be/UB6w8ME06G0
 
 ## YouTube description
 
@@ -37,19 +38,21 @@ Verified v0.8.0 release: https://github.com/abbasaliii/patch-the-web/releases/ta
 
 Built with GPT-5.6 and Codex for OpenAI Build Week 2026. The healthcare directory and providers are fictional demonstration data; this is not medical guidance.
 
+Narration voice generated with ElevenLabs.
+
 ## Chapters
 
 ```text
-0:00 Start at the public Patch the Web site
-0:12 Download and verify the extension
-0:29 Open the original MetroCare directory
-0:44 Discover a verified community repair
-1:02 Install the domain-scoped patch
-1:41 Use the live comparison feature
-1:57 Filter twelve services to one
-2:12 Reload and prove preferences persist
-2:27 Review the active repair and permissions
-2:39 How GPT-5.6 and Codex power community authoring
+0:00 Meet Patch the Web
+0:13 Download and verify the extension
+0:26 Open the original MetroCare directory
+0:39 Discover a verified community repair
+0:52 Install the domain-scoped patch
+1:05 Use the live comparison feature
+1:16 Filter twelve services to one
+1:29 Reload and prove preferences persist
+1:41 Review the active repair and permissions
+1:51 How GPT-5.6 and Codex power community authoring
 ```
 
 ## Upload settings
@@ -61,7 +64,7 @@ Built with GPT-5.6 and Codex for OpenAI Build Week 2026. The healthcare director
 - License: Standard YouTube License
 - Allow embedding: Yes
 - Paid promotion: No
-- Synthetic content disclosure: Narration uses the local Microsoft Zira text-to-speech voice; the product interactions are real recordings of the working build
+- Synthetic content disclosure: Narration uses the ElevenLabs Roger text-to-speech voice; the product interactions are real recordings of the working build
 - Music: None
 
 After upload, add the public URL to `SUBMISSION.md` and the Devpost video field, then verify playback in a signed-out browser.

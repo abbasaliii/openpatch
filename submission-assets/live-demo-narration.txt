@@ -1,19 +1,19 @@
-This is Patch the Web from the very beginning, in one uninterrupted browser recording. Patch the Web lets people repair websites they do not own, then share that repair safely with everyone else.
+Patch the Web is a safe repair layer for websites you don't own. Let me show you the complete flow: downloading the real extension, finding a community fix, and turning a frustrating site into something genuinely useful.
 
-First, download the extension from the public Patch the Web site. Unzip it, open Chrome extensions, enable Developer mode, and choose Load unpacked. This clean demo profile now shows the real Patch the Web version zero point eight extension running.
+I'm downloading the extension from our public site and opening Chrome's extension page. For this demo it's loaded unpacked, exactly like a judge can install it from the release. Using community repairs needs no account and no API key.
 
-Now we open the MetroCare directory. The original website has twelve services, but no search, no filters, and no comparison. A person has to read every card to find accessible care in their language.
+Here is MetroCare before the repair. It lists twelve services, but there is no search, no accessibility filter, and no way to compare providers. Finding wheelchair-accessible care in your language means reading every card.
 
-We open the actual extension on this website. Patch the Web checks the public registry and discovers a community repair made for this exact domain and path. It verifies the publisher policy, the patch hash, and all eleven live selector targets before offering installation.
+When I open Patch the Web, it finds a community repair written for this exact page. Before showing Install, the extension checks the publisher policy, the patch's cryptographic hash, and all eleven selectors against the live website.
 
-One click installs and activates the verified feature. This is a constrained Patch the Web document, not arbitrary JavaScript. It may use only declared operations, and it receives access only to the website it repairs.
+Now I install it. The repair is a constrained data document, never arbitrary JavaScript. Every operation is allow-listed, every selector was preflighted, and the permission applies only to this website.
 
-The page reloads with the missing feature added by the extension. We select two real listings and open the new keyboard-accessible comparison. The original website remains intact; Patch the Web adds a personal usability layer on top.
+The page now has the feature its owner never built. I can select two real listings and open a keyboard-accessible comparison, while the original site stays intact underneath the repair layer.
 
-Next we filter for wheelchair access, Urdu, and providers accepting new patients. Twelve cards become one useful result. The filtering happens locally in the browser, so private preferences are not sent to MetroCare or to Patch the Web.
+Now I'll filter for wheelchair access, Urdu, and providers accepting new patients. Twelve cards become one useful result. Those preferences stay inside this browser; neither MetroCare nor Patch the Web receives them.
 
-We reload the website. The installed repair runs again automatically, and the unfinished filter choices are still here. This proves that the result is a working browser feature, not a screenshot or a one-time preview.
+I'll reload the website. The repair runs again automatically, and my unfinished filter choices are still here. This is a durable browser feature, not a screenshot and not a one-time AI preview.
 
-Opening the extension again shows that the repair is active only on this website, every operation is healthy, and the permissions are reviewable. The user can disable or remove it at any time.
+The extension shows exactly what's active, where it can run, and whether every operation is still healthy. Permissions remain reviewable, and the user can disable the repair whenever they want.
 
-GPT-5.6 through Codex helped design and threat-model the DSL, then authors new repairs from DOM and screenshot evidence. Everyone else installs the result without AI, an account, or an API key. That is Patch the Web.
+Codex and GPT-5.6 accelerated the hard part: inspecting DOM and screenshot evidence, authoring the constrained patch, threat-modeling it, and running browser tests. Everyone else simply installs the verified result. That's Patch the Web: users fixing the web together.
