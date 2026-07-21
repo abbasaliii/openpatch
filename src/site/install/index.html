@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Install Patch the Web and activate your first safe community repair in a few guided steps." />
+    <title>Install Patch the Web</title>
+    <link rel="stylesheet" href="/install/install.css" />
+    <link rel="stylesheet" href="/install/a11y.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/" aria-label="Patch the Web home"><span aria-hidden="true">//</span> Patch the Web</a>
+      <nav aria-label="Main navigation"><a href="/registry/">Repairs</a><a href="/authors/">Request a repair</a><a href="/privacy/">Privacy</a></nav>
+      <span class="beta">Beta v0.9.1</span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <span class="eyebrow">GUIDED BETA INSTALL</span>
+          <h1>From download to<br /><em>first repair.</em></h1>
+          <p>No account or API key. Follow these steps once, then Patch the Web discovers verified repairs on supported pages automatically.</p>
+        </div>
+        <aside aria-label="What you are installing">
+          <span class="safe">✓ Safe DSL only</span>
+          <h2>Patch the Web for Chrome</h2>
+          <p>A Manifest V3 extension that applies constrained JSON repairs—never downloaded JavaScript.</p>
+          <dl><div><dt>Site access</dt><dd>Requested per repair</dd></div><div><dt>Data sent</dt><dd>None</dd></div><div><dt>Package</dt><dd>v0.9.1 · ZIP</dd></div></dl>
+        </aside>
+      </section>
+
+      <section class="installer" aria-labelledby="install-heading">
+        <div class="section-head"><div><span class="eyebrow">DO THIS ONCE</span><h2 id="install-heading">Install the beta extension</h2></div><p id="progress" aria-live="polite">0 of 4 steps marked complete</p></div>
+        <ol class="steps">
+          <li>
+            <label><input type="checkbox" data-step="download" /><span class="number">1</span><span><strong>Download and extract the extension</strong><small>Download the ZIP, open Downloads, choose <b>Extract all</b>, and keep the extracted folder.</small></span></label>
+            <a class="action primary" id="extension-download" href="/downloads/patch-the-web-extension-v0.9.1.zip" download>Download v0.9.1 <span aria-hidden="true">↓</span></a>
+          </li>
+          <li>
+            <label><input type="checkbox" data-step="extensions" /><span class="number">2</span><span><strong>Open Chrome’s Extensions page</strong><small>Paste the address below into a new Chrome tab. Turn on <b>Developer mode</b> at the top right.</small></span></label>
+            <div class="copy-row"><code>chrome://extensions</code><button class="action" id="copy-address" type="button">Copy address</button></div>
+          </li>
+          <li>
+            <label><input type="checkbox" data-step="load" /><span class="number">3</span><span><strong>Choose “Load unpacked”</strong><small>Select the extracted <b>patch-the-web-extension-v0.9.1</b> folder—not the ZIP and not its <b>src</b> or <b>patches</b> subfolders.</small></span></label>
+            <div class="folder"><span aria-hidden="true">▰</span><div><small>SELECT THIS FOLDER</small><strong>patch-the-web-extension-v0.9.1</strong><em>It contains manifest.json</em></div></div>
+          </li>
+          <li>
+            <label><input type="checkbox" data-step="pin" /><span class="number">4</span><span><strong>Pin Patch the Web</strong><small>Open Chrome’s puzzle-piece menu and pin Patch the Web. Its green icon will stay beside the address bar.</small></span></label>
+          </li>
+        </ol>
+      </section>
+
+      <section class="first-repair" aria-labelledby="first-repair-heading">
+        <div><span class="eyebrow">30-SECOND CHECK</span><h2 id="first-repair-heading">Activate your first repair</h2><p>This demo deliberately starts cluttered. Open it, click the pinned extension, review the receipt, and choose <b>Install verified community feature</b>.</p></div>
+        <div class="repair-flow" aria-label="First repair steps"><span>Open demo</span><i aria-hidden="true">→</i><span>Open extension</span><i aria-hidden="true">→</i><span>Install repair</span></div>
+        <a class="action primary demo" href="/care/">Open the repair demo <span aria-hidden="true">→</span></a>
+      </section>
+
+      <section class="next" aria-label="What to do next">
+        <article><span aria-hidden="true">⌕</span><h2>Find existing repairs</h2><p>Browse verified fixes and see their scope, permissions, and live compatibility before downloading.</p><a href="/registry/">Browse the registry →</a></article>
+        <article><span aria-hidden="true">✦</span><h2>Request a missing repair</h2><p>Describe what is difficult in plain language. We create a privacy-safe request for review.</p><a href="/authors/">Request a repair →</a></article>
+      </section>
+
+      <section class="help" aria-labelledby="help-heading"><div><span class="eyebrow">STUCK?</span><h2 id="help-heading">The common fixes are simple.</h2></div><div class="faq">
+        <details><summary>I selected a folder and Chrome rejected it</summary><p>Select the folder containing <code>manifest.json</code>. Do not select the downloaded ZIP, <code>src</code>, <code>registry</code>, or <code>patches</code>.</p></details>
+        <details><summary>I cannot see “Load unpacked”</summary><p>Turn on <b>Developer mode</b> in the upper-right corner of <code>chrome://extensions</code>. On a managed school or work browser, your administrator may disable it.</p></details>
+        <details><summary>The repair asks for site access</summary><p>That is expected once per domain. Chrome shows the exact site before granting it; Patch the Web does not request blanket access during installation.</p></details>
+        <details><summary>I installed it but nothing changed</summary><p>Open the extension while you are on the supported page, install the repair shown in its receipt, then refresh the page once if it was already open.</p></details>
+      </div></section>
+    </main>
+    <footer><span>Patch the Web beta</span><span>No account · No API key · No arbitrary JavaScript</span><a href="https://github.com/abbasaliii/patch-the-web/issues" rel="noreferrer">Get help on GitHub</a></footer>
+    <script type="module" src="/install/install.ts"></script>
+  </body>
+</html>

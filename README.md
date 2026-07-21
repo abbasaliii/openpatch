@@ -8,7 +8,7 @@ Patch the Web is a safe, public feature layer for websites users do not own. A u
 
 Built for OpenAI Build Week 2026 with Codex and GPT‑5.6.
 
-**Live product:** [patch-the-web.vercel.app](https://patch-the-web.vercel.app/) · [Flagship MetroCare demo](https://patch-the-web.vercel.app/care/) · [CivicApply repair](https://patch-the-web.vercel.app/demo/) · [Public registry](https://patch-the-web.vercel.app/registry/index.json) · [Compatibility Sentinel](https://patch-the-web.vercel.app/registry/compatibility.json)
+**Live product:** [patch-the-web.vercel.app](https://patch-the-web.vercel.app/) · [Guided installer](https://patch-the-web.vercel.app/install/) · [Flagship MetroCare demo](https://patch-the-web.vercel.app/care/) · [Public registry](https://patch-the-web.vercel.app/registry/index.json) · [Compatibility Sentinel](https://patch-the-web.vercel.app/registry/compatibility.json)
 
 ## The demo
 
@@ -70,6 +70,8 @@ The patch language supports ten constrained operation types, including bounded c
 ## Judge quick start
 
 Requirements for the public demo: Chrome/Chromium 120+. No build, account, credential, or API key is required.
+
+**Recommended path:** use the [guided installer](https://patch-the-web.vercel.app/install/). It walks through downloading, extracting, selecting the correct unpacked folder, pinning the extension, and activating a first repair. The checklist remains on the device and includes fixes for the most common Chrome setup errors.
 
 Prebuilt artifacts:
 

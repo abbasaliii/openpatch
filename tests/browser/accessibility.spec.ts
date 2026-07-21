@@ -50,4 +50,8 @@ test("the judge landing page, public registry, and Compatibility Sentinel have n
   await page.goto("/authors/");
   await expect(page.getByRole("heading", { name: /Tell us the problem/ })).toBeVisible();
   await expectNoWcagViolations(page);
+
+  await page.goto("/install/");
+  await expect(page.getByRole("heading", { name: "Install the beta extension" })).toBeVisible();
+  await expectNoWcagViolations(page);
 });
