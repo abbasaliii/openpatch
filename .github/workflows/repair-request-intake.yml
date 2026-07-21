@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate privacy-safe request structure
-        uses: actions/github-script@v7
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const body = context.payload.issue.body ?? "";
@@ -38,23 +38,37 @@ jobs:
             const outcomesText = body.match(/## Desired outcomes\s*\n([\s\S]*?)\n## Privacy confirmation/i)?.[1] ?? "";
             const outcomes = outcomesText.split("\n").filter((line) => /^-\s+\S/.test(line));
             if (outcomes.length < 1 || outcomes.length > 12) problems.push("Provide between 1 and 12 desired outcomes.");
+            const publicText = `${problemText}\n${outcomesText}`;
+            const likelyPrivate = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(publicText)
+              || /(?:\d[\s().-]*){8,}/.test(publicText)
+              || /\b(?:password|passcode|one[- ]?time code|otp|api key|secret)\s*[:=]\s*\S+/i.test(publicText);
+            if (likelyPrivate) problems.push("Remove email addresses, phone or account numbers, passwords, and verification codes from the public request.");
             const confirmations = (body.match(/- \[x\]/gi) ?? []).length;
             if (confirmations < 2) problems.push("Confirm both privacy and publication-review statements.");
             if (body.length > 8000) problems.push("Keep the request under 8,000 characters.");
+
+            if (pageMatch && problems.length === 0) {
+              const issues = await github.paginate(github.rest.issues.listForRepo, { ...context.repo, state: "open", labels: "repair-request", per_page: 100 });
+              const duplicate = issues.find((issue) => issue.number !== context.issue.number && issue.body?.match(/## Public page\s*\n(https?:\/\/[^\s]+)/i)?.[1] === pageMatch[1]);
+              if (duplicate) problems.push(`An open request already tracks this exact public page in #${duplicate.number}. Add useful context there instead.`);
+            }
 
             const issue_number = context.issue.number;
             const add = problems.length ? "needs-info" : "intake-valid";
             const remove = problems.length ? "intake-valid" : "needs-info";
             await github.rest.issues.addLabels({ ...context.repo, issue_number, labels: [add] });
+            await github.rest.issues.removeLabel({ ...context.repo, issue_number, name: "needs-triage" }).catch((error) => {
+              if (error.status !== 404) throw error;
+            });
             await github.rest.issues.removeLabel({ ...context.repo, issue_number, name: remove }).catch((error) => {
               if (error.status !== 404) throw error;
             });
 
-            if (problems.length) {
-              const marker = "<!-- patch-the-web-intake-check -->";
-              const comments = await github.paginate(github.rest.issues.listComments, { ...context.repo, issue_number, per_page: 100 });
-              const previous = comments.find((comment) => comment.user?.type === "Bot" && comment.body?.includes(marker));
-              const message = `${marker}\nThe automated intake check needs these changes:\n\n${problems.map((problem) => `- ${problem}`).join("\n")}\n\nEdit this issue and the check will run again. No patch is published from an issue alone.`;
-              if (previous) await github.rest.issues.updateComment({ ...context.repo, comment_id: previous.id, body: message });
-              else await github.rest.issues.createComment({ ...context.repo, issue_number, body: message });
-            }
+            const marker = "<!-- patch-the-web-intake-check -->";
+            const comments = await github.paginate(github.rest.issues.listComments, { ...context.repo, issue_number, per_page: 100 });
+            const previous = comments.find((comment) => comment.user?.type === "Bot" && comment.body?.includes(marker));
+            const message = problems.length
+              ? `${marker}\n### Intake needs changes\n\n${problems.map((problem) => `- ${problem}`).join("\n")}\n\nEdit this issue and the check will run again. No patch is published from an issue alone.`
+              : `${marker}\n### Intake checks passed\n\nThe public URL, request structure, privacy confirmations, and desired outcomes passed automated intake. A maintainer must still assess usefulness and safety before authoring begins. No executable patch was accepted or published by this check.`;
+            if (previous) await github.rest.issues.updateComment({ ...context.repo, comment_id: previous.id, body: message });
+            else await github.rest.issues.createComment({ ...context.repo, issue_number, body: message });

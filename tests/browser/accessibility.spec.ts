@@ -60,3 +60,24 @@ test("the judge landing page, public registry, and Compatibility Sentinel have n
   await expect(page.getByRole("heading", { name: "Repair requests" })).toBeVisible();
   await expectNoWcagViolations(page);
 });
+
+test("the reviewed no-account repair submission has no automated WCAG A/AA violations", async ({ page }) => {
+  await page.route("**/api/repair-requests", (route) => route.fulfill({
+    status: route.request().method() === "GET" ? 200 : 201,
+    contentType: "application/json",
+    body: JSON.stringify(route.request().method() === "GET"
+      ? { directSubmission: true }
+      : { status: "submitted", number: 41, url: "https://github.com/abbasaliii/patch-the-web/issues/41" })
+  }));
+  await page.goto("/authors/");
+  await page.getByLabel("Which public page needs repair?").fill("https://example.edu/programs");
+  await page.getByLabel("What is making the page difficult?").fill("I only want to see public programs that are available in Karachi.");
+  await page.getByText("Find or filter content", { exact: true }).click();
+  await page.getByRole("button", { name: "Create my repair request" }).click();
+  await page.getByRole("button", { name: "Review public submission" }).click();
+  await page.getByLabel("I reviewed this public text.").check();
+  await expectNoWcagViolations(page);
+  await page.getByRole("button", { name: "Submit request — no account needed" }).click();
+  await expect(page.getByRole("heading", { name: "Request #41 entered the review queue." })).toBeVisible();
+  await expectNoWcagViolations(page);
+});

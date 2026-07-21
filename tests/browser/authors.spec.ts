@@ -2,6 +2,12 @@ import { expect, test } from "@playwright/test";
 import { encodeRepairRequestHandoff } from "../../src/core/request-handoff";
 
 test("ordinary users can create a testable privacy-safe repair request", async ({ page }, testInfo) => {
+  let submittedBody = "";
+  await page.route("**/api/repair-requests", async (route) => {
+    if (route.request().method() === "GET") return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ directSubmission: true }) });
+    submittedBody = route.request().postData() ?? "";
+    return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ status: "submitted", number: 41, url: "https://github.com/abbasaliii/patch-the-web/issues/41" }) });
+  });
   await page.goto("/authors/");
   await page.getByLabel("Which public page needs repair?").fill("https://example.edu/programs?student=private#results");
   await page.getByLabel("What is making the page difficult?").fill("I only want to see programs offered in Karachi, but the table makes me scan every campus.");
@@ -23,14 +29,22 @@ test("ordinary users can create a testable privacy-safe repair request", async (
   await expect(page.locator("#share-preview")).toContainText("## Public page");
   await expect(page.locator("#share-preview")).toContainText("https://example.edu/programs");
   await expect(page.locator("#share-preview")).not.toContainText("student=private");
-  const githubLink = page.getByRole("link", { name: "Open public GitHub request" });
+  const githubLink = page.getByRole("link", { name: "Use GitHub instead" });
+  const directSubmit = page.getByRole("button", { name: "Submit request — no account needed" });
   await expect(githubLink).toHaveAttribute("aria-disabled", "true");
   await expect(githubLink).not.toHaveAttribute("href", /.+/);
+  await expect(directSubmit).toBeDisabled();
   await page.getByLabel("I reviewed this public text.").check();
   await expect(githubLink).toHaveAttribute("href", /^https:\/\/github\.com\/abbasaliii\/patch-the-web\/issues\/new\?/);
+  await expect(directSubmit).toBeEnabled();
   const publicIssue = new URL(await githubLink.getAttribute("href") ?? "");
   expect(publicIssue.searchParams.get("body")).not.toContain("student=private");
-  await page.getByRole("button", { name: "Keep editing" }).click();
+  await directSubmit.click();
+  await expect(page.getByRole("heading", { name: "Request #41 entered the review queue." })).toBeFocused();
+  await expect(page.getByRole("link", { name: /View the public request/ })).toHaveAttribute("href", "https://github.com/abbasaliii/patch-the-web/issues/41");
+  expect(submittedBody).not.toContain("student=private");
+  expect(JSON.parse(submittedBody)).toMatchObject({ consent: true, request: { publicScope: "https://example.edu/programs", needs: ["filter", "mobile", "accessibility"] } });
+  await page.getByRole("button", { name: "Close public submission review" }).click();
   await expect(page.getByRole("dialog")).toBeHidden();
 
   await page.getByText("Build it yourself with Codex", { exact: false }).click();
@@ -40,6 +54,20 @@ test("ordinary users can create a testable privacy-safe repair request", async (
   if (testInfo.project.name === "mobile-chromium") {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
   }
+});
+
+test("the reviewed GitHub path remains clear when direct submission is unavailable", async ({ page }) => {
+  await page.route("**/api/repair-requests", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ directSubmission: false }) }));
+  await page.goto("/authors/");
+  await page.getByLabel("Which public page needs repair?").fill("https://example.edu/apply");
+  await page.getByLabel("What is making the page difficult?").fill("The public application form loses progress after every accidental reload.");
+  await page.getByText("Remember unfinished progress", { exact: true }).click();
+  await page.getByRole("button", { name: "Create my repair request" }).click();
+  await page.getByRole("button", { name: "Review public submission" }).click();
+  await expect(page.getByRole("button", { name: "Submit request — no account needed" })).toBeHidden();
+  await expect(page.locator("#submission-note")).toContainText("Direct submission is not active");
+  await page.getByLabel("I reviewed this public text.").check();
+  await expect(page.getByRole("link", { name: "Continue with GitHub" })).toHaveAttribute("href", /^https:\/\/github\.com\/abbasaliii\/patch-the-web\/issues\/new\?/);
 });
 
 test("the extension privately prefills a request without sending the handoff to the server", async ({ page }) => {

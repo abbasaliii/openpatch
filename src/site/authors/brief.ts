@@ -88,6 +88,8 @@ function publicIssueText(value: string) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
+    .replaceAll("\\", "\\\\")
+    .replace(/([`*_{}\[\]()#+.!|>-])/g, "\\$1")
     .replaceAll("@", "&#64;");
 }
 

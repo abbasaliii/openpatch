@@ -91,11 +91,14 @@
       </section>
       <dialog id="review-dialog" aria-labelledby="review-title">
         <div class="dialog-head"><div><span class="eyebrow">EXPLICIT PUBLIC SHARE</span><h2 id="review-title" tabindex="-1">Review before anything leaves this browser.</h2></div><button id="close-review" type="button" aria-label="Close public submission review">×</button></div>
-        <p>The following text will be placed into a public GitHub issue. It contains only the cleaned public URL, your problem description, and desired outcomes. Patch the Web does not submit it automatically.</p>
-        <pre id="share-preview"></pre>
+        <p>The following text will become a public community request. It contains only the cleaned public URL, your problem description, and desired outcomes. Nothing leaves this browser until you confirm and submit.</p>
+        <pre id="share-preview" tabindex="0" role="region" aria-label="Public repair request preview"></pre>
         <label class="share-consent"><input id="share-consent" type="checkbox" /><span><strong>I reviewed this public text.</strong> It contains no personal, account, application, payment, authentication, or other private information.</span></label>
-        <div class="dialog-actions"><a class="button" id="github-submit" role="link" target="_blank" rel="noreferrer" aria-disabled="true">Open public GitHub request ↗</a><button class="button quiet" id="close-review-secondary" type="button">Keep editing</button></div>
-        <small>GitHub sign-in is required to create the issue. Installing published repairs still requires no account.</small>
+        <label class="website-trap" aria-hidden="true">Leave this empty<input id="website" type="text" tabindex="-1" autocomplete="off" /></label>
+        <p id="submit-status" class="submit-status" role="status" aria-live="polite"></p>
+        <div class="direct-success" id="direct-success" hidden><span aria-hidden="true">✓</span><div><h3 tabindex="-1">Request <b id="submitted-number"></b> entered the review queue.</h3><p>No account or contact information was collected.</p><a id="submitted-link" target="_blank" rel="noreferrer">View the public request and track its status ↗</a></div></div>
+        <div class="dialog-actions" id="submission-actions"><button class="button" id="direct-submit" type="button" hidden disabled>Submit request — no account needed</button><a class="button" id="github-submit" role="link" target="_blank" rel="noreferrer" aria-disabled="true">Continue with GitHub ↗</a><button class="button quiet" id="close-review-secondary" type="button">Keep editing</button></div>
+        <small id="submission-note">Checking the private submission service. GitHub remains available as a fallback.</small>
       </dialog>
     </main>
     <footer><span>Patch the Web author path</span><span>Public pages only</span><span>Human review before publish</span></footer>

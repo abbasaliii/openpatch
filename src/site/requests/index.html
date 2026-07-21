@@ -6,6 +6,7 @@
     <meta name="description" content="Track public Patch the Web repair requests from intake through testing and publication." />
     <title>Repair Requests — Patch the Web</title>
     <link rel="stylesheet" href="/requests/requests.css" />
+    <link rel="stylesheet" href="/requests/progress.css" />
   </head>
   <body>
     <header class="site-header">
@@ -36,7 +37,7 @@
     </main>
 
     <footer><a class="brand" href="/"><span aria-hidden="true">//</span> Patch the Web</a><span>Public repair layer for the web.</span><a href="/registry/">Verified repairs</a><a href="https://github.com/abbasaliii/patch-the-web/issues?q=is%3Aissue+label%3Arepair-request" rel="noreferrer">Source queue ↗</a></footer>
-    <template id="request-template"><article class="request-card"><div class="card-top"><span class="status"></span><span class="number"></span></div><h3></h3><p class="meta"></p><div class="labels"></div><div class="card-foot"><span class="updated"></span><a rel="noreferrer">View public request <span aria-hidden="true">↗</span></a></div></article></template>
+    <template id="request-template"><article class="request-card"><div class="card-top"><span class="status"></span><span class="number"></span></div><h3></h3><p class="target"></p><p class="problem"></p><p class="meta"></p><div class="stage-track"><i></i><i></i><i></i><i></i><i></i></div><p class="stage-copy"></p><div class="labels"></div><div class="card-foot"><span class="updated"></span><a rel="noreferrer">View public request <span aria-hidden="true">↗</span></a></div></article></template>
     <script type="module" src="/requests/requests.ts"></script>
   </body>
 </html>

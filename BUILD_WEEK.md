@@ -51,6 +51,7 @@ The public Git history preserves the Build Week sequence:
 | Jul 22 | `v0.10.0` safe update recovery | Added a bounded validated patch history, SHA-256 recheck, live selector preflight, exact-domain permission recheck, one-click rollback/redo, and complete removal of repair history |
 | Jul 22 | `v0.11.0` confirmed installation | Replaced opaque installs with verified/access/installed/confirmed stages, automatic page verification and retry, simplified registry actions, a production-only store build, and removal of development hosts from publishable patches |
 | Jul 22 | `v0.12.0` private request handoff | Let nontechnical users move from an unmatched page to a prefilled community request without copy/paste; the bounded payload stays in a URL fragment, is cleared after local restore, and is proven absent from network requests |
+| Jul 22 | `v0.13.0` guarded community intake | Added an account-free, fail-closed serverless submission path with independent privacy validation, abuse bounds, explicit receipts, an account-based fallback, automated duplicate/privacy triage, and understandable five-stage public status cards |
 
 ## Iteration examples
 
@@ -72,7 +73,7 @@ npm install
 npm run verify
 ```
 
-The release gate performs type checking, 53 unit/policy/privacy tests, all three patch validators, 22 desktop/mobile browser journeys (including six strict axe WCAG A/AA scans), and 6 packaged Manifest V3 extension tests—including public registry discovery, both real production domains, uninstall cleanup, and the domain-scoped enable switch. A separate live FAST-NUCES capture verifies the third-party target at desktop and 390px without changing the site.
+The current release gate performs type checking, 80 unit/policy/privacy/API tests, all four patch validators, 42 desktop/mobile browser journeys (including the patched products and public request workflow under strict axe WCAG A/AA scans), and 8 packaged Manifest V3 extension tests. A separate live FAST-NUCES capture verifies the third-party target at desktop and 390px without changing the site.
 
 Additional publication evidence:
 

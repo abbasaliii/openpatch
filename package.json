@@ -1,6 +1,6 @@
 {
   "name": "patch-the-web",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": true,
   "type": "module",
   "description": "A safe, community repair layer for websites users do not own.",

@@ -1,0 +1,37 @@
+.target {
+  margin: 0 0 7px;
+  color: #087a55;
+  font: 800 9px/1.35 ui-monospace, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+.problem {
+  min-height: 48px;
+  margin: 0 0 10px;
+  color: #3f5c50;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.stage-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin: 15px 0 7px;
+}
+
+.stage-track i {
+  height: 4px;
+  border-radius: 999px;
+  background: #dce8e2;
+}
+
+.stage-track i.complete { background: #0d9568; }
+
+.stage-copy {
+  margin: 0;
+  color: #536d61;
+  font-size: 8px;
+  font-weight: 750;
+  line-height: 1.4;
+}

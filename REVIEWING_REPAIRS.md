@@ -2,6 +2,8 @@
 
 GitHub Issues are the public intake queue. An issue is a request for investigation, not an executable patch and never an automatic publication.
 
+People may enter that queue in two ways: the guided site can create the issue through the guarded no-account intake, or the person can use the reviewed GitHub fallback under their own account. Both paths generate the same bounded body, labels, automated checks, and human gate. Direct intake collects no reporter identity or contact information.
+
 The read-only public lifecycle dashboard is available at <https://patch-the-web.vercel.app/requests/>. It intentionally displays issue metadata only and links back to GitHub for the complete public discussion.
 
 ## Intake states
@@ -24,5 +26,11 @@ The read-only public lifecycle dashboard is available at <https://patch-the-web.
 6. Run `npm run validate:patch -- <patch> <fixture>`, `npm run monitor:workspace`, and `npm run verify`.
 7. Review the SHA-256 receipt and live compatibility fingerprint before merging.
 8. Deploy the registry, verify the production artifact, label the issue `published`, and link the exact registry entry.
+
+## Direct-intake deployment
+
+The serverless endpoint is disabled unless both `REPAIR_SUBMISSION_ENABLED=true` and `GITHUB_REPAIR_TOKEN` exist. The token must be a fine-grained token limited to `abbasaliii/patch-the-web` with only **Issues: write**, an expiration date, and no account-wide or contents permission. Add both values separately to Vercel Preview and Production, then redeploy and verify `GET /api/repair-requests` reports `directSubmission: true`.
+
+The endpoint requires same-origin JSON, enforces a 12 KB body limit, validates every field independently of the browser, strips query strings and fragments again, rejects likely contact/account/credential values, uses a honeypot and minimum-review window, and permits at most three attempts per network per warm function instance. Configure an infrastructure-level Vercel rate-limit rule for `/api/repair-requests` before advertising the endpoint broadly. Disable the launch switch immediately if the public issue queue receives abuse.
 
 Never request credentials, cookies, form values, storage, private URLs, or user data in an issue. Never publish arbitrary JavaScript, HTML injection, network behavior, or a patch that impersonates a successful site transaction.
