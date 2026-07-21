@@ -25,3 +25,7 @@ Describe the concrete usability problem. Do not include field values, account da
 
 - [ ] I reviewed this public issue and removed personal, account, application, payment, and authentication information.
 - [ ] I understand that publication requires policy validation, automated tests, live compatibility evidence, and human review.
+
+## Track this request
+
+After creating the issue, follow its review status at https://patch-the-web.vercel.app/requests/.

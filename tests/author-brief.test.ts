@@ -51,6 +51,7 @@ describe("guided repair request", () => {
     expect(review.body).toContain("https://example.edu/programs");
     expect(review.body).toContain("&#64;everyone");
     expect(review.body).toContain("&lt;script&gt;");
+    expect(review.body).toContain("https://patch-the-web.vercel.app/requests/");
     expect(review.body).not.toContain("token=secret");
     expect(review.body).not.toContain("#private");
     expect(review.body).not.toContain("<script>");

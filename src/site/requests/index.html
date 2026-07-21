@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Track public Patch the Web repair requests from intake through testing and publication." />
+    <title>Repair Requests — Patch the Web</title>
+    <link rel="stylesheet" href="/requests/requests.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Patch the Web home"><span aria-hidden="true">//</span> Patch the Web</a>
+      <nav aria-label="Main navigation"><a href="/registry/">Repairs</a><a href="/requests/" aria-current="page">Requests</a><a href="/authors/">Request a repair</a></nav>
+      <a class="header-action" href="/authors/">Start a request <span aria-hidden="true">→</span></a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div><span class="eyebrow"><i></i> Public repair pipeline</span><h1>See what the community<br /><em>wants fixed next.</em></h1><p>Every request starts as an idea—not executable code. Track it through privacy checks, live-page inspection, constrained authoring, browser tests, and registry publication.</p></div>
+        <div class="summary" id="queue-summary" aria-live="polite" aria-busy="true"><div><strong id="open-count">—</strong><span>open requests</span></div><div><strong id="building-count">—</strong><span>being built</span></div><div><strong id="published-count">—</strong><span>published</span></div></div>
+      </section>
+
+      <section class="pipeline" aria-labelledby="pipeline-heading">
+        <div class="section-heading"><div><span class="kicker">How review works</span><h2 id="pipeline-heading">A visible path, with safety gates.</h2></div><p>A label change reflects a real review stage. Publication requires a constrained patch, tests, selector health, and human approval.</p></div>
+        <ol><li><span>1</span><div><strong>Intake</strong><small>Public URL and privacy structure checked</small></div></li><li><span>2</span><div><strong>Accepted</strong><small>Useful, public, and safely scopeable</small></div></li><li><span>3</span><div><strong>Authoring</strong><small>Codex inspects DOM and screenshots</small></div></li><li><span>4</span><div><strong>Patch review</strong><small>DSL, browser tests, and SHA-256 verified</small></div></li><li><span>5</span><div><strong>Published</strong><small>Healthy repair enters the registry</small></div></li></ol>
+      </section>
+
+      <section class="queue" aria-labelledby="queue-heading">
+        <div class="queue-toolbar"><div><span class="kicker">Community queue</span><h2 id="queue-heading">Repair requests</h2></div><label><span>Show</span><select id="status-filter"><option value="all">All requests</option><option value="needs-triage">Needs triage</option><option value="needs-info">Needs information</option><option value="intake-valid">Accepted</option><option value="authoring">Authoring</option><option value="patch-review">Patch review</option><option value="published">Published</option><option value="declined">Declined</option></select></label></div>
+        <div class="request-grid" id="request-grid" aria-live="polite" aria-busy="true"></div>
+        <div class="empty" id="empty-state" hidden><span aria-hidden="true">✦</span><h3>No requests in this view yet.</h3><p>Be the first to describe a public website problem. The guided form removes query strings and helps you review exactly what becomes public.</p><a href="/authors/">Request a community repair →</a></div>
+        <div class="error" id="error-state" hidden><h3>The public queue could not be loaded.</h3><p>The repair registry is still available. You can retry or open the source queue directly.</p><button id="retry" type="button">Try again</button><a href="https://github.com/abbasaliii/patch-the-web/issues?q=is%3Aissue+label%3Arepair-request" rel="noreferrer">Open GitHub queue</a></div>
+      </section>
+
+      <section class="trust"><div><span class="kicker">Important boundary</span><h2>Requests are public ideas.<br />They are never auto-installed.</h2></div><p>The public view intentionally displays only issue metadata: title, author, labels, timestamps, and link. Patch the Web never copies private page data, form values, cookies, storage, credentials, or URL queries into this dashboard.</p></section>
+    </main>
+
+    <footer><a class="brand" href="/"><span aria-hidden="true">//</span> Patch the Web</a><span>Public repair layer for the web.</span><a href="/registry/">Verified repairs</a><a href="https://github.com/abbasaliii/patch-the-web/issues?q=is%3Aissue+label%3Arepair-request" rel="noreferrer">Source queue ↗</a></footer>
+    <template id="request-template"><article class="request-card"><div class="card-top"><span class="status"></span><span class="number"></span></div><h3></h3><p class="meta"></p><div class="labels"></div><div class="card-foot"><span class="updated"></span><a rel="noreferrer">View public request <span aria-hidden="true">↗</span></a></div></article></template>
+    <script type="module" src="/requests/requests.ts"></script>
+  </body>
+</html>

@@ -2,6 +2,8 @@
 
 GitHub Issues are the public intake queue. An issue is a request for investigation, not an executable patch and never an automatic publication.
 
+The read-only public lifecycle dashboard is available at <https://patch-the-web.vercel.app/requests/>. It intentionally displays issue metadata only and links back to GitHub for the complete public discussion.
+
 ## Intake states
 
 - `needs-triage`: newly opened request awaiting automated and human review.

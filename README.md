@@ -8,7 +8,7 @@ Patch the Web is a safe, public feature layer for websites users do not own. A u
 
 Built for OpenAI Build Week 2026 with Codex and GPT‑5.6.
 
-**Live product:** [patch-the-web.vercel.app](https://patch-the-web.vercel.app/) · [Guided installer](https://patch-the-web.vercel.app/install/) · [Flagship MetroCare demo](https://patch-the-web.vercel.app/care/) · [Public registry](https://patch-the-web.vercel.app/registry/index.json) · [Compatibility Sentinel](https://patch-the-web.vercel.app/registry/compatibility.json)
+**Live product:** [patch-the-web.vercel.app](https://patch-the-web.vercel.app/) · [Guided installer](https://patch-the-web.vercel.app/install/) · [Repair request pipeline](https://patch-the-web.vercel.app/requests/) · [Public registry](https://patch-the-web.vercel.app/registry/index.json) · [Compatibility Sentinel](https://patch-the-web.vercel.app/registry/compatibility.json)
 
 ## The demo
 
@@ -114,7 +114,7 @@ npm run dev -- --port 5173
 
 The same skill is packaged as a distributable Codex plugin under `plugins/patch-the-web`. The extension performs no model call; GPT‑5.6 operates through the user's existing Codex session only while a repair is authored.
 
-People who do not use Codex can start at the guided [repair request page](https://patch-the-web.vercel.app/authors/). It converts plain outcome choices into a privacy-safe `.patch-the-web-request.json` artifact or, after an explicit public-share preview and confirmation, a structured GitHub issue. The issue is only an intake request: automated structure checks and a human maintainer gate must pass before authoring, testing, and registry publication. See [`REVIEWING_REPAIRS.md`](REVIEWING_REPAIRS.md).
+People who do not use Codex can start at the guided [repair request page](https://patch-the-web.vercel.app/authors/). It converts plain outcome choices into a privacy-safe `.patch-the-web-request.json` artifact or, after an explicit public-share preview and confirmation, a structured GitHub issue. The issue is only an intake request: automated structure checks and a human maintainer gate must pass before authoring, testing, and registry publication. Every public request can then be tracked through intake, authoring, patch review, and publication on the [repair request pipeline](https://patch-the-web.vercel.app/requests/). See [`REVIEWING_REPAIRS.md`](REVIEWING_REPAIRS.md).
 
 ![Patch the Web privacy-safe Repair Brief authoring UI](submission-assets/patch-the-web-repair-brief.png)
 

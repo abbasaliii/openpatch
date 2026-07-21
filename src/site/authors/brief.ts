@@ -109,7 +109,10 @@ export function buildReviewIssue(request: RepairRequestArtifact) {
     "",
     "## Privacy confirmation",
     "- [x] I reviewed this public issue and removed personal, account, application, payment, and authentication information.",
-    "- [x] I understand that this request is public and that publication still requires policy validation, automated tests, live compatibility evidence, and human review."
+    "- [x] I understand that this request is public and that publication still requires policy validation, automated tests, live compatibility evidence, and human review.",
+    "",
+    "## Track this request",
+    "After creating the issue, follow its review status at https://patch-the-web.vercel.app/requests/."
   ].join("\n");
   const url = new URL("https://github.com/abbasaliii/patch-the-web/issues/new");
   url.searchParams.set("title", `[Repair request] ${hostname}`);

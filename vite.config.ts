@@ -123,6 +123,7 @@ export default defineConfig({
         registry: resolve(root, "src/site/registry/index.html"),
         authors: resolve(root, "src/site/authors/index.html"),
         install: resolve(root, "src/site/install/index.html"),
+        requests: resolve(root, "src/site/requests/index.html"),
         privacy: resolve(root, "src/site/privacy/index.html"),
         demo: resolve(root, "src/site/demo/index.html"),
         care: resolve(root, "src/site/care/index.html"),
