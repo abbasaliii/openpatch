@@ -75,9 +75,9 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [Patch the Web extension v0.17.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.17.0.zip) — Chrome extension with automatic repair discovery, a persistent review-and-install wizard, confirmed activation, rollback, plain-language requests, and a cross-domain My repairs control center
+- [Patch the Web extension v0.18.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.18.0.zip) — Chrome extension with automatic repair discovery, a local author-to-target handoff, persistent review-and-install wizard, confirmed activation, rollback, plain-language requests, and a cross-domain My repairs control center
 - [Patch the Web Codex plugin v0.4.1](https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.1.zip) — validated authoring plugin with structured repair-request support
-- Extension SHA-256: `AC6E595367706B51EC5FC8A17FA1D140323E6614E76A53AD867F2E1AB3B347CD`
+- Extension SHA-256: `9806AF7768CD56B570889EF6916035A84EB0D978B84792EBBCCF7096229D7175`
 - Plugin SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 
 Then:
@@ -111,6 +111,8 @@ npm run dev -- --port 5173
 2. Open the Patch the Web extension and describe the problem in **Start a repair with Codex**.
 3. Choose **Copy Codex repair brief**.
 4. Open this repository in Codex and paste the brief. Codex auto-discovers `$patch-the-web-author` from `.agents/skills/patch-the-web-author`.
+5. Return to the author workspace and choose the `.patch-the-web.json` file Codex produced. The page validates the constrained DSL and confirms that its scope includes the cleaned request URL.
+6. Choose **Open website and guided test**. The extension independently revalidates the handoff, opens the exact target, and continues in the persistent installer—without uploading the patch or asking you to import it again.
 
 The same skill is packaged as a distributable Codex plugin under `plugins/patch-the-web`. The extension performs no model call; GPT‑5.6 operates through the user's existing Codex session only while a repair is authored.
 
@@ -155,7 +157,7 @@ Current results:
 
 - 90/90 unit, policy, registry-discovery, compatibility-quarantine, guided-installation, preflight, runtime, intake API, and privacy tests pass
 - 46/46 mobile and desktop browser journeys pass, including strict automated WCAG A/AA scans, no-account intake, repair status stages, and every published real-site fixture
-- 11/11 unpacked Manifest V3 extension integration tests pass; the reduced-permission Chrome Store build passes all 10 applicable public-domain journeys with the localhost-only developer case intentionally excluded
+- 12/12 unpacked Manifest V3 extension integration tests pass; the reduced-permission Chrome Store build passes all 11 applicable public-domain journeys with the localhost-only developer case intentionally excluded
 - 11/11 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
 - 10/10 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy
 - Production site and Manifest V3 extension build successfully

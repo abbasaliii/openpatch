@@ -1,5 +1,8 @@
 import { buildAuthorBrief, buildReviewIssue, cleanPublicUrl, type RepairNeed, type RepairRequestArtifact } from "./brief";
 import { decodeRepairRequestHandoff, REQUEST_HANDOFF_KEY } from "../../core/request-handoff";
+import { patchMatchesUrl } from "../../core/matcher";
+import type { CommunityPatch } from "../../core/types";
+import { validatePatch } from "../../core/validator";
 
 const form = document.querySelector<HTMLFormElement>("#brief-form")!;
 const result = document.querySelector<HTMLElement>("#result")!;
@@ -21,6 +24,10 @@ const submissionNote = document.querySelector<HTMLElement>("#submission-note")!;
 const submissionActions = document.querySelector<HTMLElement>("#submission-actions")!;
 const directSuccess = document.querySelector<HTMLElement>("#direct-success")!;
 const websiteTrap = document.querySelector<HTMLInputElement>("#website")!;
+const authoredPatch = document.querySelector<HTMLInputElement>("#authored-patch")!;
+const patchPreview = document.querySelector<HTMLElement>("#patch-preview")!;
+const testAuthoredPatch = document.querySelector<HTMLButtonElement>("#test-authored-patch")!;
+const patchStatus = document.querySelector<HTMLElement>("#patch-status")!;
 const draftKey = "patch-the-web-author-draft-v1";
 let brief = "";
 let requestArtifact: RepairRequestArtifact | undefined;
@@ -28,11 +35,49 @@ let reviewUrl = "";
 let directSubmissionAvailable = false;
 let openedAt = Date.now();
 let submissionId = crypto.randomUUID();
+let candidateRaw = "";
+let candidatePatch: CommunityPatch | undefined;
 
 type Draft = { target?: string; complaint?: string; criteria?: string; needs?: string[] };
 
 function selectedNeeds() {
   return needInputs.filter((input) => input.checked).map((input) => input.value as RepairNeed);
+}
+
+async function sha256(raw: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function resetPatchCandidate() {
+  candidateRaw = "";
+  candidatePatch = undefined;
+  authoredPatch.value = "";
+  patchPreview.hidden = true;
+  testAuthoredPatch.hidden = true;
+  testAuthoredPatch.disabled = false;
+  patchStatus.textContent = "";
+  patchStatus.classList.remove("success");
+}
+
+function handoffToExtension(raw: string, target: string) {
+  const requestId = crypto.randomUUID();
+  return new Promise<{ ok: boolean; error?: string }>((resolve) => {
+    const timeout = window.setTimeout(() => {
+      window.removeEventListener("message", onMessage);
+      resolve({ ok: false, error: "Patch the Web extension was not detected. Install or reload the extension, refresh this page, and try again." });
+    }, 4_000);
+    function onMessage(event: MessageEvent) {
+      if (event.source !== window || event.origin !== location.origin || !event.data || typeof event.data !== "object") return;
+      const response = event.data as { type?: unknown; requestId?: unknown; ok?: unknown; error?: unknown };
+      if (response.type !== "PATCH_THE_WEB_AUTHOR_HANDOFF_RESULT" || response.requestId !== requestId) return;
+      clearTimeout(timeout);
+      window.removeEventListener("message", onMessage);
+      resolve({ ok: response.ok === true, error: typeof response.error === "string" ? response.error : undefined });
+    }
+    window.addEventListener("message", onMessage);
+    window.postMessage({ type: "PATCH_THE_WEB_AUTHOR_HANDOFF", requestId, raw, target }, location.origin);
+  });
 }
 
 async function checkDirectSubmission() {
@@ -116,6 +161,7 @@ form.addEventListener("submit", (event) => {
     });
     brief = artifact.brief;
     requestArtifact = artifact.request;
+    resetPatchCandidate();
     const review = buildReviewIssue(artifact.request);
     reviewUrl = review.url;
     sharePreview.textContent = review.body;
@@ -178,6 +224,53 @@ shareConsent.addEventListener("change", () => {
   }
 });
 
+authoredPatch.addEventListener("change", async () => {
+  candidateRaw = "";
+  candidatePatch = undefined;
+  patchPreview.hidden = true;
+  testAuthoredPatch.hidden = true;
+  patchStatus.classList.remove("success");
+  const file = authoredPatch.files?.[0];
+  if (!file || !requestArtifact) return;
+  if (file.size > 256_000) {
+    patchStatus.textContent = "Blocked: patch files must be smaller than 256 KB.";
+    return;
+  }
+  patchStatus.textContent = "Checking the constrained safety policy and request scope…";
+  try {
+    const raw = await file.text();
+    const validation = validatePatch(JSON.parse(raw) as unknown);
+    if (!validation.ok) throw new Error(`Safety policy rejected ${validation.issues[0]?.path} ${validation.issues[0]?.message}.`);
+    if (!patchMatchesUrl(validation.patch, new URL(requestArtifact.publicScope))) throw new Error("This patch does not include the public page in your repair request.");
+    const hash = await sha256(raw);
+    candidateRaw = raw;
+    candidatePatch = validation.patch;
+    document.querySelector<HTMLElement>("#candidate-name")!.textContent = `${validation.patch.name} · v${validation.patch.version}`;
+    document.querySelector<HTMLElement>("#candidate-proof")!.textContent = `${validation.patch.operations.length} constrained operations · ${validation.patch.match.hosts.join(", ")} · SHA-256 ${hash.slice(0, 16)}…`;
+    patchPreview.hidden = false;
+    testAuthoredPatch.hidden = false;
+    patchStatus.classList.add("success");
+    patchStatus.textContent = "Policy and request scope passed. Nothing has been installed yet.";
+  } catch (error) {
+    patchStatus.textContent = `Blocked: ${error instanceof Error ? error.message : "invalid patch file"}`;
+  }
+});
+
+testAuthoredPatch.addEventListener("click", async () => {
+  if (!candidatePatch || !candidateRaw || !requestArtifact) return;
+  testAuthoredPatch.disabled = true;
+  patchStatus.classList.remove("success");
+  patchStatus.textContent = "Connecting this verified patch to your extension…";
+  const response = await handoffToExtension(candidateRaw, requestArtifact.publicScope);
+  if (response.ok) {
+    patchStatus.classList.add("success");
+    patchStatus.textContent = "The extension opened the exact target and guided installer.";
+  } else {
+    patchStatus.textContent = response.error ?? "The extension could not start the guided test.";
+    testAuthoredPatch.disabled = false;
+  }
+});
+
 directSubmit.addEventListener("click", async () => {
   if (!requestArtifact || !shareConsent.checked || !directSubmissionAvailable) return;
   directSubmit.disabled = true;
@@ -227,6 +320,7 @@ document.querySelector<HTMLButtonElement>("#start-over")!.addEventListener("clic
   reviewUrl = "";
   openedAt = Date.now();
   submissionId = crypto.randomUUID();
+  resetPatchCandidate();
   directSuccess.hidden = true;
   submissionActions.hidden = false;
   shareConsent.closest<HTMLElement>("label")!.hidden = false;

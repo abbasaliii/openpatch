@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Patch the Web",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Validate and install safe, domain-scoped community repairs for the web.",
   "icons": {
     "16": "icons/icon-16.png",
@@ -14,6 +14,11 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [{
+    "matches": ["https://patch-the-web.vercel.app/authors/*"],
+    "js": ["author-bridge.js"],
+    "run_at": "document_start"
+  }],
   "options_ui": {
     "page": "manage.html",
     "open_in_tab": true

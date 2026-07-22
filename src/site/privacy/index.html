@@ -1,1 +1,43 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Patch the Web privacy policy."><title>Privacy — Patch the Web</title><style>body{max-width:760px;margin:0 auto;padding:60px 24px;color:#172b22;background:#f7faf8;font:16px/1.65 Inter,Aptos,system-ui,sans-serif}a{color:#087a55}h1{font-size:46px;letter-spacing:-.06em;line-height:1}h2{margin-top:38px;font-size:24px}small{color:#5c7166}</style></head><body><a href="/">← Patch the Web</a><h1>Privacy policy</h1><small>Effective July 22, 2026</small><p>Patch the Web is designed to repair websites without turning browsing into surveillance.</p><h2>What the extension does</h2><p>When a person explicitly installs a community repair for a website, the extension validates a constrained patch manifest and applies it only on that repair’s declared domain and path.</p><h2>What we do not collect</h2><p>Patch the Web does not transmit or retain page text, form values, cookies, browser history, query strings, credentials, payment details, authentication codes, or local-storage contents. It does not use analytics, advertising, profiling, or data sales.</p><h2>Local data</h2><p>The extension stores installed-patch settings locally in the browser. Some explicitly declared repairs may save non-sensitive form progress or user filter preferences locally and temporarily; the patch receipt discloses this before activation. Sensitive fields are excluded by the runtime.</p><h2>Private repair-request handoff</h2><p>When someone requests a repair from the extension, the cleaned public origin and path, their own complaint, and suggested outcome categories are placed in the URL fragment after <code>#</code>. Browser URL fragments are not included in the web request. The request page reads this bounded payload locally and immediately removes it from the address bar. Structural inventory, selectors, page text, form values, query strings, cookies, and storage are never included.</p><h2>Public repair requests</h2><p>The request page shows the exact cleaned text before anything is shared. If direct intake is available and a person explicitly confirms submission, Patch the Web sends only that cleaned public URL, complaint, chosen outcomes, and a random submission identifier to its server. The server validates the request again and creates a public GitHub issue. Patch the Web does not ask for or store the reporter’s name, email address, account, or contact information. A network address may be processed transiently for abuse throttling; Patch the Web does not place it in the public request or application storage. Vercel and GitHub may process ordinary service logs under their own policies. The GitHub fallback sends nothing until the person follows the reviewed link and submits while signed in.</p><h2>Network requests</h2><p>The extension may request the public Patch the Web registry to discover a repair and its compatibility receipt. That registry request contains no browsing history or page contents. Patch manifests cannot make network requests or execute remote code.</p><h2>Permissions</h2><p><strong>activeTab</strong> and <strong>scripting</strong> are used only after a person opens the extension and approves a repair for the current site. <strong>storage</strong> is used for local settings and declared local preferences. Site access is requested only for a repair’s exact domain.</p><h2>Contact</h2><p>Questions or reports: <a href="https://github.com/abbasaliii/patch-the-web/issues">Patch the Web GitHub issues</a>.</p></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Patch the Web privacy policy." />
+    <title>Privacy — Patch the Web</title>
+    <style>body{max-width:760px;margin:0 auto;padding:60px 24px;color:#172b22;background:#f7faf8;font:16px/1.65 Inter,Aptos,system-ui,sans-serif}a{color:#087a55}h1{font-size:46px;letter-spacing:-.06em;line-height:1}h2{margin-top:38px;font-size:24px}small{color:#5c7166}</style>
+  </head>
+  <body>
+    <a href="/">← Patch the Web</a>
+    <h1>Privacy policy</h1>
+    <small>Effective July 22, 2026</small>
+    <p>Patch the Web is designed to repair websites without turning browsing into surveillance.</p>
+
+    <h2>What the extension does</h2>
+    <p>When a person explicitly installs a community repair for a website, the extension validates a constrained patch manifest and applies it only on that repair’s declared domain and path.</p>
+
+    <h2>What we do not collect</h2>
+    <p>Patch the Web does not transmit or retain page text, form values, cookies, browser history, query strings, credentials, payment details, authentication codes, or local-storage contents. It does not use analytics, advertising, profiling, or data sales.</p>
+
+    <h2>Local data</h2>
+    <p>The extension stores installed-patch settings locally in the browser. Some explicitly declared repairs may save non-sensitive form progress or user filter preferences locally and temporarily; the patch receipt discloses this before activation. Sensitive fields are excluded by the runtime. A pending guided installation is kept in Chrome’s temporary session storage for at most fifteen minutes.</p>
+
+    <h2>Private repair-request handoff</h2>
+    <p>When someone requests a repair from the extension, the cleaned public origin and path, their own complaint, and suggested outcome categories are placed in the URL fragment after <code>#</code>. Browser URL fragments are not included in the web request. The request page reads this bounded payload locally and immediately removes it from the address bar. Structural inventory, selectors, page text, form values, query strings, cookies, and storage are never included.</p>
+
+    <h2>Local returned-patch handoff</h2>
+    <p>When a person explicitly chooses a patch file returned by Codex on the Patch the Web author page, the page validates its constrained safety policy and request scope. The selected bytes and cleaned target are passed locally to the installed extension through a bridge available only on the exact author page. The extension validates the sender, size, policy, target, and scope again before opening the target and guided installer. This handoff does not upload the patch file to Patch the Web.</p>
+
+    <h2>Public repair requests</h2>
+    <p>The request page shows the exact cleaned text before anything is shared. If direct intake is available and a person explicitly confirms submission, Patch the Web sends only that cleaned public URL, complaint, chosen outcomes, and a random submission identifier to its server. The server validates the request again and creates a public GitHub issue. Patch the Web does not ask for or store the reporter’s name, email address, account, or contact information. A network address may be processed transiently for abuse throttling; Patch the Web does not place it in the public request or application storage. Vercel and GitHub may process ordinary service logs under their own policies. The GitHub fallback sends nothing until the person follows the reviewed link and submits while signed in.</p>
+
+    <h2>Network requests</h2>
+    <p>The extension may request the public Patch the Web registry to discover a repair and its compatibility receipt. That registry request contains no browsing history or page contents. Patch manifests cannot make network requests or execute remote code.</p>
+
+    <h2>Permissions</h2>
+    <p><strong>activeTab</strong> and <strong>scripting</strong> are used only after a person opens the extension or explicitly starts a guided test and approves the repair. <strong>storage</strong> is used for local settings, temporary install handoffs, and declared local preferences. Permanent target-site access is requested only for a repair’s exact domain. Access to <strong>patch-the-web.vercel.app</strong> is used for the trusted registry and the exact author-page local bridge.</p>
+
+    <h2>Contact</h2>
+    <p>Questions or reports: <a href="https://github.com/abbasaliii/patch-the-web/issues">Patch the Web GitHub issues</a>.</p>
+  </body>
+</html>

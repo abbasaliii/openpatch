@@ -1,4 +1,4 @@
-# Chrome Web Store release pack — v0.17.0
+# Chrome Web Store release pack — v0.18.0
 
 This document contains the exact listing, privacy answers, reviewer path, package receipt, and asset inventory for the first Chrome Web Store submission. Dashboard publication is intentionally a human-controlled final step.
 
@@ -16,7 +16,7 @@ Patch the Web adds missing usability features to websites without installing arb
 
 Before a repair runs, Patch the Web opens a persistent guided installer that checks its policy, exact host and path, SHA-256 receipt, live compatibility status, and every required selector on the open page. Chrome then asks for access to that repair’s exact domain while the receipt stays visible. The repair can be disabled, removed, updated, or restored to a previously validated version at any time. A built-in My repairs control center shows every installed scope and version across domains without requesting browsing-history access.
 
-If no repair exists, a person can describe the outcome they want in plain language. The extension creates a privacy-safe request containing only the public origin/path, the person’s complaint, and broad outcome categories. It excludes page text, field values, cookies, storage, and URL query strings.
+If no repair exists, a person can describe the outcome they want in plain language. The extension creates a privacy-safe request containing only the public origin/path, the person’s complaint, and broad outcome categories. It excludes page text, field values, cookies, storage, and URL query strings. When Codex returns a constrained patch, the Patch the Web author page can validate it and hand it locally to the extension. A content bridge exists only on the exact `/authors/` page; the extension revalidates the sender, file size, policy, clean target, and request scope before opening the target and guided installer.
 
 No account or API key is needed to install and use community repairs. Patch manifests cannot execute JavaScript, inject arbitrary HTML, call remote services, read cookies, or access browser history.
 
@@ -28,6 +28,7 @@ Chrome Web Store privacy answers must disclose local handling as well as transmi
 - **User activity / browsing history:** No collection. The extension does not build, store, or transmit browsing history. It uses the current tab URL only to match an exact repair scope.
 - **Authentication, financial, health, location, personal communications:** Not collected or transmitted. Persistence rules reject passwords, payment fields, verification codes, files, and other sensitive inputs.
 - **Repair requests:** Only after explicit review and confirmation, the public origin/path, user-written complaint, selected outcome categories, and a random request identifier may be submitted to the public request service. No account name or email is requested.
+- **Returned author patches:** A patch file explicitly chosen on the Patch the Web author page is validated in the page, passed locally to the installed extension, validated again, and kept only in temporary browser session storage. The file is not uploaded by this handoff.
 - **Registry request:** The extension fetches the public Patch the Web registry to discover patch metadata and compatibility receipts. It does not attach page content, form values, cookies, storage, URL queries, or browsing history.
 - **Advertising, profiling, sale, credit decisions:** None.
 - **Remote code:** No. Downloaded JSON is validated against a constrained allowlist and cannot contain scripts, HTML callbacks, fetches, cookies, `eval`, or executable code.
@@ -40,6 +41,7 @@ Privacy policy URL: `https://patch-the-web.vercel.app/privacy/`
 - `scripting`: run the bundled structural preflight and constrained repair runtime after user action.
 - `storage`: keep installed-repair settings, bounded version history, a session-only installation handoff that expires after fifteen minutes, and explicitly disclosed local preferences or non-sensitive draft data.
 - `optional_host_permissions`: request access only for the exact origin declared by the repair the person chose; the base store install does not request blanket website access.
+- `host_permissions` for `patch-the-web.vercel.app`: fetch the trusted registry and provide the local author handoff only on the exact Patch the Web author page.
 
 ## Reviewer test path
 
@@ -52,14 +54,15 @@ Privacy policy URL: `https://patch-the-web.vercel.app/privacy/`
 7. Disable the repair with the domain-scoped switch, then re-enable it.
 8. Open **My repairs** from the popup footer. Confirm MetroCare appears with its exact scope, registry source, version, update state, and enable/remove controls.
 9. Open an unsupported normal website and open the extension. Choose **Add search & filters** to verify the plain-language repair-request helper. Do not submit the public request during review.
+10. Optional author handoff: download the MetroCare patch JSON from the public registry, create a repair request for `https://patch-the-web.vercel.app/care/`, choose the returned patch in **After Codex builds it**, and confirm the extension opens the exact target plus guided installer. Cancel safely before installing.
 
 Expected network behavior: the extension may request `https://patch-the-web.vercel.app/registry/index.json` and the matching patch JSON. Typing into filters, using comparison, and applying the repair generates no page-data request.
 
 ## Package receipt
 
-- Upload: `release/patch-the-web-extension-v0.17.0.zip`
-- Size: 85,717 bytes
-- SHA-256: `AC6E595367706B51EC5FC8A17FA1D140323E6614E76A53AD867F2E1AB3B347CD`
+- Upload: `release/patch-the-web-extension-v0.18.0.zip`
+- Size: 87,495 bytes
+- SHA-256: `9806AF7768CD56B570889EF6916035A84EB0D978B84792EBBCCF7096229D7175`
 - Manifest: V3
 - Archive layout: `manifest.json` and extension files are at the ZIP root
 - Store build: minified, no source maps, no localhost or `127.0.0.1` host permissions
@@ -75,7 +78,7 @@ Expected network behavior: the extension may request `https://patch-the-web.verc
 ## Final dashboard checklist
 
 1. Run `npm run verify` and `npm run test:extension:store`.
-2. Upload the v0.17.0 ZIP and use the listing copy above.
+2. Upload the v0.18.0 ZIP and use the listing copy above.
 3. Complete privacy disclosures using the local-handling details above; do not select a blanket “no user data” answer.
 4. Add the privacy-policy URL, screenshots, small tile, marquee tile, category, language, and support URL.
 5. Paste the reviewer test path into the reviewer notes.

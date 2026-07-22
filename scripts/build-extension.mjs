@@ -16,7 +16,8 @@ await build({
     content: resolve(root, "src/extension/content.ts"),
     popup: resolve(root, "src/extension/popup.ts"),
     manage: resolve(root, "src/extension/manage.ts"),
-    install: resolve(root, "src/extension/install.ts")
+    install: resolve(root, "src/extension/install.ts"),
+    "author-bridge": resolve(root, "src/extension/author-bridge.ts")
   },
   bundle: true,
   outdir,

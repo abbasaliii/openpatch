@@ -122,6 +122,43 @@ test("the packaged extension repairs the real public demo domain", async () => {
   await expect(page.locator("html")).toHaveAttribute("data-patch-the-web-applied", /org\.patchtheweb\.civicapply-accessible-draft@1\.2\.1/);
 });
 
+test("the author workspace hands a Codex patch directly to the exact target and guided installer", async () => {
+  let worker = context.serviceWorkers()[0];
+  if (!worker) worker = await context.waitForEvent("serviceworker");
+  await worker.evaluate(async () => chrome.storage.session.remove("installWizardSession"));
+  const wrongPath = await context.newPage();
+  await wrongPath.goto(homeUrl);
+  await wrongPath.evaluate(({ raw, target }) => window.postMessage({
+    type: "PATCH_THE_WEB_AUTHOR_HANDOFF",
+    requestId: "123e4567-e89b-12d3-a456-426614174001",
+    raw,
+    target
+  }, location.origin), { raw: JSON.stringify(metrocarePatchJson), target: careUrl });
+  await wrongPath.waitForTimeout(400);
+  expect(await worker.evaluate(async () => Boolean((await chrome.storage.session.get("installWizardSession")).installWizardSession))).toBe(false);
+  await wrongPath.close();
+  const author = await context.newPage();
+  await author.goto("https://patch-the-web.vercel.app/authors/");
+  const wizardOpened = context.waitForEvent("page", { predicate: (candidate) => candidate.url().includes("/install.html") });
+  await author.evaluate(({ raw, target }) => window.postMessage({
+    type: "PATCH_THE_WEB_AUTHOR_HANDOFF",
+    requestId: "123e4567-e89b-12d3-a456-426614174000",
+    raw,
+    target
+  }, location.origin), { raw: JSON.stringify(metrocarePatchJson), target: careUrl });
+  const wizard = await wizardOpened;
+  await wizard.waitForLoadState("domcontentloaded");
+  await expect(wizard.getByRole("heading", { name: "MetroCare: personal service navigator" })).toBeVisible();
+  await expect(wizard.locator("#source-label")).toHaveText("Local author test repair");
+  await expect(wizard.locator("#repair-domain")).toHaveText("patch-the-web.vercel.app");
+  await expect(wizard.locator("#repair-health")).toHaveText("11/11 operation targets healthy now");
+  await wizard.getByRole("button", { name: "Cancel safely" }).click();
+  await expect.poll(async () => worker.evaluate(async () => !(await chrome.storage.session.get("installWizardSession")).installWizardSession)).toBe(true);
+  const openedTargets = context.pages().filter((candidate) => candidate.url() === careUrl);
+  await Promise.all(openedTargets.map((candidate) => candidate.close()));
+  await author.close();
+});
+
 test("the production extension discovers and installs MetroCare from the verified public registry", async () => {
   let worker = context.serviceWorkers()[0];
   if (!worker) worker = await context.waitForEvent("serviceworker");

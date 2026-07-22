@@ -13,7 +13,7 @@ type PageState = {
 type ReadyCandidate = {
   session: InstallSession;
   patch: CommunityPatch;
-  preflight: SelectorPreflightResult;
+  preflight?: SelectorPreflightResult;
 };
 
 const CAPABILITY_LABELS: Record<string, string> = {
@@ -76,7 +76,7 @@ async function preflightOnTab(tabId: number, patch: CommunityPatch) {
   return result[0]?.result as SelectorPreflightResult | undefined;
 }
 
-async function verifySession(session: InstallSession): Promise<ReadyCandidate> {
+async function verifySession(session: InstallSession, requirePreflight = false): Promise<ReadyCandidate> {
   if (await sha256(session.raw) !== session.hash) throw new Error("The repair changed after verification. Start again from the website.");
   let parsed: unknown;
   try { parsed = JSON.parse(session.raw); } catch { throw new Error("The repair file is not valid JSON."); }
@@ -85,9 +85,14 @@ async function verifySession(session: InstallSession): Promise<ReadyCandidate> {
   const tab = await targetTab(session.tabId);
   if (!tab?.url?.startsWith("http")) throw new Error("The original website tab was closed. Reopen it and start the installation again.");
   if (!patchMatchesUrl(validation.patch, new URL(tab.url))) throw new Error("The original tab is no longer on a page this repair is allowed to change.");
-  const preflight = await preflightOnTab(session.tabId, validation.patch);
-  if (!preflight) throw new Error("The website blocked the selector check. Reload it and try again.");
-  if (preflight.healthy !== preflight.total) throw new Error(`The website changed: ${preflight.total - preflight.healthy} of ${preflight.total} repair targets no longer match. Nothing was installed.`);
+  let preflight: SelectorPreflightResult | undefined;
+  try {
+    preflight = await preflightOnTab(session.tabId, validation.patch);
+  } catch {
+    if (requirePreflight) throw new Error("The website blocked the selector check even after access was approved. Nothing was installed.");
+  }
+  if (requirePreflight && !preflight) throw new Error("The website did not return a selector check. Nothing was installed.");
+  if (preflight && preflight.healthy !== preflight.total) throw new Error(`The website changed: ${preflight.total - preflight.healthy} of ${preflight.total} repair targets no longer match. Nothing was installed.`);
   return { session, patch: validation.patch, preflight };
 }
 
@@ -109,7 +114,9 @@ function renderCandidate(candidate: ReadyCandidate) {
     chip.textContent = CAPABILITY_LABELS[item] ?? item;
     return chip;
   }));
-  byId("repair-health").textContent = `${preflight.healthy}/${preflight.total} operation targets healthy now`;
+  byId("repair-health").textContent = preflight
+    ? `${preflight.healthy}/${preflight.total} operation targets healthy now`
+    : "Runs immediately after you approve this website";
   byId("repair-hash").textContent = session.hash;
   byId("permission-domain").textContent = patch.match.hosts.join(", ");
   setStage("verify", "complete");
@@ -162,6 +169,9 @@ installButton.addEventListener("click", async () => {
     }
 
     setStage("access", "complete");
+    status.textContent = "Access approved. Running the live selector check before installation…";
+    ready = await verifySession(ready.session, true);
+    byId("repair-health").textContent = `${ready.preflight!.healthy}/${ready.preflight!.total} operation targets healthy now`;
     setStage("install", "active");
     failedStage = "install";
     status.textContent = "Installing this verified repair locally…";

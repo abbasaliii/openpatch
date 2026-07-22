@@ -88,6 +88,15 @@
         <div class="handoff"><span><b>1</b> Review the cleaned request</span><span><b>2</b> Confirm it contains no private data</span><span><b>3</b> Send it for community review</span></div>
         <div class="community-submit"><div><span class="eyebrow">RECOMMENDED NEXT STEP</span><h3>Ask the community to build it.</h3><p>Nothing is submitted automatically. You will inspect and approve the exact public text first.</p></div><button class="button review-button" id="review-submit" type="button">Review public submission →</button></div>
         <details class="codex-handoff"><summary>Build it yourself with Codex <span>Advanced</span></summary><p>Use this author brief when you want Codex to inspect, test, and package the repair now.</p><pre id="preview"></pre><div class="result-actions"><button class="button" id="copy" type="button">Copy for Codex</button><button class="button quiet" id="download" type="button">Download .md</button><button class="button quiet" id="download-request" type="button">Download request JSON</button></div></details>
+        <section class="patch-return" aria-labelledby="patch-return-title">
+          <div><span class="eyebrow">AFTER CODEX BUILDS IT</span><h3 id="patch-return-title">Test the finished repair without starting over.</h3><p>Choose the constrained patch Codex returned. We verify its safety policy and request scope here, then the extension opens the exact website and guided installer.</p></div>
+          <input class="patch-file" id="authored-patch" type="file" accept="application/json,.json,.patch-the-web.json" />
+          <label class="patch-picker" for="authored-patch"><span aria-hidden="true">+</span><strong>Choose Codex patch</strong><small>.patch-the-web.json · maximum 256 KB</small></label>
+          <div class="patch-preview" id="patch-preview" hidden><span class="patch-ok" aria-hidden="true">✓</span><div><strong id="candidate-name"></strong><small id="candidate-proof"></small></div></div>
+          <button class="button test-patch" id="test-authored-patch" type="button" hidden>Open website and guided test →</button>
+          <p class="patch-status" id="patch-status" role="status" aria-live="polite"></p>
+          <small class="bridge-privacy">Local handoff only: the selected patch is sent to your installed extension, not uploaded to Patch the Web.</small>
+        </section>
       </section>
       <dialog id="review-dialog" aria-labelledby="review-title">
         <div class="dialog-head"><div><span class="eyebrow">EXPLICIT PUBLIC SHARE</span><h2 id="review-title" tabindex="-1">Review before anything leaves this browser.</h2></div><button id="close-review" type="button" aria-label="Close public submission review">×</button></div>

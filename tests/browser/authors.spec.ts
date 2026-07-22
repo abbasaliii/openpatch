@@ -19,6 +19,32 @@ test("ordinary users can create a testable privacy-safe repair request", async (
   await expect(page.getByRole("heading", { name: "Your repair request is ready." })).toBeFocused();
   await expect(page.locator("#scope")).toHaveText("Scope locked to https://example.edu/programs · 3 testable outcomes");
   await expect(page.locator("#preview")).toContainText("Use $patch-the-web-author");
+  const authoredPatch = {
+    schemaVersion: 1,
+    id: "org.patchtheweb.example-program-filter",
+    name: "Example program finder",
+    summary: "Adds a safe local program filter to the requested public page.",
+    version: "1.0.0",
+    author: { name: "Browser test" },
+    match: { hosts: ["example.edu"], paths: ["/programs"] },
+    capabilities: ["accessibility"],
+    operations: [{ id: "label-programs", type: "attributes", selector: "#programs", attributes: { title: "Programs" } }],
+    verify: [{ type: "attribute", selector: "#programs", name: "title", value: "Programs" }],
+    changelog: "Initial request handoff test."
+  };
+  await page.locator("#authored-patch").setInputFiles({ name: "wrong-scope.patch-the-web.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...authoredPatch, match: { hosts: ["other.example"], paths: ["/programs"] } })) });
+  await expect(page.locator("#patch-status")).toContainText("does not include the public page in your repair request");
+  await expect(page.getByRole("button", { name: "Open website and guided test" })).toBeHidden();
+  await page.locator("#authored-patch").setInputFiles({ name: "example.patch-the-web.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(authoredPatch)) });
+  await expect(page.locator("#candidate-name")).toHaveText("Example program finder · v1.0.0");
+  await expect(page.locator("#candidate-proof")).toContainText("1 constrained operations · example.edu");
+  await expect(page.locator("#patch-status")).toHaveText("Policy and request scope passed. Nothing has been installed yet.");
+  if (testInfo.project.name === "mobile-chromium") {
+    await page.locator("#patch-return-title").scrollIntoViewIfNeeded();
+    await page.locator(".patch-return").screenshot({ path: "submission-assets/patch-the-web-author-return-mobile.png" });
+  }
+  await page.getByRole("button", { name: "Open website and guided test" }).click();
+  await expect(page.locator("#patch-status")).toContainText("extension was not detected", { timeout: 6_000 });
   await expect(page.locator("#preview")).toContainText("390px viewport");
   await expect(page.locator("#preview")).not.toContainText("student=private");
   await expect(page.locator("#preview")).not.toContainText("#results");
