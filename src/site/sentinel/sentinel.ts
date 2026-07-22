@@ -22,6 +22,7 @@ function displayName(id: string) {
   if (id.includes("metrocare")) return "MetroCare: personal service navigator";
   if (id.includes("civicapply")) return "CivicApply: accessible & autosaved";
   if (id.includes("nu-karachi")) return "FAST-NUCES: Karachi degree programs only";
+  if (id.includes("pec-accredited")) return "PEC: accredited program search";
   return id;
 }
 
@@ -85,9 +86,10 @@ async function loadCompatibility() {
   byId("metric-total").textContent = String(report.summary.total);
   byId("metric-healthy").textContent = `${report.summary.healthy}/${report.summary.total}`;
   byId("metric-operations").textContent = String(report.patches.reduce((total, patch) => total + patch.total, 0));
+  const quarantined = report.summary.drifted + report.summary.unreachable;
   byId("hero-status").textContent = report.summary.healthy === report.summary.total
     ? `All ${report.summary.total} patches compatible`
-    : `${report.summary.drifted + report.summary.unreachable} patches quarantined`;
+    : `${quarantined} ${quarantined === 1 ? "patch" : "patches"} quarantined`;
   byId("hero-checked").textContent = `Last checked ${new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(report.generatedAt))}`;
   byId("patch-list").replaceChildren(...report.patches.map(renderPatch));
 }

@@ -44,7 +44,7 @@ test("the judge landing page, public registry, and Compatibility Sentinel have n
   await expectNoWcagViolations(page);
 
   await page.goto("/sentinel/");
-  await expect(page.locator("#hero-status")).toHaveText("All 4 patches compatible");
+  await expect(page.locator("#hero-status")).toHaveText("1 patch quarantined");
   await expectNoWcagViolations(page);
 
   await page.goto("/authors/");

@@ -100,7 +100,7 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
       compatibility: { status: string; healthy: number; total: number; fingerprint: string };
     }>;
   };
-  expect(registry.patches).toHaveLength(4);
+  expect(registry.patches).toHaveLength(5);
   expect(registry.patches[0].id).toBe("org.patchtheweb.civicapply-accessible-draft");
   expect(registry.patches[0].sha256).toMatch(/^[a-f0-9]{64}$/);
   expect(registry.patches[0].verification).toEqual({ status: "verified", operations: 19, assertions: 10 });
@@ -121,10 +121,13 @@ test("the public registry exposes a verifiable patch receipt", async ({ page }) 
   const hec = registry.patches.find((patch) => patch.id === "org.patchtheweb.hec-campus-finder");
   expect(hec?.verification).toEqual({ status: "verified", operations: 5, assertions: 4 });
   expect(hec?.compatibility).toMatchObject({ status: "healthy", healthy: 5, total: 5 });
+  const pec = registry.patches.find((patch) => patch.id === "org.patchtheweb.pec-accredited-program-search");
+  expect(pec?.verification).toEqual({ status: "verified", operations: 1, assertions: 3 });
+  expect(pec?.compatibility).toMatchObject({ status: "unreachable", healthy: 0, total: 1 });
   await expect(page.locator("#compatibility-receipt")).toContainText("Compatibility Sentinel: healthy");
   const compatibilityResponse = await page.request.get("/registry/compatibility.json");
   expect(compatibilityResponse.ok()).toBe(true);
-  expect((await compatibilityResponse.json()).summary).toEqual({ healthy: 4, drifted: 0, unreachable: 0, total: 4 });
+  expect((await compatibilityResponse.json()).summary).toEqual({ healthy: 4, drifted: 0, unreachable: 1, total: 5 });
   const navigatorResponse = await page.request.get("/registry/patches/metrocare-service-navigator.patch-the-web.json");
   expect(navigatorResponse.ok()).toBe(true);
 });
@@ -151,11 +154,11 @@ test("the registry lets people browse verified community repairs safely", async 
 
 test("the Compatibility Console explains live evidence and quarantines simulated drift", async ({ page }) => {
   await page.goto("/sentinel/");
-  await expect(page.locator("#hero-status")).toHaveText("All 4 patches compatible");
-  await expect(page.locator("#metric-healthy")).toHaveText("4/4");
-  await expect(page.locator("#metric-operations")).toHaveText("39");
-  await expect(page.locator(".patch-row")).toHaveCount(4);
-  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "5/5 live", "11/11 live", "4/4 live"]);
+  await expect(page.locator("#hero-status")).toHaveText("1 patch quarantined");
+  await expect(page.locator("#metric-healthy")).toHaveText("4/5");
+  await expect(page.locator("#metric-operations")).toHaveText("40");
+  await expect(page.locator(".patch-row")).toHaveCount(5);
+  await expect(page.locator(".patch-score")).toHaveText(["19/19 live", "5/5 live", "11/11 live", "4/4 live", "0/1 live"]);
   await page.locator("#simulate-drift").click();
   await expect(page.locator("#simulation-state")).toHaveClass(/quarantined/);
   await expect(page.locator("#simulation-state strong")).toHaveText("Quarantined from discovery");

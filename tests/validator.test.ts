@@ -4,6 +4,7 @@ import civicPatch from "../src/registry/patches/civic-apply.patch-the-web.json";
 import metroCarePatch from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
 import nuKarachiPatch from "../src/registry/patches/nu-karachi-degree-programs.patch-the-web.json";
 import hecCampusPatch from "../src/registry/patches/hec-campus-finder.patch-the-web.json";
+import pecProgramPatch from "../src/registry/patches/pec-accredited-program-search.patch-the-web.json";
 import { patchMatchesUrl } from "../src/core/matcher";
 import type { CommunityPatch } from "../src/core/types";
 import { validatePatch } from "../src/core/validator";
@@ -24,6 +25,23 @@ describe("Patch the Web policy validator", () => {
 
   it("accepts the bounded HEC public-table search repair", () => {
     expect(validatePatch(hecCampusPatch).ok).toBe(true);
+  });
+
+  it("accepts the bounded PEC public-list search repair", () => {
+    expect(validatePatch(pecProgramPatch).ok).toBe(true);
+  });
+
+  it("rejects executable or unbounded public-list searches", () => {
+    const unsafe = structuredClone(pecProgramPatch) as unknown as { operations: Array<Record<string, unknown>> };
+    const operation = unsafe.operations.find((entry) => entry.type === "publicListSearch")!;
+    operation.maxItems = 1000;
+    operation.script = "fetch('https://evil.test')";
+    const result = validatePatch(unsafe);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues.some((issue) => issue.path.endsWith("maxItems"))).toBe(true);
+      expect(result.issues.some((issue) => issue.path.endsWith("script"))).toBe(true);
+    }
   });
 
   it("rejects executable or unbounded public-table searches", () => {

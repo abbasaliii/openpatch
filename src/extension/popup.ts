@@ -34,6 +34,16 @@ type PendingImport = {
   source: "local-file" | "public-registry";
 };
 
+type PendingInstallIntent = {
+  patchId: string;
+  version: string;
+  tabId: number;
+  createdAt: number;
+};
+
+const PENDING_INSTALL_KEY = "pendingInstallIntent";
+const PENDING_INSTALL_TTL_MS = 10 * 60_000;
+
 const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const host = byId<HTMLElement>("site-host");
 const icon = byId<HTMLElement>("site-icon");
@@ -466,8 +476,16 @@ installButton.addEventListener("click", async () => {
   try {
     const origins = permissionOrigins(candidate.patch);
     const alreadyGranted = await chrome.permissions.contains({ origins });
+    const intent: PendingInstallIntent = {
+      patchId: candidate.patch.id,
+      version: candidate.patch.version,
+      tabId: currentTab.id,
+      createdAt: Date.now()
+    };
+    await chrome.storage.local.set({ [PENDING_INSTALL_KEY]: intent });
     const granted = alreadyGranted || await chrome.permissions.request({ origins });
     if (!granted) {
+      await chrome.storage.local.remove(PENDING_INSTALL_KEY);
       setInstallStage("access", "error");
       importStatus.textContent = "Access was not granted. Nothing changed. Click again when you are ready.";
       installButton.disabled = false;
@@ -501,16 +519,35 @@ installButton.addEventListener("click", async () => {
     await waitForAppliedPatch(currentTab.id, candidate.patch.id);
     setInstallStage("confirm", "complete");
     importStatus.textContent = "Done — the repair is active on this page.";
+    await chrome.storage.local.remove(PENDING_INSTALL_KEY);
     installButton.textContent = "View repaired page";
     installButton.disabled = false;
     installationComplete = true;
   } catch (error) {
+    await chrome.storage.local.remove(PENDING_INSTALL_KEY);
     setInstallStage(failedStage, "error");
     importStatus.textContent = `Installation failed: ${error instanceof Error ? error.message : "unknown error"}`;
     installButton.textContent = "Retry activation";
     installButton.disabled = false;
   }
 });
+
+async function resumePendingInstallIfReady() {
+  if (!pendingImport || !currentTab?.id) return;
+  const stored = await chrome.storage.local.get(PENDING_INSTALL_KEY);
+  const intent = stored[PENDING_INSTALL_KEY] as PendingInstallIntent | undefined;
+  if (!intent) return;
+  const expired = !Number.isFinite(intent.createdAt) || Date.now() - intent.createdAt > PENDING_INSTALL_TTL_MS;
+  const matches = intent.patchId === pendingImport.patch.id && intent.version === pendingImport.patch.version && intent.tabId === currentTab.id;
+  if (expired || !matches) {
+    await chrome.storage.local.remove(PENDING_INSTALL_KEY);
+    return;
+  }
+  const granted = await chrome.permissions.contains({ origins: permissionOrigins(pendingImport.patch) });
+  if (!granted) return;
+  importStatus.textContent = "Website access approved. Finishing installation automatically…";
+  installButton.click();
+}
 
 async function init() {
   currentTab = await activeTab();
@@ -528,6 +565,7 @@ async function init() {
   }
   try {
     await discoverPublicPatch();
+    await resumePendingInstallIfReady();
   } catch (error) {
     if (!registryMatch.hidden) {
       importStatus.textContent = `Registry repair blocked: ${error instanceof Error ? error.message : "verification failed"}`;

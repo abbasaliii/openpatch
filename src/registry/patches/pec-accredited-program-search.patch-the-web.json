@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "org.patchtheweb.pec-accredited-program-search",
+  "name": "PEC: accredited program search",
+  "summary": "Adds one private local search across Pakistan Engineering Council's long regional Level-I accreditation directory.",
+  "version": "1.0.0",
+  "author": { "name": "Patch the Web Community", "verified": true },
+  "match": {
+    "hosts": ["www.pec.org.pk"],
+    "paths": ["/accredition/programs-under-level-1/"]
+  },
+  "capabilities": ["content-filter", "accessibility", "keyboard-navigation"],
+  "operations": [
+    {
+      "id": "search-accredited-programs",
+      "type": "publicListSearch",
+      "selector": "#post-20688",
+      "itemSelector": ".elementor-widget-text-editor > .elementor-widget-container > ol > li",
+      "title": "Find an accredited engineering program",
+      "description": "Search institutions, cities, disciplines, and intake years across every regional Level-I list.",
+      "searchLabel": "Search accredited programs",
+      "placeholder": "Try Karachi, software engineering, or an institution",
+      "itemLabel": "institutions",
+      "maxItems": 220
+    }
+  ],
+  "verify": [
+    { "type": "exists", "selector": "#post-20688", "min": 1, "max": 1 },
+    { "type": "exists", "selector": ".elementor-widget-text-editor > .elementor-widget-container > ol", "min": 7, "max": 7 },
+    { "type": "exists", "selector": ".elementor-widget-text-editor > .elementor-widget-container > ol > li:first-child", "min": 7, "max": 7 }
+  ],
+  "changelog": "Initial release: bounded private search, accessible result counts, slash-to-focus, and Escape-to-clear across the public PEC Level-I directory."
+}

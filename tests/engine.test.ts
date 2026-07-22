@@ -5,6 +5,7 @@ import civicPatchJson from "../src/registry/patches/civic-apply.patch-the-web.js
 import metroCarePatchJson from "../src/registry/patches/metrocare-service-navigator.patch-the-web.json";
 import nuKarachiPatchJson from "../src/registry/patches/nu-karachi-degree-programs.patch-the-web.json";
 import hecCampusPatchJson from "../src/registry/patches/hec-campus-finder.patch-the-web.json";
+import pecProgramPatchJson from "../src/registry/patches/pec-accredited-program-search.patch-the-web.json";
 import type { CommunityPatch } from "../src/core/types";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -355,5 +356,44 @@ describe("HEC recognized-campus finder", () => {
     const health = applyPatch(hecCampusPatchJson as CommunityPatch);
     expect(health).toMatchObject({ applied: false, healthy: 4, total: 5 });
     expect(document.querySelector(".patch-the-web-table-search")).toBeNull();
+  });
+});
+
+const pecFixture = readFileSync(resolve(import.meta.dirname, "fixtures/pec-level-one-programs.html"), "utf8");
+
+describe("PEC accredited-program finder", () => {
+  beforeEach(() => {
+    const parsed = new DOMParser().parseFromString(pecFixture, "text/html");
+    document.documentElement.removeAttribute("data-patch-the-web-applied");
+    document.documentElement.className = "";
+    document.head.innerHTML = parsed.head.innerHTML;
+    document.body.innerHTML = parsed.body.innerHTML;
+  });
+
+  it("adds one local search across seven public regional lists", () => {
+    const health = applyPatch(pecProgramPatchJson as CommunityPatch);
+    expect(health).toMatchObject({ applied: true, healthy: 1, total: 1 });
+    const input = document.querySelector<HTMLInputElement>(".patch-the-web-list-search input[type='search']")!;
+    const status = document.querySelector(".patch-the-web-list-search__status");
+    expect(status?.getAttribute("aria-live")).toBe("polite");
+    expect(status?.textContent).toBe("14 public institutions available");
+
+    input.value = "Karachi";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    const items = [...document.querySelectorAll<HTMLElement>("[data-patch-the-web-list-search-match]")];
+    expect(items.filter((item) => !item.hidden)).toHaveLength(2);
+    expect(status?.textContent).toBe("2 of 14 institutions match");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "/", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(input);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(input.value).toBe("");
+    expect(items.every((item) => !item.hidden)).toBe(true);
+  });
+
+  it("fails closed when the selector reaches an interactive control", () => {
+    document.querySelector(".elementor-widget-container > ol > li")?.append(document.createElement("button"));
+    const health = applyPatch(pecProgramPatchJson as CommunityPatch);
+    expect(health).toMatchObject({ applied: false, healthy: 0, total: 1 });
+    expect(document.querySelector(".patch-the-web-list-search")).toBeNull();
   });
 });

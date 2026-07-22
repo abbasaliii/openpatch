@@ -49,6 +49,20 @@ test.afterAll(async () => {
   if (profilePath?.startsWith(tempPrefix)) await rm(profilePath, { recursive: true, force: true });
 });
 
+test("the welcome page explains both user paths on mobile", async () => {
+  let worker = context.serviceWorkers()[0];
+  if (!worker) worker = await context.waitForEvent("serviceworker");
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`chrome-extension://${new URL(worker.url()).host}/welcome.html`);
+  await expect(page.getByRole("heading", { name: /Make a broken website/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Install it in one guided flow" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Describe the problem, not the code" })).toBeVisible();
+  await expect(page.getByText(/remembers the approved installation for ten minutes/)).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
+  await page.close();
+});
+
 test("the production extension loads validated local patches and the bundled repair", async () => {
   test.skip(storeBuild, "The store manifest intentionally has no pre-granted localhost access.");
   const validation = validatePatch(importedPatch);
@@ -134,14 +148,15 @@ test("the production extension discovers and installs MetroCare from the verifie
   await expect(popup.locator("#install-button")).toHaveText("View repaired page");
 
   await expect.poll(async () => worker.evaluate(async () => {
-    const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches"]);
+    const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches", "pendingInstallIntent"]);
     const id = "org.patchtheweb.metrocare-service-navigator";
     return {
       installed: Boolean((stored.installedPatches as Record<string, unknown> | undefined)?.[id]),
       source: ((stored.installedPatchMeta as Record<string, { source?: string }> | undefined)?.[id])?.source,
-      enabled: Boolean((stored.enabledPatches as Record<string, boolean> | undefined)?.[id])
+      enabled: Boolean((stored.enabledPatches as Record<string, boolean> | undefined)?.[id]),
+      pendingIntentCleared: !stored.pendingInstallIntent
     };
-  })).toEqual({ installed: true, source: "public-registry", enabled: true });
+  })).toEqual({ installed: true, source: "public-registry", enabled: true, pendingIntentCleared: true });
 
   await expect(page.locator(".patch-the-web-navigator")).toBeVisible();
   await page.locator("select[id$='-access']").selectOption("wheelchair");

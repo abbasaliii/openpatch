@@ -91,8 +91,9 @@ try {
 
       const page = await browser.newPage();
       try {
-        const navigation = await page.goto(pageUrl, { waitUntil: "networkidle", timeout: 30_000 });
+        const navigation = await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 30_000 });
         if (!navigation?.ok()) throw new Error(`Monitored page returned ${navigation?.status() ?? "no response"}.`);
+        await page.waitForFunction(() => document.readyState !== "loading", undefined, { timeout: 10_000 });
         await page.addScriptTag({ path: runtimePath });
         const serializedPatch = JSON.stringify(patch).replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029");
         const preflight = await page.evaluate<SelectorPreflightResult>(`window.__preflightPatchTheWeb(${serializedPatch})`);

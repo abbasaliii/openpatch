@@ -11,6 +11,21 @@ export function preflightPatchOnDocument(candidate: CommunityPatch): SelectorPre
     try { return root.querySelectorAll(selector).length; } catch { return 0; }
   };
   const results = candidate.operations.map((operation) => {
+    if (operation.type === "publicListSearch") {
+      try {
+        const containers = [...document.querySelectorAll(operation.selector)];
+        if (containers.length !== 1 || containers[0].tagName === "FORM") return { id: operation.id, matched: containers.length, healthy: false };
+        const matches = [...containers[0].querySelectorAll(operation.itemSelector)];
+        const items = matches.filter((item) => item.tagName === "LI");
+        const selected = new Set(items);
+        const controls = items.some((item) => item.querySelector("form, input, select, textarea, button, [contenteditable='true']"));
+        const nested = items.some((item) => [...item.querySelectorAll(operation.itemSelector)].some((child) => selected.has(child)));
+        const blank = items.some((item) => !(item.textContent ?? "").replace(/\s+/g, " ").trim());
+        return { id: operation.id, matched: matches.length, healthy: matches.length === items.length && items.length > 0 && items.length <= operation.maxItems && !controls && !nested && !blank };
+      } catch {
+        return { id: operation.id, matched: 0, healthy: false };
+      }
+    }
     if (operation.type === "publicTableSearch") {
       try {
         const matches = [...document.querySelectorAll(operation.selector)];

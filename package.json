@@ -1,6 +1,6 @@
 {
   "name": "patch-the-web",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "private": true,
   "type": "module",
   "description": "A safe, community repair layer for websites users do not own.",
@@ -23,7 +23,7 @@
     "test:extension:store": "npm run build:extension:store && playwright test --config playwright.extension-store.config.ts",
     "validate:patch": "tsx scripts/validate-patch.ts",
     "check": "tsc --noEmit && npm test && npm run build",
-    "verify": "npm run check && npm run validate:patch -- src/registry/patches/civic-apply.patch-the-web.json src/site/demo/index.html && npm run validate:patch -- src/registry/patches/metrocare-service-navigator.patch-the-web.json src/site/care/index.html && npm run validate:patch -- src/registry/patches/nu-karachi-degree-programs.patch-the-web.json tests/fixtures/nu-degree-programs.html && npm run validate:patch -- src/registry/patches/hec-campus-finder.patch-the-web.json tests/fixtures/hec-recognized-campuses.html && npm run test:browser && npm run test:extension"
+    "verify": "npm run check && npm run validate:patch -- src/registry/patches/civic-apply.patch-the-web.json src/site/demo/index.html && npm run validate:patch -- src/registry/patches/metrocare-service-navigator.patch-the-web.json src/site/care/index.html && npm run validate:patch -- src/registry/patches/nu-karachi-degree-programs.patch-the-web.json tests/fixtures/nu-degree-programs.html && npm run validate:patch -- src/registry/patches/hec-campus-finder.patch-the-web.json tests/fixtures/hec-recognized-campuses.html && npm run validate:patch -- src/registry/patches/pec-accredited-program-search.patch-the-web.json tests/fixtures/pec-level-one-programs.html && npm run test:browser && npm run test:extension"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.12.1",

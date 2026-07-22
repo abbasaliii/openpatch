@@ -140,6 +140,19 @@ export type PublicTableSearchOperation = {
   maxRows: number;
 };
 
+export type PublicListSearchOperation = {
+  id: string;
+  type: "publicListSearch";
+  selector: string;
+  itemSelector: string;
+  title: string;
+  description: string;
+  searchLabel: string;
+  placeholder?: string;
+  itemLabel: string;
+  maxItems: number;
+};
+
 export type PatchOperation =
   | StyleOperation
   | AttributeOperation
@@ -151,7 +164,8 @@ export type PatchOperation =
   | CollectionFilterOperation
   | CollectionCompareOperation
   | TableColumnFilterOperation
-  | PublicTableSearchOperation;
+  | PublicTableSearchOperation
+  | PublicListSearchOperation;
 
 export type PatchAssertion =
   | { type: "exists"; selector: string; min?: number; max?: number }

@@ -127,13 +127,13 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
     issues.push({ path: `${base}.id`, message: "must use 3-80 lowercase letters, numbers, dots, dashes, or underscores" });
   }
   const type = value.type;
-  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter", "collectionCompare", "tableColumnFilter", "publicTableSearch"];
+  const known = ["style", "attributes", "hide", "move", "persistForm", "validation", "keyboardNavigation", "collectionFilter", "collectionCompare", "tableColumnFilter", "publicTableSearch", "publicListSearch"];
   if (typeof type !== "string" || !known.includes(type)) {
     issues.push({ path: `${base}.type`, message: "is not an allowed transformation" });
     return;
   }
 
-  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter", "collectionCompare", "tableColumnFilter", "publicTableSearch"].includes(type)) {
+  if (["style", "attributes", "hide", "move", "persistForm", "validation", "collectionFilter", "collectionCompare", "tableColumnFilter", "publicTableSearch", "publicListSearch"].includes(type)) {
     checkSelector(value.selector, `${base}.selector`, issues);
   }
 
@@ -404,6 +404,25 @@ function checkOperation(value: unknown, index: number, issues: ValidationIssue[]
       issues.push({ path: `${base}.maxRows`, message: "must bound the feature to 1-300 public rows" });
     }
   }
+
+  if (type === "publicListSearch") {
+    const allowed = new Set(["id", "type", "selector", "itemSelector", "title", "description", "searchLabel", "placeholder", "itemLabel", "maxItems"]);
+    Object.keys(value).forEach((key) => {
+      if (!allowed.has(key)) issues.push({ path: `${base}.${key}`, message: "is not allowed for bounded public-list search" });
+    });
+    checkSelector(value.itemSelector, `${base}.itemSelector`, issues);
+    for (const key of ["title", "description", "searchLabel", "itemLabel"] as const) {
+      if (!text(value[key], key === "description" ? 180 : 120) || UNSAFE_VALUE.test(String(value[key]))) {
+        issues.push({ path: `${base}.${key}`, message: "must be concise safe visible text" });
+      }
+    }
+    if (value.placeholder !== undefined && (!text(value.placeholder, 100) || UNSAFE_VALUE.test(String(value.placeholder)))) {
+      issues.push({ path: `${base}.placeholder`, message: "must be concise safe placeholder text" });
+    }
+    if (!Number.isInteger(value.maxItems) || Number(value.maxItems) < 1 || Number(value.maxItems) > 300) {
+      issues.push({ path: `${base}.maxItems`, message: "must bound the feature to 1-300 public list items" });
+    }
+  }
 }
 
 export function validatePatch(value: unknown): ValidationResult {
@@ -518,6 +537,11 @@ export function requiredCapabilities(operations: PatchOperation[]): PatchCapabil
       result.add("accessibility");
     }
     if (operation.type === "publicTableSearch") {
+      result.add("content-filter");
+      result.add("accessibility");
+      result.add("keyboard-navigation");
+    }
+    if (operation.type === "publicListSearch") {
       result.add("content-filter");
       result.add("accessibility");
       result.add("keyboard-navigation");

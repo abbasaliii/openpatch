@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-21T22:14:55.487Z",
+  "generatedAt": "2026-07-21T23:59:10.849Z",
   "registryUrl": "workspace:src/registry/patches",
   "summary": {
     "healthy": 4,
     "drifted": 0,
-    "unreachable": 0,
-    "total": 4
+    "unreachable": 1,
+    "total": 5
   },
   "patches": [
     {
@@ -14,7 +14,7 @@
       "version": "1.2.1",
       "pageUrl": "https://patch-the-web.vercel.app/demo/",
       "status": "healthy",
-      "checkedAt": "2026-07-21T22:14:55.487Z",
+      "checkedAt": "2026-07-21T23:59:10.849Z",
       "patchSha256": "f15a80b24bab0d4692f61dd44c47e2704e954b659ee0b415e185e3e7a7f76155",
       "healthy": 19,
       "total": 19,
@@ -123,7 +123,7 @@
       "version": "1.0.0",
       "pageUrl": "https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx",
       "status": "healthy",
-      "checkedAt": "2026-07-21T22:14:55.487Z",
+      "checkedAt": "2026-07-21T23:59:10.849Z",
       "patchSha256": "b0b3d607ced94baf0ec5ec5e4754d3419c6e1cf083a96c244c6b9b020e80c4fe",
       "healthy": 5,
       "total": 5,
@@ -162,7 +162,7 @@
       "version": "1.1.1",
       "pageUrl": "https://patch-the-web.vercel.app/care/",
       "status": "healthy",
-      "checkedAt": "2026-07-21T22:14:55.487Z",
+      "checkedAt": "2026-07-21T23:59:10.849Z",
       "patchSha256": "e38546124f1e80852b6fbc63fd7c66a0974fb997677f0665fc07c9d01e578d21",
       "healthy": 11,
       "total": 11,
@@ -231,7 +231,7 @@
       "version": "1.0.0",
       "pageUrl": "https://nu.edu.pk/Degree-Programs",
       "status": "healthy",
-      "checkedAt": "2026-07-21T22:14:55.487Z",
+      "checkedAt": "2026-07-21T23:59:10.849Z",
       "patchSha256": "19fab525f610dc7c0abc77a01e48764f558adc8d924429e459f8e70266b3743d",
       "healthy": 4,
       "total": 4,
@@ -259,6 +259,20 @@
           "healthy": true
         }
       ]
+    },
+    {
+      "id": "org.patchtheweb.pec-accredited-program-search",
+      "version": "1.0.0",
+      "pageUrl": "https://www.pec.org.pk/accredition/programs-under-level-1/",
+      "status": "unreachable",
+      "checkedAt": "2026-07-21T23:59:10.849Z",
+      "patchSha256": "a8a9bc15fbbea1f5bb7d4383330db4184b252aa0b93b6410a712a729306d907e",
+      "healthy": 0,
+      "total": 1,
+      "fingerprint": "8d96b80b4571b26ae1e93307d8a456baad5e2ba1a0187231b7c51edf785354c7",
+      "driftedOperationIds": [],
+      "results": [],
+      "error": "Monitored page returned 403."
     }
   ]
 }

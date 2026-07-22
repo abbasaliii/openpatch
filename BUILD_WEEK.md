@@ -47,6 +47,7 @@ The public Git history preserves the Build Week sequence:
 | Jul 20 | `v0.7.3` accessibility | Automated WCAG A/AA audits across patched workflows and public surfaces, hardened contrast tokens, and a keyboard-focusable comparison region |
 | Jul 20 | `v0.8.0` control & privacy | Community-patch removal, optional-permission cleanup, absolute preference expiry, sensitive-field hardening, live error repair, and deeper keyboard/browser/extension evidence |
 | Jul 21 | `v0.9.0` real public table search | Added a bounded `publicTableSearch` DSL primitive, authored the HEC recognized-campus finder against the live page, handled repeated table headers safely, added mobile layout repair, published 5/5 live compatibility evidence, and expanded the registry to four verified repairs |
+| Jul 22 | `v0.14.0` bounded public list search | Added a fail-closed `publicListSearch` primitive, authored a PEC accreditation-directory finder against 170 live institution entries, passed policy and responsive accessibility tests, and correctly quarantined publication when PEC returned HTTP 403 to automated monitoring |
 | Jul 22 | `v0.9.1` guided repair requests | Replaced expert-authored acceptance criteria with plain outcome choices, added public-URL privacy cleaning, tab-local draft recovery, a clear Codex handoff, extension guidance, and mobile + WCAG browser evidence |
 | Jul 22 | `v0.10.0` safe update recovery | Added a bounded validated patch history, SHA-256 recheck, live selector preflight, exact-domain permission recheck, one-click rollback/redo, and complete removal of repair history |
 | Jul 22 | `v0.11.0` confirmed installation | Replaced opaque installs with verified/access/installed/confirmed stages, automatic page verification and retry, simplified registry actions, a production-only store build, and removal of development hosts from publishable patches |
@@ -84,7 +85,7 @@ npm run monitor:workspace -- src/registry/compatibility.json
 - MetroCare: 11/11 constrained operations and 10/10 publishing assertions
 - CivicApply: 19/19 constrained operations and 10/10 publishing assertions
 - FAST-NUCES: 4/4 constrained operations, 8/8 publishing assertions, 22 relevant rows retained, and 15 excluded
-- Public compatibility ledger: 34 operation targets across 3 patches, checked every six hours
+- Public compatibility ledger: 39 healthy operation targets across 4 discoverable patches, plus one quarantined real-site candidate, checked every six hours
 - Extension archive SHA-256: `A952870B7606760BC3FFCA68EA695BC4BB26EA6BF0CA9CA879DF422DAFB55CBF`
 - Codex plugin archive SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 

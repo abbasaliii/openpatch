@@ -257,6 +257,27 @@ Add one trusted, local-only search control across a bounded set of public data t
 
 Capabilities: `content-filter`, `accessibility`, and `keyboard-navigation`. The selector must resolve only to 1-5 tables. Each table must contain 1-12 exact normalized header rows with the same 2-12-column shape and at least one matching data row. The combined searchable set is capped at the declared `maxRows` and an absolute maximum of 300. `/` focuses search and Escape clears it. Any ambiguous structure or exceeded bound fails closed before mutation.
 
+### `publicListSearch`
+
+Add one trusted, local-only search control across a bounded collection of public top-level list items. The runtime builds the accessible interface, searches only existing public item text in memory, announces match counts, and never persists or transmits the query.
+
+```json
+{
+  "id": "search-accredited-programs",
+  "type": "publicListSearch",
+  "selector": "#public-directory",
+  "itemSelector": ".region > ol > li",
+  "title": "Find an accredited program",
+  "description": "Search institutions, cities, disciplines, and intake years.",
+  "searchLabel": "Search accredited programs",
+  "placeholder": "Try Karachi or software engineering",
+  "itemLabel": "institutions",
+  "maxItems": 220
+}
+```
+
+Capabilities: `content-filter`, `accessibility`, and `keyboard-navigation`. The outer selector must resolve to exactly one non-form container. The item selector must resolve only to 1-300 non-overlapping, non-empty `<li>` elements under that container. Any selected item containing a form, input, select, textarea, button, or editable content fails closed before mutation. `/` focuses search and Escape clears it.
+
 ## Assertions
 
 Use `exists` to lock selector counts and `attribute` to verify repaired semantics.

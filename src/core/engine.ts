@@ -7,11 +7,13 @@ import type {
   PatchHealth,
   PatchOperation,
   PersistFormOperation,
+  PublicListSearchOperation,
   PublicTableSearchOperation,
   ValidationOperation
 } from "./types";
 import { inspectTableColumnFilter } from "./table-filter";
 import { inspectPublicTableSearch } from "./public-table-search";
+import { inspectPublicListSearch } from "./public-list-search";
 
 type BrowserContext = {
   document: Document;
@@ -84,19 +86,19 @@ function installTrustedUiStyles(document: Document) {
       color: #176248; background: #fff; font: 800 11px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
     }
     .patch-the-web-navigator__clear:focus-visible { outline: 3px solid rgba(11, 149, 105, .18); outline-offset: 2px; }
-    .patch-the-web-table-search {
+    .patch-the-web-table-search, .patch-the-web-list-search {
       margin: 0 0 22px; padding: 20px; border: 1px solid #b9e6d1; border-radius: 16px;
       color: #17352a; background: linear-gradient(145deg, #f2fcf7, #fff);
       box-shadow: 0 12px 30px rgba(22,94,67,.08); font-family: ui-sans-serif, system-ui, sans-serif;
     }
-    .patch-the-web-table-search h2 { margin: 0 0 4px; color: #143126; font-size: 20px; line-height: 1.2; }
-    .patch-the-web-table-search p { margin: 0; color: #5f746b; font-size: 13px; line-height: 1.5; }
-    .patch-the-web-table-search label { display: grid; gap: 7px; margin-top: 15px; color: #355649; font-size: 11px; font-weight: 800; }
-    .patch-the-web-table-search input { width: 100%; min-height: 43px; padding: 9px 11px; border: 1px solid #bed4ca; border-radius: 10px; color: #19362b; background: #fff; font: 500 14px/1.25 ui-sans-serif, system-ui, sans-serif; }
-    .patch-the-web-table-search input:focus { outline: 3px solid rgba(11,149,105,.18); outline-offset: 1px; border-color: #0b9569; }
-    .patch-the-web-table-search__receipt { display: flex; gap: 12px; align-items: center; margin-top: 13px; padding-top: 12px; border-top: 1px solid #dcece4; }
-    .patch-the-web-table-search__status { color: #136b4d !important; font-weight: 800; }
-    .patch-the-web-table-search__privacy { margin-left: auto !important; font-size: 10px !important; }
+    .patch-the-web-table-search h2, .patch-the-web-list-search h2 { margin: 0 0 4px; color: #143126; font-size: 20px; line-height: 1.2; }
+    .patch-the-web-table-search p, .patch-the-web-list-search p { margin: 0; color: #5f746b; font-size: 13px; line-height: 1.5; }
+    .patch-the-web-table-search label, .patch-the-web-list-search label { display: grid; gap: 7px; margin-top: 15px; color: #355649; font-size: 11px; font-weight: 800; }
+    .patch-the-web-table-search input, .patch-the-web-list-search input { width: 100%; min-height: 43px; padding: 9px 11px; border: 1px solid #bed4ca; border-radius: 10px; color: #19362b; background: #fff; font: 500 14px/1.25 ui-sans-serif, system-ui, sans-serif; }
+    .patch-the-web-table-search input:focus, .patch-the-web-list-search input:focus { outline: 3px solid rgba(11,149,105,.18); outline-offset: 1px; border-color: #0b9569; }
+    .patch-the-web-table-search__receipt, .patch-the-web-list-search__receipt { display: flex; gap: 12px; align-items: center; margin-top: 13px; padding-top: 12px; border-top: 1px solid #dcece4; }
+    .patch-the-web-table-search__status, .patch-the-web-list-search__status { color: #136b4d !important; font-weight: 800; }
+    .patch-the-web-table-search__privacy, .patch-the-web-list-search__privacy { margin-left: auto !important; font-size: 10px !important; }
     .patch-the-web-compare {
       margin: -8px 0 26px;
       padding: 18px 20px;
@@ -751,6 +753,62 @@ function setupPublicTableSearch(operation: PublicTableSearchOperation, context: 
   return inspection;
 }
 
+function setupPublicListSearch(operation: PublicListSearchOperation, context: BrowserContext) {
+  const inspection = inspectPublicListSearch(operation, context.document);
+  if (!inspection.healthy || !inspection.container || !inspection.items) return inspection;
+  const { document } = context;
+  const panel = document.createElement("section");
+  panel.className = "patch-the-web-list-search";
+  panel.dataset.patchTheWebOwned = "true";
+  const title = document.createElement("h2");
+  title.textContent = operation.title;
+  const description = document.createElement("p");
+  description.textContent = operation.description;
+  const label = document.createElement("label");
+  label.textContent = operation.searchLabel;
+  const input = document.createElement("input");
+  input.type = "search";
+  input.placeholder = operation.placeholder ?? "";
+  input.autocomplete = "off";
+  const receipt = document.createElement("div");
+  receipt.className = "patch-the-web-list-search__receipt";
+  const status = document.createElement("p");
+  status.className = "patch-the-web-list-search__status";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  const privacy = document.createElement("p");
+  privacy.className = "patch-the-web-list-search__privacy";
+  privacy.textContent = "Search stays on this page";
+  label.append(input);
+  receipt.append(status, privacy);
+  panel.append(title, description, label, receipt);
+  const firstList = inspection.items[0].parentElement;
+  (firstList ?? inspection.container.firstElementChild)?.before(panel);
+  const searchable = inspection.items.map((item) => ({ item, text: (item.textContent ?? "").replace(/\s+/g, " ").trim().toLocaleLowerCase() }));
+  const update = () => {
+    const query = input.value.replace(/\s+/g, " ").trim().toLocaleLowerCase();
+    let visible = 0;
+    searchable.forEach(({ item, text }) => {
+      const match = query.length === 0 || text.includes(query);
+      item.hidden = !match;
+      item.style.setProperty("display", match ? "" : "none", match ? "" : "important");
+      item.toggleAttribute("aria-hidden", !match);
+      item.dataset.patchTheWebListSearchMatch = String(match);
+      if (match) visible += 1;
+    });
+    status.textContent = query ? `${visible} of ${searchable.length} ${operation.itemLabel} match` : `${searchable.length} public ${operation.itemLabel} available`;
+  };
+  input.addEventListener("input", update);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && input.value) { input.value = ""; update(); }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "/" && document.activeElement !== input) { event.preventDefault(); input.focus(); }
+  });
+  update();
+  return inspection;
+}
+
 function applyOperation(patch: CommunityPatch, operation: PatchOperation, context: BrowserContext): OperationHealth {
   const { document, window } = context;
   try {
@@ -850,6 +908,10 @@ function applyOperation(patch: CommunityPatch, operation: PatchOperation, contex
     }
     if (operation.type === "publicTableSearch") {
       const inspection = setupPublicTableSearch(operation, context);
+      return { id: operation.id, type: operation.type, matched: inspection.matched, applied: inspection.healthy, detail: inspection.detail };
+    }
+    if (operation.type === "publicListSearch") {
+      const inspection = setupPublicListSearch(operation, context);
       return { id: operation.id, type: operation.type, matched: inspection.matched, applied: inspection.healthy, detail: inspection.detail };
     }
     const containers = selected(document, operation.container);

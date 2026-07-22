@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Patch the Web",
-  "version": "0.12.0",
+  "version": "0.14.0",
   "description": "Validate and install safe, domain-scoped community repairs for the web.",
   "icons": {
     "16": "icons/icon-16.png",
