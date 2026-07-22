@@ -75,9 +75,9 @@ Requirements for the public demo: Chrome/Chromium 120+. No build, account, crede
 
 Prebuilt artifacts:
 
-- [Patch the Web extension v0.16.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.16.0.zip) — Chrome extension with automatic repair discovery, confirmed activation, rollback, install recovery, plain-language requests, and a cross-domain My repairs control center
+- [Patch the Web extension v0.17.0](https://patch-the-web.vercel.app/downloads/patch-the-web-extension-v0.17.0.zip) — Chrome extension with automatic repair discovery, a persistent review-and-install wizard, confirmed activation, rollback, plain-language requests, and a cross-domain My repairs control center
 - [Patch the Web Codex plugin v0.4.1](https://patch-the-web.vercel.app/downloads/patch-the-web-codex-plugin-v0.4.1.zip) — validated authoring plugin with structured repair-request support
-- Extension SHA-256: `264B245A733D5D96452C9DB67E41F766E376A465958BC325539C4238132EBC3F`
+- Extension SHA-256: `AC6E595367706B51EC5FC8A17FA1D140323E6614E76A53AD867F2E1AB3B347CD`
 - Plugin SHA-256: `EFD9B788FBC90E6248427F2421B3239DAAF2CE398D550B01CED5390880DD06CF`
 
 Then:
@@ -89,7 +89,7 @@ Then:
 3. Open [the live MetroCare demo](https://patch-the-web.vercel.app/care/).
 4. Observe twelve services and no search or filters—the directory works, but cannot express a person’s combined needs.
 5. Open the Patch the Web extension. It discovers **MetroCare: personal service navigator**, verifies its registry receipt, shows the scheduled `11/11` live-compatibility result, and independently reports `11/11 operation targets healthy` on your current tab.
-6. Choose **Install verified community feature**; the page reloads with the navigator active.
+6. Choose **Install verified community feature**. A full-page receipt rechecks the policy, SHA-256, exact scope, and all live selectors; approve the website there and wait for the four confirmation steps to complete.
 7. Select Harbor Family Clinic and Northside Community Health, then choose **Compare selected**. Patch the Web creates an accessible side-by-side decision table without sending a request.
 8. Clear the comparison, choose **Wheelchair access**, **Urdu**, and **Accepting new patients**, and watch the directory reduce to Harbor Family Clinic with `1 of 12 services match`.
 9. Reload to see the preferences restored locally; press `/` to focus search. The automated test proves filtering and comparison make zero network requests.
@@ -153,10 +153,9 @@ npm run verify
 
 Current results:
 
-- 86/86 unit, policy, registry-discovery, compatibility-quarantine, preflight, runtime, intake API, and privacy tests pass
-- 22/22 desktop and 390px browser journeys pass, including six strict automated WCAG A/AA scans across both patched products, the landing page, and Compatibility Sentinel
-- 42/42 mobile and desktop browser journeys pass, including the no-account intake, explicit consent, fallback, public status stages, and strict WCAG A/AA scans
-- 8/8 unpacked Manifest V3 extension integration tests pass; the production-only Store build passes all 7 applicable public-domain journeys
+- 90/90 unit, policy, registry-discovery, compatibility-quarantine, guided-installation, preflight, runtime, intake API, and privacy tests pass
+- 46/46 mobile and desktop browser journeys pass, including strict automated WCAG A/AA scans, no-account intake, repair status stages, and every published real-site fixture
+- 11/11 unpacked Manifest V3 extension integration tests pass; the reduced-permission Chrome Store build passes all 10 applicable public-domain journeys with the localhost-only developer case intentionally excluded
 - 11/11 flagship constrained operations apply; 19/19 CivicApply operations remain healthy
 - 10/10 flagship publication assertions pass; 10/10 CivicApply assertions remain healthy
 - Production site and Manifest V3 extension build successfully

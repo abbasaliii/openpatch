@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Install repair · Patch the Web</title>
+    <link rel="stylesheet" href="install.css" />
+    <link rel="stylesheet" href="install-polish.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="welcome.html" aria-label="Patch the Web home"><span class="mark" aria-hidden="true"><i></i><i></i></span><span><strong>Patch the Web</strong><small>Safe community repairs</small></span></a>
+      <span class="safe">Constrained DSL</span>
+    </header>
+
+    <main>
+      <section class="intro">
+        <span class="eyebrow">Guided installation</span>
+        <h1>Review once. Approve one website. See it work.</h1>
+        <p>This page stays open while Chrome asks for access, so you always know what happened and what to do next.</p>
+      </section>
+
+      <section class="installer" id="installer" aria-labelledby="repair-name">
+        <div class="loading" id="loading" role="status">Rechecking the repair and its selectors…</div>
+        <div id="receipt" hidden>
+          <div class="receipt-head">
+            <span class="check" aria-hidden="true">✓</span>
+            <div><span class="eyebrow" id="source-label">Verified repair</span><h2 id="repair-name"></h2><p id="repair-summary"></p></div>
+            <span class="version" id="repair-version"></span>
+          </div>
+
+          <dl class="facts">
+            <div><dt>Website</dt><dd id="repair-domain"></dd></div>
+            <div><dt>Page scope</dt><dd id="repair-path"></dd></div>
+            <div><dt>Capabilities</dt><dd id="repair-capabilities"></dd></div>
+            <div><dt>Live selector check</dt><dd id="repair-health"></dd></div>
+            <div><dt>Integrity receipt</dt><dd class="hash" id="repair-hash"></dd></div>
+          </dl>
+
+          <div class="privacy"><strong>What access means</strong><p>The repair can change only the declared page structure on <span id="permission-domain"></span>. It cannot run arbitrary JavaScript, read cookies, or send page data.</p></div>
+
+          <ol class="progress" aria-label="Installation progress">
+            <li id="stage-verify"><span>1</span><div><strong>Repair verified</strong><small>Policy, integrity, scope, and selectors</small></div></li>
+            <li id="stage-access"><span>2</span><div><strong>Approve this website</strong><small>Chrome asks for this exact domain only</small></div></li>
+            <li id="stage-install"><span>3</span><div><strong>Install locally</strong><small>No account or API key</small></div></li>
+            <li id="stage-confirm"><span>4</span><div><strong>Confirm on the page</strong><small>Reload once and verify the repair applied</small></div></li>
+          </ol>
+
+          <p class="status" id="status" role="status" aria-live="polite">Ready. Nothing changes until you approve access.</p>
+          <div class="actions">
+            <button class="primary" id="install" type="button">Approve website and install</button>
+            <button class="secondary" id="cancel" type="button">Cancel safely</button>
+          </div>
+        </div>
+        <div class="fatal" id="fatal" hidden role="alert">
+          <span aria-hidden="true">!</span><h2>Installation could not start</h2><p id="fatal-message"></p>
+          <div class="actions"><button class="primary" id="return-site" type="button">Return to website</button><button class="secondary" id="discard" type="button">Discard this attempt</button></div>
+        </div>
+      </section>
+
+      <p class="footnote">The candidate is kept only in Chrome’s temporary session storage and expires after 15 minutes.</p>
+    </main>
+    <script src="install.js"></script>
+  </body>
+</html>

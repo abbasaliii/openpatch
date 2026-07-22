@@ -58,7 +58,7 @@ test("the welcome page explains both user paths on mobile", async () => {
   await expect(page.getByRole("heading", { name: /Make a broken website/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Install it in one guided flow" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Describe the problem, not the code" })).toBeVisible();
-  await expect(page.getByText(/remembers the approved installation for ten minutes/)).toBeVisible();
+  await expect(page.getByText(/keeps the verified installation ready for fifteen minutes/)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
   await page.close();
 });
@@ -138,25 +138,36 @@ test("the production extension discovers and installs MetroCare from the verifie
   await expect(popup.locator("#registry-match-proof")).toContainText("live compatibility 11/11");
   await expect(popup.locator("#import-health")).toHaveText("11/11 operation targets healthy");
   await expect(popup.locator("#import-status")).toContainText("Verified and healthy");
+  const wizardOpened = context.waitForEvent("page", { predicate: (candidate) => candidate.url().includes("/install.html") });
   await popup.locator("#install-button").click();
+  const wizard = await wizardOpened;
+  await wizard.waitForLoadState("domcontentloaded");
+  await wizard.setViewportSize({ width: 390, height: 844 });
 
-  await expect(popup.locator("#progress-verify")).toHaveClass(/complete/);
-  await expect(popup.locator("#progress-access")).toHaveClass(/complete/);
-  await expect(popup.locator("#progress-install")).toHaveClass(/complete/);
-  await expect(popup.locator("#progress-confirm")).toHaveClass(/complete/);
-  await expect(popup.locator("#import-status")).toHaveText("Done — the repair is active on this page.");
-  await expect(popup.locator("#install-button")).toHaveText("View repaired page");
+  await expect(wizard.getByRole("heading", { name: "MetroCare: personal service navigator" })).toBeVisible();
+  await expect(wizard.locator("#repair-health")).toHaveText("11/11 operation targets healthy now");
+  await expect(wizard.locator("#stage-verify")).toHaveClass(/complete/);
+  await expect(wizard.locator("#status")).toContainText("Nothing changes until you approve access");
+  expect(await wizard.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 2)).toBe(true);
+  await wizard.screenshot({ path: resolve(import.meta.dirname, "../../submission-assets/patch-the-web-guided-install-mobile.png"), fullPage: true });
+  await wizard.getByRole("button", { name: "Approve website and install" }).click();
+  await expect(wizard.locator("#stage-access")).toHaveClass(/complete/);
+  await expect(wizard.locator("#stage-install")).toHaveClass(/complete/);
+  await expect(wizard.locator("#stage-confirm")).toHaveClass(/complete/);
+  await expect(wizard.locator("#status")).toHaveText("Repair active and confirmed. You can return to the repaired website.");
+  await expect(wizard.getByRole("button", { name: "View repaired website" })).toBeVisible();
 
   await expect.poll(async () => worker.evaluate(async () => {
-    const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches", "pendingInstallIntent"]);
+    const stored = await chrome.storage.local.get(["installedPatches", "installedPatchMeta", "enabledPatches"]);
+    const session = await chrome.storage.session.get("installWizardSession");
     const id = "org.patchtheweb.metrocare-service-navigator";
     return {
       installed: Boolean((stored.installedPatches as Record<string, unknown> | undefined)?.[id]),
       source: ((stored.installedPatchMeta as Record<string, { source?: string }> | undefined)?.[id])?.source,
       enabled: Boolean((stored.enabledPatches as Record<string, boolean> | undefined)?.[id]),
-      pendingIntentCleared: !stored.pendingInstallIntent
+      sessionCleared: !session.installWizardSession
     };
-  })).toEqual({ installed: true, source: "public-registry", enabled: true, pendingIntentCleared: true });
+  })).toEqual({ installed: true, source: "public-registry", enabled: true, sessionCleared: true });
 
   await expect(page.locator(".patch-the-web-navigator")).toBeVisible();
   await page.locator("select[id$='-access']").selectOption("wheelchair");
@@ -164,6 +175,32 @@ test("the production extension discovers and installs MetroCare from the verifie
   await page.locator("select[id$='-availability']").selectOption("new-patients");
   await expect(page.locator(".care-service:visible h3")).toHaveText("Harbor Family Clinic");
   await expect(page.locator("html")).toHaveAttribute("data-patch-the-web-applied", /org\.patchtheweb\.metrocare-service-navigator@1\.1\.1/);
+  await wizard.close();
+});
+
+test("the guided installer rejects expired attempts without requesting website access", async () => {
+  let worker = context.serviceWorkers()[0];
+  if (!worker) worker = await context.waitForEvent("serviceworker");
+  const extensionId = new URL(worker.url()).host;
+  const target = await context.newPage();
+  await target.goto(careUrl);
+  const tabId = await worker.evaluate(async (url) => {
+    const matches = await chrome.tabs.query({ url });
+    return matches.sort((left, right) => (right.id ?? 0) - (left.id ?? 0))[0]?.id;
+  }, careUrl);
+  expect(tabId).toBeTruthy();
+  const raw = JSON.stringify(metrocarePatchJson);
+  const hash = createHash("sha256").update(raw).digest("hex");
+  await worker.evaluate(async ({ raw, hash, tabId, tabUrl }) => {
+    await chrome.storage.session.set({ installWizardSession: { raw, hash, source: "public-registry", tabId, tabUrl, createdAt: Date.now() - 16 * 60_000 } });
+  }, { raw, hash, tabId: tabId as number, tabUrl: careUrl });
+  const wizard = await context.newPage();
+  await wizard.goto(`chrome-extension://${extensionId}/install.html`);
+  await expect(wizard.getByRole("heading", { name: "Installation could not start" })).toBeVisible();
+  await expect(wizard.locator("#fatal-message")).toContainText("missing or expired");
+  await expect.poll(async () => worker.evaluate(async () => !(await chrome.storage.session.get("installWizardSession")).installWizardSession)).toBe(true);
+  await wizard.close();
+  await target.close();
 });
 
 test("a verified update can roll back and then restore the newer version", async () => {
@@ -228,7 +265,7 @@ test("My repairs manages installed features across domains without browsing-hist
   await expect(metroCare.locator(".source")).toHaveText("Verified public registry");
   await expect(metroCare.locator(".update")).toHaveText("Current verified version");
   await expect(metroCare.locator(".scope")).toContainText("patch-the-web.vercel.app");
-  await manage.screenshot({ path: resolve(import.meta.dirname, "../../submission-assets/patch-the-web-my-repairs-mobile.png"), fullPage: true });
+  if (!storeBuild) await manage.screenshot({ path: resolve(import.meta.dirname, "../../submission-assets/patch-the-web-my-repairs-mobile.png"), fullPage: true });
 
   await metroCare.locator(".switch-row").click();
   await expect(metroCare.locator(".state")).toHaveText("PAUSED");
